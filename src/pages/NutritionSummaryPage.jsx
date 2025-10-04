@@ -265,17 +265,17 @@ function NutritionSummaryPage() {
     ? getFoodRecommendations(state.weight, nutritionData.calories, selectedCategory)
     : null;
 
-  const handleFoodQuantityChange = (foodId, change) => {
-    setSelectedFoods((prev) => {
-      const current = prev[foodId] || 0;
-      const newQuantity = Math.max(0, current + change);
-      if (newQuantity === 0) {
-        const { [foodId]: removed, ...rest } = prev;
-        return rest;
-      }
-      return { ...prev, [foodId]: newQuantity };
-    });
-  };
+  // const handleFoodQuantityChange = (foodId, change) => {
+  //   setSelectedFoods((prev) => {
+  //     const current = prev[foodId] || 0;
+  //     const newQuantity = Math.max(0, current + change);
+  //     if (newQuantity === 0) {
+  //       const { [foodId]: removed, ...rest } = prev;
+  //       return rest;
+  //     }
+  //     return { ...prev, [foodId]: newQuantity };
+  //   });
+  // };
 
   const handleSave = () => {
     const selectedFoodData = Object.entries(selectedFoods).map(

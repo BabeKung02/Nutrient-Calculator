@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   calculateBMR,
@@ -26,7 +26,7 @@ function RegisterPage() {
   const [alcohol, setAlcohol] = useState("");
   const [activityLevel, setActivityLevel] = useState("");
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // ฟังก์ชันแปลงวันที่จาก yyyy-mm-dd เป็น dd/mm/yyyy
   const formatDateToDDMMYYYY = (dateString) => {

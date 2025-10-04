@@ -1,0 +1,724 @@
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+.weight-input:focus {
+  border-color: #8b5cf6 !important;
+  box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25) !important;
+  outline: none !important;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2) !important;
+  background: linear-gradient(45deg, #7c3aed, #db2777) !important;
+}
+
+.submit-btn:active {
+  transform: translateY(0) !important;
+}
+
+/* === Food Animation Styles === */
+.food-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.food-float-delay-1 {
+  animation-delay: 1s;
+}
+
+.food-float-delay-2 {
+  animation-delay: 2s;
+}
+
+.food-float-delay-3 {
+  animation-delay: 3s;
+}
+
+/* === Food Item Display Styles === */
+.healthy-food-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.food-item-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: float 4s ease-in-out infinite;
+}
+
+/* === Food Icon Styles === */
+.egg-icon {
+  width: 40px;
+  height: 50px;
+  background: linear-gradient(145deg, #fff9c4, #fef08a);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #fbbf24;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.egg-icon::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: #fb923c;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.egg-icon::after {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+
+.carrot-icon {
+  width: 30px;
+  height: 40px;
+  background: linear-gradient(145deg, #fb923c, #f97316);
+  border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
+  border: 2px solid #ea580c;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.carrot-icon::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 2px;
+  box-shadow: -4px 2px 0 -1px #16a34a;
+}
+
+.carrot-icon::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 8px;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+}
+
+/* === Position Classes for Food Decorations === */
+.food-decor-1 {
+  position: absolute;
+  top: 5%;
+  left: 10%;
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.food-decor-2 {
+  position: absolute;
+  top: 15%;
+  right: 15%;
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.food-decor-3 {
+  position: absolute;
+  top: 40%;
+  left: 5%;
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.food-decor-4 {
+  position: absolute;
+  top: 60%;
+  right: 8%;
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+.food-decor-5 {
+  position: absolute;
+  bottom: 25%;
+  left: 12%;
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+
+.food-decor-6 {
+  position: absolute;
+  bottom: 15%;
+  right: 20%;
+  animation: float 6s ease-in-out infinite;
+  animation-delay: 2.5s;
+}
+
+/* === Card Food Decorations === */
+.card-food-decor-1 {
+  position: absolute;
+  top: -20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.card-food-decor-2 {
+  position: absolute;
+  top: -15px;
+  right: 30px;
+  z-index: 10;
+}
+
+.card-food-decor-3 {
+  position: absolute;
+  bottom: -20px;
+  left: 30px;
+  z-index: 10;
+}
+
+.card-food-decor-4 {
+  position: absolute;
+  bottom: -15px;
+  right: 25px;
+  z-index: 10;
+}
+
+/* === Main Container === */
+.main-container {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+/* === Background Decorations === */
+.bg-decoration {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.4;
+  animation: float 6s ease-in-out infinite;
+}
+
+.deco1 {
+  top: 10%;
+  left: 8%;
+  width: 8px;
+  height: 8px;
+  background: #a855f7;
+  animation-delay: 0s;
+}
+
+.deco2 {
+  top: 25%;
+  right: 12%;
+  width: 12px;
+  height: 12px;
+  background: #ec4899;
+  animation-delay: 1s;
+}
+
+.deco3 {
+  bottom: 35%;
+  left: 10%;
+  width: 6px;
+  height: 6px;
+  background: #8b5cf6;
+  animation-delay: 2s;
+}
+
+.deco4 {
+  bottom: 20%;
+  right: 8%;
+  width: 10px;
+  height: 10px;
+  background: #3b82f6;
+  animation-delay: 3s;
+}
+
+/* === Content Card === */
+.content-card {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.1) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1) !important;
+  max-width: 450px;
+  position: relative;
+}
+
+/* === Description Text === */
+.description {
+  color: #7c3aed;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+/* === Weight Input Styling === */
+.weight-input {
+  border: 2px solid #d1d5db !important;
+  border-radius: 15px !important;
+  padding: 1rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+}
+
+/* === Submit Button Styling === */
+.submit-btn {
+  background: linear-gradient(45deg, #8b5cf6, #ec4899) !important;
+  border: none !important;
+  border-radius: 15px !important;
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* === Food Decorations Positioning === */
+.food-decor {
+  opacity: 0.6;
+}
+
+.decor-egg {
+  top: 5%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.decor-carrot {
+  top: 40%;
+  left: 5%;
+  animation-delay: 1s;
+}
+
+.decor-avocado {
+  bottom: 25%;
+  right: 8%;
+  animation-delay: 3s;
+}
+
+/* === Card Decorations === */
+.decor-card {
+  position: absolute;
+  z-index: 10;
+  animation: float 4s ease-in-out infinite;
+}
+
+.decor-card1 {
+  top: -20px;
+  left: 20px;
+  animation-delay: 0s;
+}
+
+.decor-card2 {
+  top: -15px;
+  right: 30px;
+  animation-delay: 1s;
+}
+
+.decor-card3 {
+  bottom: -20px;
+  left: 30px;
+  animation-delay: 2s;
+}
+
+.decor-card4 {
+  bottom: -15px;
+  right: 25px;
+  animation-delay: 3s;
+}
+
+/* === Food Items in Center === */
+.food-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: float 4s ease-in-out infinite;
+  margin: 0 0.5rem;
+}
+
+.date-picker-input {
+  border-radius: 12px !important;
+  height: 45px;
+}
+
+.food-item:nth-child(1) {
+  animation-delay: 0s;
+}
+.food-item:nth-child(2) {
+  animation-delay: 1s;
+}
+.food-item:nth-child(3) {
+  animation-delay: 2s;
+}
+.food-item:nth-child(4) {
+  animation-delay: 3s;
+}
+
+/* === Additional Food Description Styles === */
+.food-description {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.food-emoji-text {
+  font-size: 0.8rem;
+}
+
+/* === SELECT DROPDOWN STYLING === */
+.form-select,
+select.weight-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%238b5cf6' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+  padding-right: 3rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 15px;
+}
+
+.form-select:hover,
+select.weight-input:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  transform: translateY(-2px);
+  background-color: #faf9ff;
+}
+
+.form-select:focus,
+select.weight-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2),
+    0 8px 16px -4px rgba(139, 92, 246, 0.15);
+  outline: none;
+  background-color: #faf9ff;
+  transform: translateY(-2px);
+}
+
+.form-select:active,
+select.weight-input:active {
+  transform: translateY(0);
+}
+
+/* Enhanced dropdown options styling */
+.form-select option,
+select.weight-input option {
+  padding: 16px 20px;
+  background-color: #ffffff;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+  border-radius: 12px;
+  margin: 6px 8px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.form-select option:hover,
+select.weight-input option:hover {
+  background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%);
+  color: #7c3aed;
+  transform: scale(1.02);
+  padding-left: 24px;
+}
+
+.form-select option:checked,
+select.weight-input option:checked {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.form-select option:disabled,
+select.weight-input option:disabled {
+  color: #999;
+  font-style: italic;
+  background-color: #f5f5f5;
+}
+
+/* Firefox specific enhancements */
+@-moz-document url-prefix() {
+  .form-select,
+  select.weight-input {
+    padding-right: 3rem;
+  }
+
+  .form-select option:hover,
+  select.weight-input option:hover {
+    background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%) !important;
+    color: #7c3aed !important;
+  }
+
+  .form-select option:checked,
+  select.weight-input option:checked {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+  }
+}
+
+/* Placeholder สำหรับ select */
+.form-select option:disabled,
+select.weight-input option:disabled {
+  color: #999;
+  font-style: italic;
+}
+
+/* === RELIGION RADIO GRID === */
+.religion-radio-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  max-width: 400px;
+  margin: 0 auto;
+  margin-left: 17px;
+}
+
+.religion-radio-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem;
+}
+
+.religion-radio-item .form-check-input {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.religion-radio-item .form-check-label {
+  cursor: pointer;
+  user-select: none;
+  padding: 0;
+  margin-left: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+/* === DATE INPUT WITH DD/MM/YYYY DISPLAY === */
+.date-input-wrapper {
+  position: relative;
+}
+
+.date-picker-input {
+  cursor: pointer;
+  color: transparent;
+}
+
+.date-picker-input::-webkit-datetime-edit-fields-wrapper {
+  display: none;
+}
+
+.date-picker-input::-webkit-datetime-edit-text,
+.date-picker-input::-webkit-datetime-edit-month-field,
+.date-picker-input::-webkit-datetime-edit-day-field,
+.date-picker-input::-webkit-datetime-edit-year-field {
+  display: none;
+}
+
+.date-picker-input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 1;
+}
+
+.date-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #495057;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+/* Responsive สำหรับ Radio แบบ 2 คอลัมน์ */
+@media (max-width: 576px) {
+  .row.g-2 {
+    gap: 0.5rem !important;
+  }
+
+  .row.g-2 .col-6 {
+    padding: 0 0.25rem;
+  }
+}
+
+/* ปรับปรุง checkbox ของโรคประจำตัว */
+.disease-checkboxes .form-check-label {
+  cursor: pointer;
+  user-select: none;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+}
+
+.disease-checkboxes .form-check-input:checked + .form-check-label {
+  color: #8b5cf6;
+  font-weight: 600;
+}
+
+/* Select สำหรับระดับโรคไต */
+.disease-checkboxes select.weight-input {
+  font-size: 0.95rem;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+}
+
+/* Animation สำหรับ dropdown ของโรคไต */
+.disease-checkboxes .mt-2 {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ปรับปรุงการแสดงผลของ Activity Level Select */
+select#activityLevel {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+select#activityLevel option {
+  padding: 10px 14px;
+  line-height: 1.6;
+}
+
+/* เพิ่ม visual feedback เมื่อ hover select */
+.form-select:not(:disabled):not([readonly]),
+select.weight-input:not(:disabled):not([readonly]) {
+  background-color: #fff;
+}
+
+.form-select:not(:disabled):not([readonly]):hover,
+select.weight-input:not(:disabled):not([readonly]):hover {
+  background-color: #faf9ff;
+}
+
+/* ปรับแต่งสำหรับ Safari และ Chrome */
+@media not all and (min-resolution: 0.001dpcm) {
+  @supports (-webkit-appearance: none) {
+    .form-select option,
+    select.weight-input option {
+      color: #333;
+      background-color: white;
+      padding: 8px 12px;
+    }
+  }
+}
+
+/* เพิ่ม spacing สำหรับ option ที่ยาว */
+select#activityLevel option {
+  white-space: normal;
+  word-wrap: break-word;
+  min-height: 40px;
+}
+
+/* ปรับ focus state ให้สวยงาม */
+.form-control:focus,
+.form-select:focus,
+.weight-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+  outline: none;
+}
+
+/* ปรับแต่ง radio และ checkbox ให้สวยงามขึ้น */
+
+.form-check-input {
+  margin-top: 14px !important;
+}
+
+.radio-input {
+  margin-top:6px !important;
+}
+.form-check-input:checked {
+  background-color: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.form-check-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+
+.form-check-input:checked:focus {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25);
+}
+.date-picker-input {
+  border-radius: 10px !important;
+  height: 45px;
+}
+
+.activity-radio-item {
+  margin: 20px 0;
+}

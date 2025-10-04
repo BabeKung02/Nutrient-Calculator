@@ -596,6 +596,11 @@ select.weight-input option:disabled {
   white-space: nowrap;
 }
 
+.date-picker-input::-webkit-date-and-time-value {
+  text-align: left;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
 /* Responsive สำหรับ Radio แบบ 2 คอลัมน์ */
 @media (max-width: 576px) {
   .row.g-2 {

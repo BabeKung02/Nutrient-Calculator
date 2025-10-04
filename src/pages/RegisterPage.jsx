@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import {
+  calculateBMR,
+  calculateTDEE,
+  calculateCaloriesRequirement,
+} from "../utils/nutritionCalculator";
 import "../styles/Register.css";
 
 function RegisterPage() {
@@ -243,19 +248,37 @@ function RegisterPage() {
       };
       return religionMap[r] || r;
     };
+    // คำนวณแคลอรี่โดยใช้ฟังก์ชันจาก nutritionCalculator
+    const bmr = calculateBMR({
+      weight: parseFloat(weight),
+      height: parseFloat(height),
+      age: parseFloat(age),
+      gender,
+    });
+    const tdee = calculateTDEE({
+      bmr,
+      activityLevel: parseFloat(activityLevel),
+    });
+    const calories = calculateCaloriesRequirement({
+      tdee,
+      bmi: parseFloat(bmi),
+      hasDiabetes,
+      hasHypertension,
+    });
 
     Swal.fire({
       icon: "success",
       title: "บันทึกข้อมูลเรียบร้อย!",
       html: `
         <div style="text-align: center; margin-top: 10px;">
-        <p><strong>ชื่อ-นามสกุล:</strong> ${firstName} ${lastName}</p>
-        <p><strong>อายุ:</strong> ${parseFloat(age)} ปี</p>
-        <p><strong>เพศ:</strong> ${gender === "male" ? "ชาย" : "หญิง"}</p>
-        <p><strong>ศาสนา:</strong> ${getReligionText(religion)}</p>
+          <p><strong>ชื่อ-นามสกุล:</strong> ${firstName} ${lastName}</p>
+          <p><strong>อายุ:</strong> ${parseFloat(age)} ปี</p>
+          <p><strong>เพศ:</strong> ${gender === "male" ? "ชาย" : "หญิง"}</p>
+          <p><strong>ศาสนา:</strong> ${getReligionText(religion)}</p>
           <p><strong>น้ำหนัก:</strong> ${parseFloat(weight)} กิโลกรัม</p>
           <p><strong>ส่วนสูง:</strong> ${parseFloat(height)} เซนติเมตร</p>
           <p><strong>BMI:</strong> ${bmi} (${bmiCategory.text})</p>
+          <p><strong>พลังงานที่ควรได้รับต่อวัน:</strong> ${calories.toLocaleString()} kcal</p>
           ${
             diseases.length > 0
               ? `<p><strong>โรคประจำตัว:</strong> ${diseases.join(", ")}</p>`
@@ -265,29 +288,31 @@ function RegisterPage() {
       `,
       confirmButtonText: "ตกลง",
       customClass: { title: "swal2-title-custom" },
-    }).then(() => {
-      navigate("/summary", {
-        state: {
-          firstName,
-          lastName,
-          weight: parseFloat(weight),
-          height: parseFloat(height),
-          age: parseFloat(age),
-          gender,
-          religion,
-          weightDate,
-          bmi: parseFloat(bmi),
-          hasDiabetes,
-          hasHypertension,
-          hasHeartDisease,
-          hasKidneyDisease,
-          kidneyStage,
-          smoking,
-          alcohol,
-          activityLevel,
-        },
-      });
     });
+
+    // .then(() => {
+    //   ("/summary", {
+    //     state: {
+    //       firstName,
+    //       lastName,
+    //       weight: parseFloat(weight),
+    //       height: parseFlonavigateat(height),
+    //       age: parseFloat(age),
+    //       gender,
+    //       religion,
+    //       weightDate,
+    //       bmi: parseFloat(bmi),
+    //       hasDiabetes,
+    //       hasHypertension,
+    //       hasHeartDisease,
+    //       hasKidneyDisease,
+    //       kidneyStage,
+    //       smoking,
+    //       alcohol,
+    //       activityLevel,
+    //     },
+    //   });
+    // });
   };
 
   const EggIcon = () => <div className="egg-icon" />;
@@ -526,6 +551,10 @@ function RegisterPage() {
                   type="date"
                   id="weightDate"
                   className="form-control weight-input date-picker-input"
+                  style={{
+                    color: weightDate ? "transparent" : "transparent",
+                    WebkitTextFillColor: "transparent",
+                  }}
                   value={weightDate}
                   onChange={(e) => setWeightDate(e.target.value)}
                 />
@@ -631,7 +660,7 @@ function RegisterPage() {
               >
                 <div className="form-check">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="smoking-yes"
                     name="smoking"
@@ -645,7 +674,7 @@ function RegisterPage() {
                 </div>
                 <div className="form-check">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="smoking-no"
                     name="smoking"
@@ -670,7 +699,7 @@ function RegisterPage() {
               >
                 <div className="form-check">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="alcohol-yes"
                     name="alcohol"
@@ -684,7 +713,7 @@ function RegisterPage() {
                 </div>
                 <div className="form-check">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="alcohol-no"
                     name="alcohol"
@@ -706,7 +735,7 @@ function RegisterPage() {
               <div className="activity-radio-list">
                 <div className="form-check activity-radio-item">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="activity-1"
                     name="activityLevel"
@@ -715,12 +744,12 @@ function RegisterPage() {
                     onChange={(e) => setActivityLevel(e.target.value)}
                   />
                   <label className="form-check-label" htmlFor="activity-1">
-                    เคลื่อนไหวน้อยมาก นั่งเป็นส่วนใหญ่
+                    เคลื่อนไหวน้อยมาก นั่งเป็นส่วนใหญ่ ไม่ออกกำลังกายเลย
                   </label>
                 </div>
                 <div className="form-check activity-radio-item">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="activity-2"
                     name="activityLevel"
@@ -729,12 +758,12 @@ function RegisterPage() {
                     onChange={(e) => setActivityLevel(e.target.value)}
                   />
                   <label className="form-check-label" htmlFor="activity-2">
-                    ออกกำลังกายเบาๆ 1-3 วัน/สัปดาห์
+                    ออกกำลังกาย 1-3 วัน/สัปดาห์
                   </label>
                 </div>
                 <div className="form-check activity-radio-item">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="activity-3"
                     name="activityLevel"
@@ -743,12 +772,12 @@ function RegisterPage() {
                     onChange={(e) => setActivityLevel(e.target.value)}
                   />
                   <label className="form-check-label" htmlFor="activity-3">
-                    ออกกำลังกายปานกลาง 3-5 วัน/สัปดาห์
+                    ออกกำลังกาย 3-5 วัน/สัปดาห์
                   </label>
                 </div>
                 <div className="form-check activity-radio-item">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="activity-4"
                     name="activityLevel"
@@ -757,12 +786,12 @@ function RegisterPage() {
                     onChange={(e) => setActivityLevel(e.target.value)}
                   />
                   <label className="form-check-label" htmlFor="activity-4">
-                    ออกกำลังกายหนัก 6-7 วัน/สัปดาห์
+                    ออกกำลังกาย 6-7 วัน/สัปดาห์
                   </label>
                 </div>
                 <div className="form-check activity-radio-item">
                   <input
-                    className="form-check-input"
+                    className="form-check-input radio-input"
                     type="radio"
                     id="activity-5"
                     name="activityLevel"

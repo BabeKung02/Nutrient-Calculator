@@ -42,10 +42,8 @@ function MenuPage() {
       title: "บันทึกอาหารประจำวัน",
       icon: "📊",
       color: "#4facfe",
-      onClick: () =>
-        (window.location.href =
-          "https://drive.google.com/file/d/1Pn1Kpfcz5r_RGnA0lWXfIg_uYuzmpkKt/view?usp=drive_link"),
-    },
+      onClick: () => alert("Coming soon!"),
+    }
   ];
 
   return (

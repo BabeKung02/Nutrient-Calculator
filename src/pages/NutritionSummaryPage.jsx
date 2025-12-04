@@ -103,100 +103,100 @@ const getFoodRecommendations = (weight, calories, category) => {
         },
       ],
     },
-    // fruits: {
-    //   title: "กลุ่มผลไม้",
-    //   icon: "🍎",
-    //   color: "#F59E0B",
-    //   foods: [
-    //     {
-    //       name: "แอปเปิ้ล",
-    //       image: "🍎",
-    //       portion: "1 ผล/วัน",
-    //       detail: "ผลไม่โตเกินไป",
-    //       calories: 90,
-    //       protein: 0.5,
-    //       fat: 0.3,
-    //       carbs: 23
-    //     },
-    //     {
-    //       name: "ส้ม",
-    //       image: "🍊",
-    //       portion: "1-2 ผล/วัน",
-    //       detail: "อุดมวิตามินซี",
-    //       calories: 70,
-    //       protein: 1,
-    //       fat: 0.2,
-    //       carbs: 17
-    //     },
-    //     {
-    //       name: "ฝรั่ง",
-    //       image: "🍐",
-    //       portion: "1-2 ผล/วัน",
-    //       detail: "ใยอาหารสูง",
-    //       calories: 60,
-    //       protein: 0.5,
-    //       fat: 0.5,
-    //       carbs: 14
-    //     },
-    //     {
-    //       name: "มะเขือเทศ",
-    //       image: "🍅",
-    //       portion: "2-3 ผล/วัน",
-    //       detail: "ทานสดหรือปรุงสุก",
-    //       calories: 25,
-    //       protein: 1,
-    //       fat: 0.3,
-    //       carbs: 5
-    //     }
-    //   ]
-    // },
-    // dairy: {
-    //   title: "กลุ่มนมและผลิตภัณฑ์",
-    //   icon: "🥛",
-    //   color: "#93C5FD",
-    //   foods: [
-    //     {
-    //       name: "นมสดจืด",
-    //       image: "🥛",
-    //       portion: "1-2 แก้ว/วัน",
-    //       detail: "เลือกแบบไขมันต่ำ",
-    //       calories: 125,
-    //       protein: 8,
-    //       fat: 5,
-    //       carbs: 12
-    //     },
-    //     {
-    //       name: "โยเกิร์ตไม่หวาน",
-    //       image: "🥛",
-    //       portion: "1 ถ้วย/วัน",
-    //       detail: "อุดมด้วยโปรไบโอติก",
-    //       calories: 110,
-    //       protein: 10,
-    //       fat: 3.5,
-    //       carbs: 12
-    //     },
-    //     {
-    //       name: "นมถั่วเหลือง",
-    //       image: "🥤",
-    //       portion: "1-2 แก้ว/วัน",
-    //       detail: "ทางเลือกสำหรับคนแพ้นม",
-    //       calories: 90,
-    //       protein: 7,
-    //       fat: 4,
-    //       carbs: 8
-    //     },
-    //     {
-    //       name: "เนยแข็งไขมันต่ำ",
-    //       image: "🧀",
-    //       portion: "1-2 แผ่น/วัน",
-    //       detail: "อุดมแคลเซียม",
-    //       calories: 80,
-    //       protein: 7,
-    //       fat: 5,
-    //       carbs: 1
-    //     }
-    //   ]
-    // },
+    fruits: {
+      title: "กลุ่มผลไม้",
+      icon: "🍎",
+      color: "#F59E0B",
+      foods: [
+        {
+          name: "แอปเปิ้ล",
+          image: "🍎",
+          portion: "1 ผล/วัน",
+          detail: "ผลไม่โตเกินไป",
+          calories: 90,
+          protein: 0.5,
+          fat: 0.3,
+          carbs: 23,
+        },
+        {
+          name: "ส้ม",
+          image: "🍊",
+          portion: "1-2 ผล/วัน",
+          detail: "อุดมวิตามินซี",
+          calories: 70,
+          protein: 1,
+          fat: 0.2,
+          carbs: 17,
+        },
+        {
+          name: "ฝรั่ง",
+          image: "🍐",
+          portion: "1-2 ผล/วัน",
+          detail: "ใยอาหารสูง",
+          calories: 60,
+          protein: 0.5,
+          fat: 0.5,
+          carbs: 14,
+        },
+        {
+          name: "มะเขือเทศ",
+          image: "🍅",
+          portion: "2-3 ผล/วัน",
+          detail: "ทานสดหรือปรุงสุก",
+          calories: 25,
+          protein: 1,
+          fat: 0.3,
+          carbs: 5,
+        },
+      ],
+    },
+    dairy: {
+      title: "กลุ่มนม",
+      icon: "🥛",
+      color: "#93C5FD",
+      foods: [
+        {
+          name: "นมสดจืด",
+          image: "🥛",
+          portion: "1-2 แก้ว/วัน",
+          detail: "เลือกแบบไขมันต่ำ",
+          calories: 125,
+          protein: 8,
+          fat: 5,
+          carbs: 12,
+        },
+        {
+          name: "โยเกิร์ตไม่หวาน",
+          image: "🥛",
+          portion: "1 ถ้วย/วัน",
+          detail: "อุดมด้วยโปรไบโอติก",
+          calories: 110,
+          protein: 10,
+          fat: 3.5,
+          carbs: 12,
+        },
+        {
+          name: "นมถั่วเหลือง",
+          image: "🥤",
+          portion: "1-2 แก้ว/วัน",
+          detail: "ทางเลือกสำหรับคนแพ้นม",
+          calories: 90,
+          protein: 7,
+          fat: 4,
+          carbs: 8,
+        },
+        {
+          name: "เนยแข็งไขมันต่ำ",
+          image: "🧀",
+          portion: "1-2 แผ่น/วัน",
+          detail: "อุดมแคลเซียม",
+          calories: 80,
+          protein: 7,
+          fat: 5,
+          carbs: 1,
+        },
+      ],
+    },
     protein: {
       title: "กลุ่มเนื้อสัตว์",
       icon: "🥩",
@@ -339,10 +339,6 @@ function NutritionSummaryPage() {
       handleCategoryClick("grains");
     } else if (x > 50 && y > 50 && y < 75) {
       handleCategoryClick("protein");
-    } else if (x > 50 && y > 35 && y < 50) {
-      handleCategoryClick("dairy");
-    } else if (y > 75) {
-      handleCategoryClick("fruits");
     }
   };
 
@@ -360,6 +356,19 @@ function NutritionSummaryPage() {
     setSelectedFood(food);
     setShowFoodDetailModal(true);
   };
+
+  const commonImgStyle = {
+    width: "100%",
+    height: "124px",
+    cursor: "pointer",
+    borderRadius: "10px",
+    transition: "transform 0.3s",
+    marginTop: "30px",
+  };
+
+  const handleMouseOver = (e) =>
+    (e.currentTarget.style.transform = "scale(1.02)");
+  const handleMouseOut = (e) => (e.currentTarget.style.transform = "scale(1)");
 
   const closeFoodDetailModal = () => {
     setShowFoodDetailModal(false);
@@ -488,6 +497,29 @@ function NutritionSummaryPage() {
                   (e.currentTarget.style.transform = "scale(1)")
                 }
               />
+
+              <div style={{ display: "flex", gap: "30px" }}>
+                {/* 2. รูปนม (Dairy) - คลิกแล้วส่ง 'dairy' เลย */}
+                <img
+                
+                  src="/milk.png"
+                  alt="Milk Group"
+                  onClick={() => handleCategoryClick("dairy")} // เรียกตรงๆ ไม่ต้องคำนวณ
+                  style={commonImgStyle}
+                  onMouseOver={handleMouseOver}
+                  onMouseOut={handleMouseOut}
+                />
+
+                {/* 3. รูปผลไม้ (Fruits) - คลิกแล้วส่ง 'fruits' เลย */}
+                <img
+                  src="/fruit.png"
+                  alt="Fruit Group"
+                  onClick={() => handleCategoryClick("fruits")} // เรียกตรงๆ ไม่ต้องคำนวณ
+                  style={commonImgStyle}
+                  onMouseOver={handleMouseOver}
+                  onMouseOut={handleMouseOut}
+                />
+              </div>
             </div>
 
             <div
@@ -727,6 +759,7 @@ function NutritionSummaryPage() {
               background: "white",
               borderRadius: "20px",
               maxWidth: "500px",
+              marginBottom:"100px",
               width: "100%",
               maxHeight: "80vh",
               overflow: "auto",
@@ -892,7 +925,7 @@ function NutritionSummaryPage() {
               width: "100%",
               position: "relative",
               animation: "slideUp 0.3s ease-out",
-              marginBottom: "50px",
+              marginBottom: "112px",
             }}
           >
             <button

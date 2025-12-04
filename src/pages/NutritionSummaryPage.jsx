@@ -360,13 +360,13 @@ function NutritionSummaryPage() {
     ? getFoodRecommendations(state.weight, state.calories, selectedCategory)
     : null;
 
-  const handleSave = () => {
-    navigate("/summary-data", {
-      state: {
-        ...state
-      },
-    });
-  };
+  // const handleSave = () => {
+  //   navigate("/summary-data", {
+  //     state: {
+  //       ...state
+  //     },
+  //   });
+  // };
 
   return (
     <div style={{ 

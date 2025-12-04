@@ -311,11 +311,6 @@ function NutritionSummaryPage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFood, setSelectedFood] = useState(null);
 
-  const images = [
-    { id: 1, name: "นม", src: "/milk.png" },
-    { id: 2, name: "ผลไม้", src: "/fruit.png" },
-  ];
-
   useEffect(() => {
     if (!state || !state.weight) {
       navigate("/");
@@ -857,7 +852,6 @@ function NutritionSummaryPage() {
                       border: "2px solid transparent",
                       maxHeight: "60vh",
                       overflowY: "auto",
-                      padding: "10px 20px",
                     }}
                     onMouseOver={(e) => {
                       e.currentTarget.style.transform = "scale(1.05)";

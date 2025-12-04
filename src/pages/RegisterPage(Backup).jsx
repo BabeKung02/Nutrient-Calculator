@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   calculateBMR,
@@ -13,7 +13,7 @@ function RegisterPage() {
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  // const [religion, setReligion] = useState("");
+  const [religion, setReligion] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [weightDate, setWeightDate] = useState("");
@@ -28,73 +28,13 @@ function RegisterPage() {
   const [alcohol, setAlcohol] = useState("");
   const [activityLevel, setActivityLevel] = useState("");
 
-  useEffect(() => {
-    const savedData = localStorage.getItem("userData");
-    if (savedData) {
-      const userData = JSON.parse(savedData);
-
-      setFirstName(userData.firstName || "");
-      setLastName(userData.lastName || "");
-      setAge(userData.age || "");
-      setGender(userData.gender || "");
-      setWeight(userData.weight || "");
-      setHeight(userData.height || "");
-      setWeightDate(formatDateToYYYYMMDD(userData.weightDate) || "");
-      setHasDiseaseOption(
-        userData.hasDiabetes ||
-          userData.hasHypertension ||
-          userData.hasHeartDisease ||
-          userData.hasKidneyDisease ||
-          false
-      );
-
-      setHasDiabetes(userData.hasDiabetes || false);
-      setHasHypertension(userData.hasHypertension || false);
-      setHasHeartDisease(userData.hasHeartDisease || false);
-      setHasKidneyDisease(userData.hasKidneyDisease || false);
-      setKidneyStage(userData.kidneyStage || "");
-      setSmoking(userData.smoking || "");
-      setAlcohol(userData.alcohol || "");
-      setActivityLevel(userData.activityLevel || "");
-    }
-  }, []);
-
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // ฟังก์ชันแปลงวันที่จาก yyyy-mm-dd เป็น dd/mm/yyyy
   const formatDateToDDMMYYYY = (dateString) => {
-    // ตรวจสอบค่าว่างหรือไม่ใช่สตริง
-    if (!dateString || typeof dateString !== "string") return "";
-
-    // แยกส่วนปี เดือน วัน
-    const parts = dateString.split("-");
-    if (parts.length !== 3) return "";
-
-    const [year, month, day] = parts;
-
-    // ตรวจสอบว่ามีค่า year, month, day ทุกตัว
-    if (!year || !month || !day) return "";
-
-    // คืนค่าในรูปแบบ DD/MM/YYYY
-    return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
-  };
-
-  // ฟังก์ชันแปลงวันที่จาก dd/mm/yyyy เป็น yyyy-mm-dd
-  const formatDateToYYYYMMDD = (dateString) => {
-    // ตรวจสอบค่าว่างหรือไม่ใช่สตริง
-    if (!dateString || typeof dateString !== "string") return "";
-
-    // แยกส่วนวัน เดือน ปี
-    const parts = dateString.split("/");
-    if (parts.length !== 3) return "";
-
-    const [day, month, year] = parts;
-
-    // ตรวจสอบว่ามีค่า day, month, year ทุกตัว
-    if (!day || !month || !year) return "";
-
-    // คืนค่าในรูปแบบ YYYY-MM-DD
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    if (!dateString) return "";
+    const [year, month, day] = dateString.split("-");
+    return `${day}/${month}/${year}`;
   };
 
   // คำนวณ BMI
@@ -125,11 +65,11 @@ function RegisterPage() {
 
     if (!firstName.trim()) emptyFields.push("ชื่อ");
     if (!lastName.trim()) emptyFields.push("นามสกุล");
-    if (!weight || weight === "") emptyFields.push("น้ำหนัก");
-    if (!height || height === "") emptyFields.push("ส่วนสูง");
-    if (!age || age === "") emptyFields.push("อายุ");
+    if (!weight || weight.trim() === "") emptyFields.push("น้ำหนัก");
+    if (!height || height.trim() === "") emptyFields.push("ส่วนสูง");
+    if (!age || age.trim() === "") emptyFields.push("อายุ");
     if (!gender) emptyFields.push("เพศ");
-    // if (!religion) emptyFields.push("ศาสนา");
+    if (!religion) emptyFields.push("ศาสนา");
     if (!weightDate) emptyFields.push("วันที่ชั่งน้ำหนักล่าสุด");
     if (!smoking) emptyFields.push("สูบบุหรี่");
     if (!alcohol) emptyFields.push("ดื่มแอลกอฮอล์");
@@ -165,7 +105,7 @@ function RegisterPage() {
       return;
     }
 
-    if (weight === null || weight === undefined || weight === "") {
+    if (!weight || weight.trim() === "") {
       Swal.fire({
         icon: "error",
         title: "กรุณากรอกน้ำหนัก",
@@ -184,7 +124,8 @@ function RegisterPage() {
       });
       return;
     }
-    if (height === null || height === undefined || height === "") {
+
+    if (!height || height.trim() === "") {
       Swal.fire({
         icon: "error",
         title: "กรุณากรอกส่วนสูง",
@@ -203,7 +144,8 @@ function RegisterPage() {
       });
       return;
     }
-    if (age === null || age === undefined || age === "") {
+
+    if (!age || age.trim() === "") {
       Swal.fire({
         icon: "error",
         title: "กรุณากรอกอายุ",
@@ -233,15 +175,15 @@ function RegisterPage() {
       return;
     }
 
-    // if (!religion) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "กรุณาเลือกศาสนา",
-    //     text: "โปรดเลือกศาสนาของคุณเพื่อดำเนินการต่อ",
-    //     customClass: { title: "swal2-title-custom" },
-    //   });
-    //   return;
-    // }
+    if (!religion) {
+      Swal.fire({
+        icon: "error",
+        title: "กรุณาเลือกศาสนา",
+        text: "โปรดเลือกศาสนาของคุณเพื่อดำเนินการต่อ",
+        customClass: { title: "swal2-title-custom" },
+      });
+      return;
+    }
 
     if (!weightDate) {
       Swal.fire({
@@ -299,15 +241,15 @@ function RegisterPage() {
     if (hasHeartDisease) diseases.push("โรคหัวใจ");
     if (hasKidneyDisease) diseases.push(`โรคไตเรื้อรัง ระดับ ${kidneyStage}`);
 
-    // const getReligionText = (r) => {
-    //   const religionMap = {
-    //     buddhism: "พุทธ",
-    //     islam: "อิสลาม",
-    //     christianity: "คริสต์",
-    //     other: "อื่นๆ",
-    //   };
-    //   return religionMap[r] || r;
-    // };
+    const getReligionText = (r) => {
+      const religionMap = {
+        buddhism: "พุทธ",
+        islam: "อิสลาม",
+        christianity: "คริสต์",
+        other: "อื่นๆ",
+      };
+      return religionMap[r] || r;
+    };
     // คำนวณแคลอรี่โดยใช้ฟังก์ชันจาก nutritionCalculator
     const bmr = calculateBMR({
       weight: parseFloat(weight),
@@ -330,50 +272,49 @@ function RegisterPage() {
       icon: "success",
       title: "บันทึกข้อมูลเรียบร้อย!",
       html: `
- <div style="text-align: center; margin-top: 10px;">
- <p><strong>ชื่อ-นามสกุล:</strong> ${firstName} ${lastName}</p>
- <p><strong>อายุ:</strong> ${parseFloat(age)} ปี</p>
- <p><strong>เพศ:</strong> ${gender === "male" ? "ชาย" : "หญิง"}</p>
- <p><strong>น้ำหนัก:</strong> ${parseFloat(weight)} กิโลกรัม</p>
- <p><strong>ส่วนสูง:</strong> ${parseFloat(height)} เซนติเมตร</p>
- <p><strong>BMI:</strong> ${bmi} (${bmiCategory.text})</p>
- <p><strong>พลังงานที่ควรได้รับต่อวัน:</strong> ${calories.toLocaleString()} kcal</p>
- ${
-   diseases.length > 0
-     ? `<p><strong>โรคประจำตัว:</strong> ${diseases.join(", ")}</p>`
-     : ""
- }
-</div>
-`,
+        <div style="text-align: center; margin-top: 10px;">
+          <p><strong>ชื่อ-นามสกุล:</strong> ${firstName} ${lastName}</p>
+          <p><strong>อายุ:</strong> ${parseFloat(age)} ปี</p>
+          <p><strong>เพศ:</strong> ${gender === "male" ? "ชาย" : "หญิง"}</p>
+          <p><strong>ศาสนา:</strong> ${getReligionText(religion)}</p>
+          <p><strong>น้ำหนัก:</strong> ${parseFloat(weight)} กิโลกรัม</p>
+          <p><strong>ส่วนสูง:</strong> ${parseFloat(height)} เซนติเมตร</p>
+          <p><strong>BMI:</strong> ${bmi} (${bmiCategory.text})</p>
+          <p><strong>พลังงานที่ควรได้รับต่อวัน:</strong> ${calories.toLocaleString()} kcal</p>
+          ${
+            diseases.length > 0
+              ? `<p><strong>โรคประจำตัว:</strong> ${diseases.join(", ")}</p>`
+              : ""
+          }
+        </div>
+      `,
       confirmButtonText: "ตกลง",
       customClass: { title: "swal2-title-custom" },
-    }).then(() => {
-      const userData = {
-        firstName,
-        lastName,
-        weight: parseFloat(weight),
-        height: parseFloat(height),
-        age: parseFloat(age),
-        gender,
-        weightDate: formatDateToDDMMYYYY(weightDate),
-        bmi: parseFloat(bmi),
-        bmiCategory: bmiCategory.text,
-        hasDiabetes,
-        hasHypertension,
-        hasHeartDisease,
-        hasKidneyDisease,
-        kidneyStage,
-        smoking,
-        alcohol,
-        activityLevel,
-        tdee,
-        bmr,
-        calories,
-        diseases: diseases.join(", "),
-      };
-      localStorage.setItem("userData", JSON.stringify(userData));
-      navigate("/menu", { state: userData });
     });
+
+    // .then(() => {
+    //   ("/summary", {
+    //     state: {
+    //       firstName,
+    //       lastName,
+    //       weight: parseFloat(weight),
+    //       height: parseFlonavigateat(height),
+    //       age: parseFloat(age),
+    //       gender,
+    //       religion,
+    //       weightDate,
+    //       bmi: parseFloat(bmi),
+    //       hasDiabetes,
+    //       hasHypertension,
+    //       hasHeartDisease,
+    //       hasKidneyDisease,
+    //       kidneyStage,
+    //       smoking,
+    //       alcohol,
+    //       activityLevel,
+    //     },
+    //   });
+    // });
   };
 
   const EggIcon = () => <div className="egg-icon" />;
@@ -381,14 +322,7 @@ function RegisterPage() {
 
   return (
     <div className="main-container">
-      <div
-        class="container-fluid d-flex align-items-center justify-content-center min-vh-100 p-4"
-        style={{
-          background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-          minHeight: "100vh",
-          width: "100vw",
-        }}
-      >
+      <div className="container-fluid d-flex align-items-center justify-content-center min-vh-100 p-4">
         <div className="w-100" style={{ maxWidth: "450px" }}>
           <div className="card p-4 content-card">
             <div className="text-center">
@@ -543,7 +477,7 @@ function RegisterPage() {
               </div>
             </div>
 
-            {/* <div className="mb-4">
+            <div className="mb-4">
               <label className="form-label text-center d-block fw-semibold mb-3">
                 ศาสนา <span className="required-star">*</span>
               </label>
@@ -605,7 +539,7 @@ function RegisterPage() {
                   </label>
                 </div>
               </div>
-            </div> */}
+            </div>
 
             <div className="mb-4">
               <label
@@ -627,7 +561,7 @@ function RegisterPage() {
                   onChange={(e) => setWeightDate(e.target.value)}
                 />
                 <span className="date-display">
-                  {weightDate && formatDateToDDMMYYYY(weightDate) !== ""
+                  {weightDate
                     ? formatDateToDDMMYYYY(weightDate)
                     : "เลือกวันที่"}
                 </span>

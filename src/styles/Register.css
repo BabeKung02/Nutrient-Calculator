@@ -20,6 +20,39 @@
   }
 }
 
+.disease-select {
+  padding: 4px 8px !important;
+  font-size: 0.9rem;
+}
+
+.kidney-list-container {
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  padding: 6px;
+  background: #f8f9fa;
+}
+
+.kidney-item {
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.kidney-item:last-child {
+  margin-bottom: 0;
+}
+
+.kidney-item:hover {
+  background: #e7f1ff;
+}
+
+.kidney-item.active {
+  background: #0d6efd;
+  color: #fff;
+  font-weight: 500;
+}
+
 .weight-input:focus {
   border-color: #8b5cf6 !important;
   box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25) !important;
@@ -440,6 +473,7 @@ select.weight-input:hover {
 .form-select:focus,
 select.weight-input:focus {
   border-color: #8b5cf6;
+
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2),
     0 8px 16px -4px rgba(139, 92, 246, 0.15);
   outline: none;
@@ -479,7 +513,8 @@ select.weight-input option:checked {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   color: white;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+  /* box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); */
+  padding: 10px;
 }
 
 .form-select option:disabled,
@@ -704,7 +739,7 @@ select#activityLevel option {
 }
 
 .radio-input {
-  margin-top:6px !important;
+  margin-top: 6px !important;
 }
 .form-check-input:checked {
   background-color: #8b5cf6;

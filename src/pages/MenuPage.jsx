@@ -271,6 +271,40 @@ function MenuPage() {
     );
   };
 
+  // Custom line segment color
+  const CustomLine = (props) => {
+    const { points } = props;
+    if (!points || points.length < 2) return null;
+
+    return (
+      <g>
+        {points.map((point, i) => {
+          if (i === points.length - 1) return null;
+          const nextPoint = points[i + 1];
+          if (!point.value || !nextPoint.value) return null;
+
+          const isCurrentHigh = point.value > 180;
+          const isNextHigh = nextPoint.value > 180;
+          const strokeColor =
+            isCurrentHigh || isNextHigh ? "#ff4757" : "#4facfe";
+
+          return (
+            <line
+              key={i}
+              x1={point.x}
+              y1={point.y}
+              x2={nextPoint.x}
+              y2={nextPoint.y}
+              stroke={strokeColor}
+              strokeWidth={2.5}
+              strokeLinecap="round"
+            />
+          );
+        })}
+      </g>
+    );
+  };
+
   return (
     <div
       style={{
@@ -283,6 +317,20 @@ function MenuPage() {
         alignItems: "flex-start",
       }}
     >
+      <style>{`
+        * {
+          outline: none !important;
+        }
+        *:focus {
+          outline: none !important;
+        }
+        svg {
+          outline: none !important;
+        }
+        .recharts-surface {
+          outline: none !important;
+        }
+      `}</style>
       <div style={{ maxWidth: "600px", width: "100%" }}>
         {/* User Info Card */}
         <div

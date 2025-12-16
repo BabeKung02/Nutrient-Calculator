@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 // Food recommendations with detailed nutritional info
 const getFoodRecommendations = (weight, calories, category) => {
@@ -354,11 +355,24 @@ function NutritionSummaryPage() {
 
   const commonImgStyle = {
     width: "100%",
-    height: "124px",
+    height: "135px",
     cursor: "pointer",
     borderRadius: "10px",
     transition: "transform 0.3s",
     marginTop: "30px",
+    display: "flex",
+    justifyContent: "space-between", // หรือ space-around / space-evenly
+    gap: "20px",
+  };
+
+  const leftImgStyle = {
+    ...commonImgStyle,
+    transform: "translateX(10px)",
+  };
+
+  const rightImgStyle = {
+    ...commonImgStyle,
+    transform: "translateX(-10px)",
   };
 
   const handleMouseOver = (e) =>
@@ -386,74 +400,20 @@ function NutritionSummaryPage() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        background:
+          "linear-gradient(135deg, rgb(183, 199, 255) 0%, rgb(229, 212, 251) 100%)",
         padding: "20px",
       }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-        <button
-          onClick={() => navigate("/menu")}
-          style={{
-            background: "rgba(255,255,255,0.2)",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            color: "white",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            marginBottom: "20px",
-            fontSize: "16px",
-            transition: "all 0.3s",
-            marginLeft: "10px",
-          }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.background = "rgba(255,255,255,0.3)")
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.background = "rgba(255,255,255,0.2)")
-          }
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-          ย้อนกลับ
-        </button>
-
+      <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
         <div
           style={{
             background: "white",
-            borderRadius: "20px",
-            padding: "30px",
             boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+            borderRadius: "30px",
           }}
         >
-          <div style={{ textAlign: "center", marginBottom: "30px" }}>
-            <h2
-              style={{
-                color: "#667eea",
-                fontSize: "24px",
-                marginBottom: "10px",
-                fontWeight: "700",
-              }}
-            >
-              โภชนาการสารอาหาร
-            </h2>
-            {/* <p style={{ fontSize: '18px', color: '#666', marginBottom: '5px' }}>
-              สำหรับน้ำหนัก {state.weight} กิโลกรัม
-            </p>
-            <p style={{ fontSize: '14px', color: '#999' }}>
-              BMI: {state.bmi} ({state.bmiCategory})
-            </p> */}
-          </div>
+          <Header title="โภชนาการอาหาร" backTo="/menu" />
 
           <div style={{}}>
             <p
@@ -462,6 +422,7 @@ function NutritionSummaryPage() {
                 color: "#666",
                 marginBottom: "25px",
                 fontSize: "16px",
+                marginTop: "10px",
               }}
             >
               💡คลิกที่แต่ละส่วนเพื่อดูคำแนะนำอาหาร
@@ -496,11 +457,10 @@ function NutritionSummaryPage() {
               <div style={{ display: "flex", gap: "30px" }}>
                 {/* 2. รูปนม (Dairy) - คลิกแล้วส่ง 'dairy' เลย */}
                 <img
-                
                   src="/milk.png"
                   alt="Milk Group"
                   onClick={() => handleCategoryClick("dairy")} // เรียกตรงๆ ไม่ต้องคำนวณ
-                  style={commonImgStyle}
+                  style={leftImgStyle}
                   onMouseOver={handleMouseOver}
                   onMouseOut={handleMouseOut}
                 />
@@ -510,7 +470,7 @@ function NutritionSummaryPage() {
                   src="/fruit.png"
                   alt="Fruit Group"
                   onClick={() => handleCategoryClick("fruits")} // เรียกตรงๆ ไม่ต้องคำนวณ
-                  style={commonImgStyle}
+                  style={rightImgStyle}
                   onMouseOver={handleMouseOver}
                   onMouseOut={handleMouseOut}
                 />
@@ -754,7 +714,7 @@ function NutritionSummaryPage() {
               background: "white",
               borderRadius: "20px",
               maxWidth: "500px",
-              marginBottom:"100px",
+              marginBottom: "100px",
               width: "100%",
               maxHeight: "80vh",
               overflow: "auto",

@@ -21,7 +21,6 @@ function RegisterPage() {
 
   const [hasDiabetes, setHasDiabetes] = useState(false);
   const [hasHypertension, setHasHypertension] = useState(false);
-  const [hasHeartDisease, setHasHeartDisease] = useState(false);
   const [hasKidneyDisease, setHasKidneyDisease] = useState(false);
   const [kidneyStage, setKidneyStage] = useState("");
   const [smoking, setSmoking] = useState("");
@@ -43,14 +42,12 @@ function RegisterPage() {
       setHasDiseaseOption(
         userData.hasDiabetes ||
           userData.hasHypertension ||
-          userData.hasHeartDisease ||
           userData.hasKidneyDisease ||
           false
       );
 
       setHasDiabetes(userData.hasDiabetes || false);
       setHasHypertension(userData.hasHypertension || false);
-      setHasHeartDisease(userData.hasHeartDisease || false);
       setHasKidneyDisease(userData.hasKidneyDisease || false);
       setKidneyStage(userData.kidneyStage || "");
       setSmoking(userData.smoking || "");
@@ -296,7 +293,6 @@ function RegisterPage() {
     const diseases = [];
     if (hasDiabetes) diseases.push("เบาหวาน");
     if (hasHypertension) diseases.push("ความดันโลหิตสูง");
-    if (hasHeartDisease) diseases.push("โรคหัวใจ");
     if (hasKidneyDisease) diseases.push(`โรคไตเรื้อรัง ระดับ ${kidneyStage}`);
 
     // const getReligionText = (r) => {
@@ -360,7 +356,6 @@ function RegisterPage() {
         bmiCategory: bmiCategory.text,
         hasDiabetes,
         hasHypertension,
-        hasHeartDisease,
         hasKidneyDisease,
         kidneyStage,
         smoking,
@@ -663,7 +658,6 @@ function RegisterPage() {
                     value={[
                       hasDiabetes && "diabetes",
                       hasHypertension && "hypertension",
-                      hasHeartDisease && "heart",
                       hasKidneyDisease && "kidney",
                     ].filter(Boolean)}
                     onChange={(e) => {
@@ -673,7 +667,6 @@ function RegisterPage() {
                       );
                       setHasDiabetes(values.includes("diabetes"));
                       setHasHypertension(values.includes("hypertension"));
-                      setHasHeartDisease(values.includes("heart"));
                       setHasKidneyDisease(values.includes("kidney"));
 
                       if (!values.includes("kidney")) {
@@ -683,7 +676,6 @@ function RegisterPage() {
                   >
                     <option value="diabetes">โรคเบาหวาน</option>
                     <option value="hypertension">โรคความดันโลหิตสูง</option>
-                    <option value="heart">โรคหัวใจ</option>
                     <option value="kidney">โรคไตเรื้อรัง</option>
                   </select>
                 </div>
@@ -731,7 +723,6 @@ function RegisterPage() {
                     setHasDiseaseOption(false);
                     setHasDiabetes(false);
                     setHasHypertension(false);
-                    setHasHeartDisease(false);
                     setHasKidneyDisease(false);
                     setKidneyStage("");
                   }}

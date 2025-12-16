@@ -115,10 +115,10 @@ function MenuPage() {
   const handleAddGlucose = () => {
     if (newGlucose && !isNaN(newGlucose)) {
       const selectedDateTime = new Date(selectedDate + "T12:00:00");
-      
+
       const year = selectedDateTime.getFullYear();
-      const month = String(selectedDateTime.getMonth()).padStart(2, '0');
-      const day = String(selectedDateTime.getDate()).padStart(2, '0');
+      const month = String(selectedDateTime.getMonth()).padStart(2, "0");
+      const day = String(selectedDateTime.getDate()).padStart(2, "0");
       const dateKey = `${year}-${month}-${day}`;
 
       const newRecord = {
@@ -146,23 +146,51 @@ function MenuPage() {
   const menuItems = [
     {
       id: 1,
-      title: "โภชนาการอาหาร",
-      icon: "🍽️",
+      title: "ข้อมูลส่วนตัว",
+      icon: "👤",
       color: "#667eea",
-      onClick: () => navigate("/summary", { state: userData }),
+      onClick: () => navigate("/personal", { state: userData }),
     },
     {
       id: 2,
-      title: "สารอาหารที่ควรได้รับต่อวัน",
-      icon: "💊",
+      title: "โภชนาการอาหาร",
+      icon: "🍽️",
       color: "#f093fb",
-      onClick: () => alert("Coming soon!"),
+      onClick: () => navigate("/summary", { state: userData }),
     },
     {
       id: 3,
-      title: "บันทึกอาหารประจำวัน",
-      icon: "📊",
+      title: "บันทึกค่าน้ำตาล",
+      icon: "⬜",
       color: "#4facfe",
+      onClick: () => navigate("/sugar-level", { state: userData }),
+    },
+    {
+      id: 4,
+      title: "บันทึกยาที่ได้รับ",
+      icon: "💊",
+      color: "#fa709a",
+      onClick: () => alert("Coming soon!"),
+    },
+    {
+      id: 5,
+      title: "บันทึกการตรวจเท้า",
+      icon: "🏥",
+      color: "#ff6b6b",
+      onClick: () => alert("Coming soon!"),
+    },
+    {
+      id: 6,
+      title: "บันทึกนัดที่ต้องไปพบแพทย์",
+      icon: "👨‍⚕️",
+      color: "#48dbfb",
+      onClick: () => alert("Coming soon!"),
+    },
+    {
+      id: 7,
+      title: "บทความให้ความรู้ต่างๆ\nเกี่ยวกับเบาหวาน",
+      icon: "📝",
+      color: "#54a0ff",
       onClick: () => alert("Coming soon!"),
     },
   ];
@@ -255,7 +283,9 @@ function MenuPage() {
       <g
         onClick={(e) => {
           e.stopPropagation();
-          setActiveTooltip(activeTooltip === payload.index ? null : payload.index);
+          setActiveTooltip(
+            activeTooltip === payload.index ? null : payload.index
+          );
         }}
         style={{ cursor: "pointer" }}
       >
@@ -298,7 +328,8 @@ function MenuPage() {
         }
       `}</style>
       <div style={{ maxWidth: "600px", width: "100%" }}>
-        {/* User Info Card */}
+        {/* User Info Card - COMMENTED OUT */}
+        {/* 
         <div
           style={{
             background: "white",
@@ -410,8 +441,10 @@ function MenuPage() {
             แก้ไขข้อมูล
           </button>
         </div>
+        */}
 
-        {/* Glucose Tracking Card */}
+        {/* Glucose Tracking Card - COMMENTED OUT */}
+        {/*
         <div
           style={{
             background: "white",
@@ -466,8 +499,8 @@ function MenuPage() {
                     tick={{ fontSize: 11, fill: "#888", fontWeight: 500 }}
                     axisLine={{ stroke: "#e8e8e8" }}
                   />
-                  <Tooltip 
-                    content={<CustomTooltip />} 
+                  <Tooltip
+                    content={<CustomTooltip />}
                     cursor={false}
                     isAnimationActive={false}
                   />
@@ -664,6 +697,7 @@ function MenuPage() {
             </button>
           )}
         </div>
+        */}
 
         {/* Menu */}
         <div
@@ -711,6 +745,7 @@ function MenuPage() {
                     fontWeight: 600,
                     flex: 1,
                     marginLeft: "15px",
+                    whiteSpace: "pre-line",
                   }}
                 >
                   {item.title}

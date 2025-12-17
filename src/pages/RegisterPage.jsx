@@ -433,7 +433,7 @@ function RegisterPage() {
         <div className="w-100" style={{ maxWidth: "450px" }}>
           <div className="card p-4 content-card">
             <div className="text-center">
-              <p className="description">โปรแกรมคำนวณสารอาหาร</p>
+              <p className="description">กรอกข้อมูลส่วนตัว</p>
               <div className="healthy-food-section">
                 <div className="food-item">
                   <EggIcon />
@@ -758,7 +758,7 @@ function RegisterPage() {
               )}
 
               {/* ไม่มีโรคประจำตัว */}
-              <div className="form-check mt-3">
+              {/* <div className="form-check mt-3">
                 <input
                   className="form-check-input radio-input"
                   type="radio"
@@ -776,7 +776,7 @@ function RegisterPage() {
                 <label className="form-check-label" htmlFor="noDisease">
                   ไม่มีโรคประจำตัว
                 </label>
-              </div>
+              </div> */}
             </div>
 
             <div className="mb-4">

@@ -6,6 +6,12 @@ function MenuPage() {
   const location = useLocation();
   const [userData, setUserData] = useState(null);
 
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("userData");
+    navigate("/");
+  };
+
   useEffect(() => {
     const stateData = location.state;
     const savedData = localStorage.getItem("userData");
@@ -75,17 +81,17 @@ function MenuPage() {
   ];
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        minHeight: "100vh",
-        padding: "20px 15px",
-        background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-      }}
-    >
+<div
+    style={{
+      width: "100vw",
+      minHeight: "100vh",
+      padding: "40px 15px", // เพิ่ม padding บนเล็กน้อยเพื่อให้กล่องไม่ชิดขอบจอเกินไป
+      background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "flex-start",
+    }}
+  >
       <style>{`
         * {
           outline: none !important;
@@ -101,20 +107,54 @@ function MenuPage() {
         }
       `}</style>
       <div style={{ maxWidth: "600px", width: "100%" }}>
-     
         <div
+        style={{
+          position: "relative", // เพิ่มบรรทัดนี้เพื่อให้ปุ่มอ้างอิงตำแหน่งกับกล่องขาว
+          background: "white",
+          padding: "40px 15px 15px 15px", // เพิ่ม padding top เพื่อเว้นที่ให้ปุ่มไม่บังเนื้อหา
+          borderRadius: "12px",
+          boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+          overflow: "hidden", // ช่วยให้มุมของปุ่มตัดพอดีกับความโค้งของกล่อง (ถ้าต้องการ)
+        }}
+      >
+        <button
+          onClick={handleLogout}
           style={{
-            background: "white",
-            padding: "15px",
-            borderRadius: "12px",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+            position: "absolute",
+            top: "0",    // ชิดขอบบนสุด
+            right: "0",  // ชิดขอบขวาสุด
+            background: "#f1f5f9",
+            border: "none",
+            borderBottomLeftRadius: "12px", // มนเฉพาะมุมล่างซ้าย
+            padding: "8px 16px",
+            fontSize: "13px",
+            fontWeight: 600,
+            cursor: "pointer",
+            color: "#64748b",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            transition: "all 0.2s",
+            zIndex: 10,
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "#fee2e2";
+            e.currentTarget.style.color = "#b91c1c";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "#f1f5f9";
+            e.currentTarget.style.color = "#64748b";
           }}
         >
+          ออกจากระบบ
+        </button>
+
           <div
             style={{
               display: "flex",
               flexDirection: "column",
               gap: "12px",
+              marginTop: "12px",
             }}
           >
             {menuItems.map((item) => (

@@ -472,19 +472,7 @@ function SugarLevel() {
             borderRadius: "30px",
           }}
         >
-          <div
-            style={{
-              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-              color: "white",
-              padding: "20px",
-              borderRadius: "30px 30px 0 0",
-              textAlign: "center",
-            }}
-          >
-            <h2 style={{ margin: 0, fontSize: "20px", fontWeight: 600 }}>
-              บันทึกค่าน้ำตาล
-            </h2>
-          </div>
+            <Header title="บันทึกค่าน้ำตาล" backTo="/menu" />
 
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div

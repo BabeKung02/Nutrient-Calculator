@@ -131,9 +131,11 @@ export default function Login() {
 
             {/* Buttons */}
             <div className="button-group">
-              <button onClick={handleLogin} className="login-button">
-                เข้าสู่ระบบ
-              </button>
+              {users.length > 0 && (
+                <button onClick={handleLogin} className="login-button">
+                  เข้าสู่ระบบ
+                </button>
+              )}
 
               <button onClick={handleAddUser} className="add-user-button">
                 เพิ่มผู้ใช้งานใหม่

@@ -150,7 +150,7 @@ const PersonalPage = () => {
 
           <button
             style={styles.editBtn}
-            onClick={() => navigate("/", { state: userData })}
+            onClick={() => navigate("/register", { state: userData })}
           >
             <svg
               style={{

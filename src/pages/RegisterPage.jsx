@@ -9,6 +9,7 @@ import {
 import "../styles/Register.css";
 
 function RegisterPage() {
+  const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
@@ -27,8 +28,41 @@ function RegisterPage() {
   const [alcohol, setAlcohol] = useState("");
   const [activityLevel, setActivityLevel] = useState("");
 
+  const navigate = useNavigate();
+
+  const resetForm = () => {
+    setFirstName("");
+    setLastName("");
+    setAge("");
+    setGender("");
+    setWeight("");
+    setHeight("");
+    setWeightDate("");
+
+    setHasDiabetes(false);
+    setHasHypertension(false);
+    setHasKidneyDisease(false);
+    setKidneyStage("");
+    setSmoking("");
+    setAlcohol("");
+    setActivityLevel("");
+  };
+
   useEffect(() => {
-    const savedData = localStorage.getItem("userData");
+    const currentUser = localStorage.getItem("currentUser");
+
+    if (!currentUser) {
+      navigate("/"); // กลับหน้า login
+      return;
+    }
+
+    setUsername(currentUser);
+  }, [navigate]);
+
+  useEffect(() => {
+    if (!username) return; // ถ้า username ยังไม่ถูกกำหนด ให้หยุด
+
+    const savedData = localStorage.getItem(`userData_${username}`);
     if (savedData) {
       const userData = JSON.parse(savedData);
 
@@ -53,10 +87,11 @@ function RegisterPage() {
       setSmoking(userData.smoking || "");
       setAlcohol(userData.alcohol || "");
       setActivityLevel(userData.activityLevel || "");
+    } else {
+      // user ใหม่ → reset form เป็นค่าว่างทั้งหมด
+      resetForm();
     }
-  }, []);
-
-  const navigate = useNavigate();
+  }, [username]); // สังเกตว่า dependency เป็น username
 
   // ฟังก์ชันแปลงวันที่จาก yyyy-mm-dd เป็น dd/mm/yyyy
   const formatDateToDDMMYYYY = (dateString) => {
@@ -344,6 +379,7 @@ function RegisterPage() {
       confirmButtonText: "ตกลง",
       customClass: { title: "swal2-title-custom" },
     }).then(() => {
+      const currentUser = localStorage.getItem("currentUser");
       const userData = {
         firstName,
         lastName,
@@ -366,7 +402,17 @@ function RegisterPage() {
         calories,
         diseases: diseases.join(", "),
       };
-      localStorage.setItem("userData", JSON.stringify(userData));
+      if (!currentUser) {
+        Swal.fire({
+          icon: "error",
+          title: "ไม่พบผู้ใช้งาน",
+          text: "กรุณาเข้าสู่ระบบใหม่",
+        });
+        navigate("/");
+        return;
+      }
+
+      localStorage.setItem(`userData_${currentUser}`, JSON.stringify(userData));
       navigate("/menu", { state: userData });
     });
   };

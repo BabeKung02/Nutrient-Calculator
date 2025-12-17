@@ -5,13 +5,15 @@ import SummaryDataPage from "./pages/SummaryDataPage";
 import MenuPage from "./pages/MenuPage";
 import SugarLevel from "./pages/SugarLevelPage";
 import PersonalPage from "./pages/PersonalPage";
+import Login from "./pages/Login";
 
 import "./App.css";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<RegisterPage />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/summary" element={<NutritionSummaryPage />} />
         <Route path="/summary-data" element={<SummaryDataPage />} />

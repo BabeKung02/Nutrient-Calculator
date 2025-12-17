@@ -314,7 +314,7 @@ function NutritionSummaryPage() {
 
   useEffect(() => {
     if (!state || !state.weight) {
-      navigate("/");
+      navigate("/register");
     }
   }, [state, navigate]);
 

@@ -24,6 +24,7 @@ function SugarLevel() {
   const [selectedDatePoct, setSelectedDatePoct] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [selectedTimePoct, setSelectedTimePoct] = useState("before_breakfast");
   const [selectedDateHba1c, setSelectedDateHba1c] = useState(
     new Date().toISOString().split("T")[0]
   );
@@ -32,19 +33,38 @@ function SugarLevel() {
   const [activeTooltipPoct, setActiveTooltipPoct] = useState(null);
   const [activeTooltipHba1c, setActiveTooltipHba1c] = useState(null);
 
+  const currentUser = localStorage.getItem("currentUser");
+
   const CustomTooltipPoct = ({ active, payload }) => {
     if (active && payload && payload.length && activeTooltipPoct !== null) {
       const data = payload[0].payload;
+
+      // สร้าง unique ID จาก date + timeOfDay
+      const currentId = `${data.fullDate}_${data.timeOfDay}`;
+
+      // เช็คว่า tooltip นี้ถูกเปิดอยู่หรือไม่
+      if (activeTooltipPoct !== currentId) {
+        return null;
+      }
+
+      const timeLabels = {
+        before_breakfast: "🌅 ก่อนอาหารเช้า",
+        before_lunch: "☀️ ก่อนอาหารเที่ยง",
+        before_dinner: "🌆 ก่อนอาหารเย็น",
+        before_bed: "🌙 ก่อนนอน",
+      };
+
       return (
         <div
           style={{
-            background: "white",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-            border: "2px solid #4facfe",
-            pointerEvents: "auto",
             position: "relative",
+            backgroundColor: "rgba(0, 0, 0, 0.9)",
+            border: "2px solid #4facfe",
+            borderRadius: "12px",
+            padding: "12px 16px",
+            color: "white",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+            minWidth: "180px",
           }}
         >
           <button
@@ -74,28 +94,22 @@ function SugarLevel() {
           >
             ×
           </button>
-          <p
-            style={{
-              margin: 0,
-              fontSize: "13px",
-              fontWeight: 600,
-              color: "#333",
-              marginBottom: "4px",
-              paddingRight: "20px",
-            }}
-          >
+
+          <div style={{ fontSize: "13px", marginBottom: "6px", opacity: 0.9 }}>
             📅 {data.fullDate}
-          </p>
-          <p
+          </div>
+          <div style={{ fontSize: "12px", marginBottom: "8px", opacity: 0.8 }}>
+            {timeLabels[data.timeOfDay] || ""}
+          </div>
+          <div
             style={{
-              margin: 0,
-              fontSize: "15px",
-              fontWeight: 700,
+              fontSize: "16px",
+              fontWeight: "bold",
               color: data.value > 180 ? "#ff4757" : "#4facfe",
             }}
           >
             🩸 {data.value} mg/dL
-          </p>
+          </div>
         </div>
       );
     }
@@ -173,18 +187,29 @@ function SugarLevel() {
   };
 
   useEffect(() => {
-    const stateData = location.state;
-    const savedData = localStorage.getItem("userData");
-    const savedPoct = localStorage.getItem("poctRecords");
-    const savedHba1c = localStorage.getItem("hba1cRecords");
+    const stateData = location.state; // ข้อมูลจาก navigate
+    const currentUser = localStorage.getItem("currentUser"); // ดึง username ปัจจุบัน
+
+    if (!currentUser) {
+      navigate("/login"); // ถ้าไม่มี username กลับไปหน้า login
+      return;
+    }
+
+    // โหลดข้อมูลผู้ใช้แยกตาม username
+    const savedData = localStorage.getItem(`userData_${currentUser}`);
+    const savedPoct = localStorage.getItem(`poctRecords_${currentUser}`);
+    const savedHba1c = localStorage.getItem(`hba1cRecords_${currentUser}`);
 
     if (stateData) {
       setUserData(stateData);
-      localStorage.setItem("userData", JSON.stringify(stateData));
+      localStorage.setItem(
+        `userData_${currentUser}`,
+        JSON.stringify(stateData)
+      );
     } else if (savedData) {
       setUserData(JSON.parse(savedData));
     } else {
-      navigate("/");
+      navigate("/register", { state: { username: currentUser } });
     }
 
     if (savedPoct) {
@@ -200,24 +225,29 @@ function SugarLevel() {
     if (newPoct && !isNaN(newPoct)) {
       const selectedDateTime = new Date(selectedDatePoct + "T12:00:00");
       const year = selectedDateTime.getFullYear();
-      const month = String(selectedDateTime.getMonth()+1).padStart(2, "0");
+      const month = String(selectedDateTime.getMonth() + 1).padStart(2, "0");
       const day = String(selectedDateTime.getDate()).padStart(2, "0");
-      const dateKey = `${year}-${month}-${day}`;
+      const dateKey = `${year}-${month}-${day}-${selectedTimePoct}`;
 
       const newRecord = {
         value: parseFloat(newPoct),
         date: selectedDateTime.toISOString(),
         dateKey: dateKey,
+        timeOfDay: selectedTimePoct,
       };
 
       const filteredRecords = poctRecords.filter((r) => r.dateKey !== dateKey);
       const updatedRecords = [...filteredRecords, newRecord];
 
       setPoctRecords(updatedRecords);
-      localStorage.setItem("poctRecords", JSON.stringify(updatedRecords));
+      localStorage.setItem(
+        `poctRecords_${currentUser}`,
+        JSON.stringify(updatedRecords)
+      );
       setNewPoct("");
       setShowInputPoct(false);
       setSelectedDatePoct(new Date().toISOString().split("T")[0]);
+      setSelectedTimePoct("before_breakfast");
     }
   };
 
@@ -239,7 +269,10 @@ function SugarLevel() {
       const updatedRecords = [...filteredRecords, newRecord];
 
       setHba1cRecords(updatedRecords);
-      localStorage.setItem("hba1cRecords", JSON.stringify(updatedRecords));
+      localStorage.setItem(
+        `hba1cRecords_${currentUser}`,
+        JSON.stringify(updatedRecords)
+      );
       setNewHba1c("");
       setShowInputHba1c(false);
       setSelectedDateHba1c(new Date().toISOString().split("T")[0]);
@@ -300,17 +333,20 @@ function SugarLevel() {
   const chartDataPoct = recentPoctRecords.map((record, index) => {
     const recordDate = new Date(record.date);
     const position = ((recordDate - startDate) / totalRange) * 100;
+
+    const year = recordDate.getFullYear();
+    const month = String(recordDate.getMonth() + 1).padStart(2, "0");
+    const day = String(recordDate.getDate()).padStart(2, "0");
+    const dateString = `${year}-${month}-${day}`;
+
     return {
       position: position,
       value: record.value,
       displayDate: `${recordDate.getDate()} ${
         monthNames[recordDate.getMonth()]
       }`,
-      fullDate: recordDate.toLocaleDateString("th-TH", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }),
+      fullDate: dateString,
+      timeOfDay: record.timeOfDay || "before_breakfast",
       index: index,
     };
   });
@@ -333,10 +369,6 @@ function SugarLevel() {
     };
   });
 
-  console.log("HbA1c Records:", hba1cRecords);
-  console.log("Chart Data HbA1c:", chartDataHba1c);
-  console.log("Recent HbA1c:", recentHba1cRecords);
-
   const monthMarkers = last3Months.map((m) => {
     const monthStart = new Date(m.year, m.month, 1);
     const position = ((monthStart - startDate) / totalRange) * 100;
@@ -345,17 +377,31 @@ function SugarLevel() {
       name: m.name,
     };
   });
+
   const CustomDotPoct = (props) => {
     const { cx, cy, value, payload } = props;
     if (value === null) return null;
-    const isHigh = value > 180;
-    const isActive = activeTooltipPoct === payload.index;
+
+    const timeColors = {
+      before_breakfast: "#00FFFF",
+      before_lunch: "#FFD54F",
+      before_dinner: "#FF8A65",
+      before_bed: "#9575CD",
+    };
+
+    const dotColor = timeColors[payload.timeOfDay] || "#4facfe";
+
+    // สร้าง unique ID จาก date + timeOfDay
+    const uniqueId = `${payload.fullDate}_${payload.timeOfDay}`;
+    const isActive = activeTooltipPoct === uniqueId;
+
     return (
       <g
         onClick={(e) => {
           e.stopPropagation();
+          // Toggle: ถ้ากดซ้ำจะปิด ถ้ากดใหม่จะเปิด
           setActiveTooltipPoct(
-            activeTooltipPoct === payload.index ? null : payload.index
+            activeTooltipPoct === uniqueId ? null : uniqueId
           );
         }}
         style={{ cursor: "pointer" }}
@@ -365,7 +411,7 @@ function SugarLevel() {
           cy={cy}
           r={isActive ? 7 : 5}
           fill="white"
-          stroke={isHigh ? "#ff4757" : "#4facfe"}
+          stroke={dotColor}
           strokeWidth={isActive ? 3 : 2.5}
         />
       </g>
@@ -412,14 +458,12 @@ function SugarLevel() {
       }}
     >
       <style>{`
-  * { outline: none !important; } 
-  *:focus { outline: none !important; } 
-  svg { outline: none !important; } 
-  .recharts-surface { outline: none !important; }
-  body, input, button, label, span, p, div {
-    font-size: 16px !important;
-  }
-`}</style>
+        * { outline: none !important; }
+        *:focus { outline: none !important; }
+        svg { outline: none !important; }
+        .recharts-surface { outline: none !important; }
+        body, input, button, label, span, p, div { font-size: 16px !important; }
+      `}</style>
       <div style={{ maxWidth: "600px", width: "100%" }}>
         <div
           style={{
@@ -428,7 +472,20 @@ function SugarLevel() {
             borderRadius: "30px",
           }}
         >
-          <Header title="บันทึกค่าน้ำตาล" backTo="/menu" />
+          <div
+            style={{
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              color: "white",
+              padding: "20px",
+              borderRadius: "30px 30px 0 0",
+              textAlign: "center",
+            }}
+          >
+            <h2 style={{ margin: 0, fontSize: "20px", fontWeight: 600 }}>
+              บันทึกค่าน้ำตาล
+            </h2>
+          </div>
+
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div
               style={{
@@ -454,7 +511,6 @@ function SugarLevel() {
                   onClick={() => setActiveTooltipPoct(null)}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-
                   <XAxis
                     dataKey="position"
                     dy={20}
@@ -470,7 +526,6 @@ function SugarLevel() {
                     tick={{ fontSize: 12, fill: "#555", fontWeight: 600 }}
                     axisLine={{ stroke: "#e8e8e8" }}
                   />
-
                   <YAxis
                     domain={[0, 250]}
                     ticks={[0, 50, 100, 150, 200, 250]}
@@ -488,15 +543,31 @@ function SugarLevel() {
                     strokeDasharray="4 3"
                     strokeWidth={1.5}
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#4facfe"
-                    strokeWidth={2.5}
-                    dot={<CustomDotPoct />}
-                    activeDot={false}
-                    connectNulls={false}
-                  />
+                  {[
+                    "before_breakfast",
+                    "before_lunch",
+                    "before_dinner",
+                    "before_bed",
+                  ].map((timeOfDay) => {
+                    const filteredData = chartDataPoct.map((point) =>
+                      point.timeOfDay === timeOfDay
+                        ? point
+                        : { ...point, value: null }
+                    );
+                    return (
+                      <Line
+                        key={timeOfDay}
+                        type="monotone"
+                        dataKey="value"
+                        data={filteredData}
+                        stroke="#d0d0d0"
+                        strokeWidth={2.5}
+                        dot={<CustomDotPoct />}
+                        activeDot={false}
+                        connectNulls={true}
+                      />
+                    );
+                  })}
                 </LineChart>
               </ResponsiveContainer>
               <div
@@ -508,6 +579,7 @@ function SugarLevel() {
                   fontSize: "13px",
                   fontWeight: 500,
                   paddingBottom: "15px",
+                  flexWrap: "wrap",
                 }}
               >
                 <div
@@ -517,13 +589,13 @@ function SugarLevel() {
                     style={{
                       width: "12px",
                       height: "12px",
-                      background: "#4facfe",
+                      background: "#00BCD4",
                       borderRadius: "50%",
                       border: "2px solid white",
-                      boxShadow: "0 0 0 1px #4facfe",
+                      boxShadow: "0 0 0 1px #00BCD4",
                     }}
                   ></div>
-                  <span style={{ color: "#666" }}>ปกติ (80-180)</span>
+                  <span style={{ color: "#666" }}> เช้า</span>
                 </div>
                 <div
                   style={{ display: "flex", alignItems: "center", gap: "5px" }}
@@ -532,13 +604,43 @@ function SugarLevel() {
                     style={{
                       width: "12px",
                       height: "12px",
-                      background: "#ff4757",
+                      background: "#FFD54F",
                       borderRadius: "50%",
                       border: "2px solid white",
-                      boxShadow: "0 0 0 1px #ff4757",
+                      boxShadow: "0 0 0 1px #FFD54F",
                     }}
                   ></div>
-                  <span style={{ color: "#666" }}>สูง (&gt;180)</span>
+                  <span style={{ color: "#666" }}> เที่ยง</span>
+                </div>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
+                >
+                  <div
+                    style={{
+                      width: "12px",
+                      height: "12px",
+                      background: "#FF8A65",
+                      borderRadius: "50%",
+                      border: "2px solid white",
+                      boxShadow: "0 0 0 1px #FF8A65",
+                    }}
+                  ></div>
+                  <span style={{ color: "#666" }}> เย็น</span>
+                </div>
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
+                >
+                  <div
+                    style={{
+                      width: "12px",
+                      height: "12px",
+                      background: "#9575CD",
+                      borderRadius: "50%",
+                      border: "2px solid white",
+                      boxShadow: "0 0 0 1px #9575CD",
+                    }}
+                  ></div>
+                  <span style={{ color: "#666" }}> ก่อนนอน</span>
                 </div>
               </div>
             </div>
@@ -615,6 +717,38 @@ function SugarLevel() {
                     boxSizing: "border-box",
                   }}
                 />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "6px",
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    color: "#333",
+                  }}
+                >
+                  ⏰ ช่วงเวลา
+                </label>
+                <select
+                  value={selectedTimePoct}
+                  onChange={(e) => setSelectedTimePoct(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "14px",
+                    border: "2px solid #4facfe",
+                    borderRadius: "8px",
+                    fontSize: "15px",
+                    outline: "none",
+                    boxSizing: "border-box",
+                    backgroundColor: "white",
+                  }}
+                >
+                  <option value="before_breakfast">🌅 ก่อนอาหารเช้า</option>
+                  <option value="before_lunch">☀️ ก่อนอาหารเที่ยง</option>
+                  <option value="before_dinner">🌆 ก่อนอาหารเย็น</option>
+                  <option value="before_bed">🌙 ก่อนนอน</option>
+                </select>
               </div>
               <div style={{ marginBottom: "10px" }}>
                 <label
@@ -710,22 +844,22 @@ function SugarLevel() {
         <div
           style={{
             background: "white",
-            padding: "15px",
-            borderRadius: "12px",
-            boxShadow: "0 3px 12px rgba(0,0,0,0.12)",
-            marginBottom: "15px",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+            borderRadius: "30px",
+            marginTop: "20px",
+            paddingBottom: "20px",
           }}
         >
           <div
             style={{
               display: "flex",
               justifyContent: "center",
-              marginBottom: "15px",
+              paddingTop: "20px",
             }}
           >
             <div
               style={{
-                background: "linear-gradient(135deg, #5DD39E, #BCE784)",
+                background: "linear-gradient(135deg, #5DD39E, #00D9A5)",
                 color: "white",
                 padding: "10px 45px",
                 borderRadius: "30px",
@@ -851,6 +985,7 @@ function SugarLevel() {
             padding: "15px",
             borderRadius: "12px",
             boxShadow: "0 3px 12px rgba(0,0,0,0.12)",
+            marginTop: "20px",
           }}
         >
           <div

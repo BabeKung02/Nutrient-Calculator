@@ -163,8 +163,8 @@ function RegisterPage() {
     if (!gender) emptyFields.push("เพศ");
     // if (!religion) emptyFields.push("ศาสนา");
     // if (!weightDate) emptyFields.push("วันที่ชั่งน้ำหนักล่าสุด");
-    if (!smoking) emptyFields.push("สูบบุหรี่");
-    if (!alcohol) emptyFields.push("ดื่มแอลกอฮอล์");
+    // if (!smoking) emptyFields.push("สูบบุหรี่");
+    // if (!alcohol) emptyFields.push("ดื่มแอลกอฮอล์");
     if (!activityLevel) emptyFields.push("กิจกรรมที่ทำเป็นประจำ");
 
     if (emptyFields.length > 1) {
@@ -285,25 +285,25 @@ function RegisterPage() {
     //   return;
     // }
 
-    if (!smoking) {
-      Swal.fire({
-        icon: "error",
-        title: "กรุณาเลือกสถานะการสูบบุหรี่",
-        text: "โปรดระบุว่าคุณสูบบุหรี่หรือไม่",
-        customClass: { title: "swal2-title-custom" },
-      });
-      return;
-    }
+    // if (!smoking) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "กรุณาเลือกสถานะการสูบบุหรี่",
+    //     text: "โปรดระบุว่าคุณสูบบุหรี่หรือไม่",
+    //     customClass: { title: "swal2-title-custom" },
+    //   });
+    //   return;
+    // }
 
-    if (!alcohol) {
-      Swal.fire({
-        icon: "error",
-        title: "กรุณาเลือกสถานะการดื่มแอลกอฮอล์",
-        text: "โปรดระบุว่าคุณดื่มแอลกอฮอล์หรือไม่",
-        customClass: { title: "swal2-title-custom" },
-      });
-      return;
-    }
+    // if (!alcohol) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "กรุณาเลือกสถานะการดื่มแอลกอฮอล์",
+    //     text: "โปรดระบุว่าคุณดื่มแอลกอฮอล์หรือไม่",
+    //     customClass: { title: "swal2-title-custom" },
+    //   });
+    //   return;
+    // }
 
     if (!activityLevel) {
       Swal.fire({
@@ -386,12 +386,12 @@ function RegisterPage() {
         weightDate: formatDateToDDMMYYYY(weightDate),
         bmi: parseFloat(bmi),
         bmiCategory: bmiCategory.text,
-        hasDiabetes,
-        hasHypertension,
-        hasKidneyDisease,
-        kidneyStage,
-        smoking,
-        alcohol,
+        // hasDiabetes,
+        // hasHypertension,
+        // hasKidneyDisease,
+        // kidneyStage,
+        // smoking,
+        // alcohol,
         activityLevel,
         tdee,
         bmr,

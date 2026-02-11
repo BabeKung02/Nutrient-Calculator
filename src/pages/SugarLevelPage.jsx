@@ -410,7 +410,7 @@ function SugarLevel() {
           cx={cx}
           cy={cy}
           r={isActive ? 7 : 5}
-          fill="white"
+          fill={dotColor}
           stroke={dotColor}
           strokeWidth={isActive ? 3 : 2.5}
         />
@@ -422,6 +422,7 @@ function SugarLevel() {
     const { cx, cy, value, payload } = props;
     if (value === null) return null;
     const isHigh = value > 7;
+    const dotColor = isHigh ? "#ff4757" : "#5DD39E";
     const isActive = activeTooltipHba1c === payload.index;
     return (
       <g
@@ -437,8 +438,8 @@ function SugarLevel() {
           cx={cx}
           cy={cy}
           r={isActive ? 7 : 5}
-          fill="white"
-          stroke={isHigh ? "#ff4757" : "#5DD39E"}
+          fill={dotColor}
+          stroke={dotColor}
           strokeWidth={isActive ? 3 : 2.5}
         />
       </g>
@@ -479,14 +480,14 @@ function SugarLevel() {
               style={{
                 background: "linear-gradient(135deg, #4facfe, #00f2fe)",
                 color: "white",
-                padding: "10px 45px",
+                padding: "10px 25px",
                 borderRadius: "30px",
                 fontSize: "16px",
                 fontWeight: 600,
                 marginTop: "24px",
               }}
             >
-              🩸 กราฟ POCT 3 เดือนล่าสุด
+              🩸 กราฟค่าน้ำตาลปลายนิ้ว 3 เดือนล่าสุด
             </div>
           </div>
 
@@ -577,10 +578,8 @@ function SugarLevel() {
                     style={{
                       width: "12px",
                       height: "12px",
-                      background: "#00BCD4",
+                      background: "#00FFFF",
                       borderRadius: "50%",
-                      border: "2px solid white",
-                      boxShadow: "0 0 0 1px #00BCD4",
                     }}
                   ></div>
                   <span style={{ color: "#666" }}> เช้า</span>
@@ -594,8 +593,6 @@ function SugarLevel() {
                       height: "12px",
                       background: "#FFD54F",
                       borderRadius: "50%",
-                      border: "2px solid white",
-                      boxShadow: "0 0 0 1px #FFD54F",
                     }}
                   ></div>
                   <span style={{ color: "#666" }}> เที่ยง</span>
@@ -609,8 +606,6 @@ function SugarLevel() {
                       height: "12px",
                       background: "#FF8A65",
                       borderRadius: "50%",
-                      border: "2px solid white",
-                      boxShadow: "0 0 0 1px #FF8A65",
                     }}
                   ></div>
                   <span style={{ color: "#666" }}> เย็น</span>
@@ -624,8 +619,6 @@ function SugarLevel() {
                       height: "12px",
                       background: "#9575CD",
                       borderRadius: "50%",
-                      border: "2px solid white",
-                      boxShadow: "0 0 0 1px #9575CD",
                     }}
                   ></div>
                   <span style={{ color: "#666" }}> ก่อนนอน</span>
@@ -667,13 +660,13 @@ function SugarLevel() {
               style={{
                 background: "linear-gradient(135deg, #4facfe, #00f2fe)",
                 color: "white",
-                padding: "10px 45px",
+                padding: "10px 8px",
                 borderRadius: "30px",
                 fontSize: "16px",
                 fontWeight: 600,
               }}
             >
-              🩸 ระดับน้ำตาลในเลือด (POCT)
+              🩸 ระดับน้ำตาลในเลือด (ค่าน้ำตาลปลายนิ้ว)
             </div>
           </div>
           {showInputPoct ? (
@@ -824,7 +817,7 @@ function SugarLevel() {
                 gap: "8px",
               }}
             >
-              <span style={{ fontSize: "20px" }}>+</span>บันทึกค่า POCT
+              <span style={{ fontSize: "20px" }}>+</span>บันทึกค่าน้ำตาลปลายนิ้ว
             </button>
           )}
         </div>
@@ -930,8 +923,6 @@ function SugarLevel() {
                       height: "12px",
                       background: "#5DD39E",
                       borderRadius: "50%",
-                      border: "2px solid white",
-                      boxShadow: "0 0 0 1px #5DD39E",
                     }}
                   ></div>
                   <span style={{ color: "#666" }}>ปกติ (≤7%)</span>
@@ -945,8 +936,6 @@ function SugarLevel() {
                       height: "12px",
                       background: "#ff4757",
                       borderRadius: "50%",
-                      border: "2px solid white",
-                      boxShadow: "0 0 0 1px #ff4757",
                     }}
                   ></div>
                   <span style={{ color: "#666" }}>สูง (&gt;7%)</span>

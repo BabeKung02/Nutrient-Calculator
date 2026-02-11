@@ -162,7 +162,7 @@ function RegisterPage() {
     if (!age || age === "") emptyFields.push("อายุ");
     if (!gender) emptyFields.push("เพศ");
     // if (!religion) emptyFields.push("ศาสนา");
-    if (!weightDate) emptyFields.push("วันที่ชั่งน้ำหนักล่าสุด");
+    // if (!weightDate) emptyFields.push("วันที่ชั่งน้ำหนักล่าสุด");
     if (!smoking) emptyFields.push("สูบบุหรี่");
     if (!alcohol) emptyFields.push("ดื่มแอลกอฮอล์");
     if (!activityLevel) emptyFields.push("กิจกรรมที่ทำเป็นประจำ");
@@ -275,15 +275,15 @@ function RegisterPage() {
     //   return;
     // }
 
-    if (!weightDate) {
-      Swal.fire({
-        icon: "error",
-        title: "กรุณาเลือกวันที่ชั่งน้ำหนัก",
-        text: "โปรดระบุวันที่ชั่งน้ำหนักล่าสุด",
-        customClass: { title: "swal2-title-custom" },
-      });
-      return;
-    }
+    // if (!weightDate) {
+    //   Swal.fire({
+    //     icon: "error",
+    //     title: "กรุณาเลือกวันที่ชั่งน้ำหนัก",
+    //     text: "โปรดระบุวันที่ชั่งน้ำหนักล่าสุด",
+    //     customClass: { title: "swal2-title-custom" },
+    //   });
+    //   return;
+    // }
 
     if (!smoking) {
       Swal.fire({
@@ -369,11 +369,7 @@ function RegisterPage() {
  <p><strong>ส่วนสูง:</strong> ${parseFloat(height)} เซนติเมตร</p>
  <p><strong>BMI:</strong> ${bmi} (${bmiCategory.text})</p>
  <p><strong>พลังงานที่ควรได้รับต่อวัน:</strong> ${calories.toLocaleString()} kcal</p>
- ${
-   diseases.length > 0
-     ? `<p><strong>โรคประจำตัว:</strong> ${diseases.join(", ")}</p>`
-     : ""
- }
+
 </div>
 `,
       confirmButtonText: "ตกลง",
@@ -648,7 +644,7 @@ function RegisterPage() {
               </div>
             </div> */}
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="weightDate"
                 className="form-label text-center d-block fw-semibold"
@@ -673,113 +669,9 @@ function RegisterPage() {
                     : "เลือกวันที่"}
                 </span>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mb-4">
-              <label className="form-label text-center d-block fw-semibold mb-3">
-                โรคประจำตัว
-              </label>
-
-              {/* มีโรคประจำตัว */}
-              <div className="form-check mb-2">
-                <input
-                  className="form-check-input radio-input"
-                  type="radio"
-                  name="diseaseOption"
-                  id="hasDisease"
-                  checked={hasDiseaseOption}
-                  onChange={() => setHasDiseaseOption(true)}
-                />
-                <label className="form-check-label" htmlFor="hasDisease">
-                  มีโรคประจำตัว
-                </label>
-              </div>
-
-              {/* แสดง Select เมื่อเลือก "มีโรค" */}
-              {hasDiseaseOption && (
-                <div className="mt-2 ms-4">
-                  <select
-                    className="form-select disease-select"
-                    multiple
-                    value={[
-                      hasDiabetes && "diabetes",
-                      hasHypertension && "hypertension",
-                      hasKidneyDisease && "kidney",
-                    ].filter(Boolean)}
-                    onChange={(e) => {
-                      const values = Array.from(
-                        e.target.selectedOptions,
-                        (opt) => opt.value
-                      );
-                      setHasDiabetes(values.includes("diabetes"));
-                      setHasHypertension(values.includes("hypertension"));
-                      setHasKidneyDisease(values.includes("kidney"));
-
-                      if (!values.includes("kidney")) {
-                        setKidneyStage("");
-                      }
-                    }}
-                  >
-                    <option value="diabetes">โรคเบาหวาน</option>
-                    <option value="hypertension">โรคความดันโลหิตสูง</option>
-                    <option value="kidney">โรคไตเรื้อรัง</option>
-                  </select>
-                </div>
-              )}
-
-              {hasDiseaseOption && hasKidneyDisease && (
-                <div className="mt-2 ms-4">
-                  <label className="form-label small mb-2">
-                    เลือกระดับโรคไต
-                  </label>
-
-                  <div className="ms-3">
-                    {[1, 2, 3, 4].map((level) => (
-                      <div className="form-check mb-1" key={level}>
-                        <input
-                          className="form-check-input radio-input"
-                          type="radio"
-                          name="kidneyStage"
-                          id={`kidney-${level}`}
-                          value={level}
-                          checked={kidneyStage === String(level)}
-                          onChange={(e) => setKidneyStage(e.target.value)}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor={`kidney-${level}`}
-                        >
-                          ระดับ {level}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* ไม่มีโรคประจำตัว */}
-              {/* <div className="form-check mt-3">
-                <input
-                  className="form-check-input radio-input"
-                  type="radio"
-                  name="diseaseOption"
-                  id="noDisease"
-                  checked={!hasDiseaseOption}
-                  onChange={() => {
-                    setHasDiseaseOption(false);
-                    setHasDiabetes(false);
-                    setHasHypertension(false);
-                    setHasKidneyDisease(false);
-                    setKidneyStage("");
-                  }}
-                />
-                <label className="form-check-label" htmlFor="noDisease">
-                  ไม่มีโรคประจำตัว
-                </label>
-              </div> */}
-            </div>
-
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="form-label text-center d-block fw-semibold mb-3">
                 สูบบุหรี่ <span className="required-star">*</span>
               </label>
@@ -816,9 +708,9 @@ function RegisterPage() {
                   </label>
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="form-label text-center d-block fw-semibold mb-3">
                 ดื่มแอลกอฮอล์ <span className="required-star">*</span>
               </label>
@@ -855,7 +747,7 @@ function RegisterPage() {
                   </label>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="mb-4">
               <label className="form-label text-center d-block fw-semibold mb-3">

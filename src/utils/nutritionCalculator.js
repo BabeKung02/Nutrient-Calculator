@@ -18,11 +18,11 @@ export function calculateBMI(weight, height) {
 export function getBMICategory(bmi) {
   const b = parseFloat(bmi);
 
-  if (b < 18.5) return "น้ำหนักน้อย";
-  if (b >= 18.5 && b < 23) return "ปกติ";
+  if (b < 18.5) return "ผอม";
+  if (b >= 18.5 && b < 23) return "สมส่วน";
   if (b >= 23 && b < 25) return "น้ำหนักเกิน";
-  if (b >= 25 && b < 30) return "โรคอ้วน ระดับ 1";
-  if (b >= 30) return "โรคอ้วน ระดับ 2";
+  if (b >= 25 && b < 30) return "อ้วน";
+  if (b >= 30) return "อ้วนอันตราย";
 
   return "ไม่สามารถระบุได้";
 }
@@ -65,14 +65,9 @@ export function calculateTDEE({ bmr, activityLevel }) {
 }
 
 // ============================================
-// คำนวณพลังงานที่ต้องการตามเงื่อนไขและโรคประจำตัว
+// คำนวณพลังงานที่ต้องการสำหรับผู้ป่วยเบาหวาน
 // ============================================
-export function calculateCaloriesRequirement({
-  tdee,
-  bmi,
-  hasDiabetes,
-  hasHypertension,
-}) {
+export function calculateCaloriesRequirement({ tdee, bmi }) {
   const b = parseFloat(bmi);
   const t = parseFloat(tdee);
 
@@ -86,12 +81,8 @@ export function calculateCaloriesRequirement({
   }
 
   // เงื่อนไข: BMI >= 23 (น้ำหนักเกิน/อ้วน)
+  // สำหรับผู้ป่วยเบาหวาน ลด 500 kcal
   if (b >= 23) {
-    // ถ้ามีโรคเบาหวานหรือความดันโลหิตสูง ลด 500-1000
-    if (hasDiabetes || hasHypertension) {
-      return Math.round(t - 750); // ใช้ค่ากลางระหว่าง 500-1000
-    }
-    // ถ้าไม่มีโรคประจำตัว ลด 500
     return Math.round(t - 500);
   }
 
@@ -99,15 +90,9 @@ export function calculateCaloriesRequirement({
 }
 
 // ============================================
-// คำนวณสัดส่วนสารอาหาร (มาโครนิวเทรียนต์)
+// คำนวณสัดส่วนสารอาหาร (สำหรับผู้ป่วยเบาหวาน)
 // ============================================
-export function calculateMacros({
-  calories,
-  weight,
-  bmi,
-  hasDiabetes,
-  hasHypertension,
-}) {
+export function calculateMacros({ calories, weight, bmi }) {
   const cal = parseFloat(calories);
   const w = parseFloat(weight);
   const b = parseFloat(bmi);
@@ -123,49 +108,16 @@ export function calculateMacros({
 
   let carbPercent, proteinPercent, fatPercent;
 
-  // ===== กรณีป่วยทั่วไป ไม่มีโรคประจำตัว =====
-  if (!hasDiabetes && !hasHypertension) {
-    if (b >= 18.5 && b < 23) {
-      // น้ำหนักปกติ
-      carbPercent = 0.55; // ใช้ค่ากลาง 55% (45-65%)
-      proteinPercent = 0.125; // ใช้ค่ากลาง 12.5% (10-15%)
-      fatPercent = 0.275; // ใช้ค่ากลาง 27.5% (20-35%)
-    } else {
-      // น้ำหนักเกิน/อ้วน
-      carbPercent = 0.55;
-      proteinPercent = 0.125;
-      fatPercent = 0.275;
-    }
-  }
-
-  // ===== กรณีมีโรคเบาหวาน =====
-  else if (hasDiabetes) {
-    if (b >= 18.5 && b < 23) {
-      // น้ำหนักปกติ
-      carbPercent = 0.55;
-      proteinPercent = 0.125;
-      fatPercent = 0.275;
-    } else {
-      // น้ำหนักเกิน/อ้วน
-      carbPercent = 0.5;
-      proteinPercent = 0.2;
-      fatPercent = 0.3;
-    }
-  }
-
-  // ===== กรณีมีโรคความดันโลหิตสูง =====
-  else if (hasHypertension) {
-    if (b >= 18.5 && b < 23) {
-      // น้ำหนักปกติ
-      carbPercent = 0.55;
-      proteinPercent = 0.125;
-      fatPercent = 0.275;
-    } else {
-      // น้ำหนักเกิน/อ้วน
-      carbPercent = 0.5;
-      proteinPercent = 0.2;
-      fatPercent = 0.3;
-    }
+  if (b >= 18.5 && b < 23) {
+    // น้ำหนักปกติ - ผู้ป่วยเบาหวาน
+    carbPercent = 0.55;
+    proteinPercent = 0.125;
+    fatPercent = 0.275;
+  } else {
+    // น้ำหนักเกิน/อ้วน - ผู้ป่วยเบาหวาน
+    carbPercent = 0.5;
+    proteinPercent = 0.2;
+    fatPercent = 0.3;
   }
 
   // คำนวณปริมาณสารอาหารในหน่วยกรัม
@@ -175,30 +127,22 @@ export function calculateMacros({
   // โปรตีน: 1g = 4 kcal
   const proteinGrams = Math.round((cal * proteinPercent) / 4);
 
-  // ไขมัน: 1g = 9 kcal (ไม่ใช่ 7 ตามที่เขียนไว้)
+  // ไขมัน: 1g = 9 kcal
   const fatGrams = Math.round((cal * fatPercent) / 9);
 
   return {
     carbs: carbsGrams,
     protein: proteinGrams,
     fat: fatGrams,
-    sodium: 2000, // โซเดียมน้อยกว่า 2,000 mg สำหรับทุกกรณี
+    sodium: 2000, // โซเดียมน้อยกว่า 2,000 mg
   };
 }
 
 // ============================================
-// ฟังก์ชันหลักที่รวมการคำนวณทั้งหมด
+// ฟังก์ชันหลักที่รวมการคำนวณทั้งหมด (สำหรับผู้ป่วยเบาหวาน)
 // ============================================
 export function calculateNutrition(userData) {
-  const {
-    weight,
-    height,
-    age,
-    gender,
-    activityLevel,
-    hasDiabetes = false,
-    hasHypertension = false,
-  } = userData;
+  const { weight, height, age, gender, activityLevel } = userData;
 
   // 1. คำนวณ BMI
   const bmi = calculateBMI(weight, height);
@@ -210,22 +154,11 @@ export function calculateNutrition(userData) {
   // 3. คำนวณ TDEE
   const tdee = calculateTDEE({ bmr, activityLevel });
 
-  // 4. คำนวณพลังงานที่ต้องการ
-  const calories = calculateCaloriesRequirement({
-    tdee,
-    bmi,
-    hasDiabetes,
-    hasHypertension,
-  });
+  // 4. คำนวณพลังงานที่ต้องการ (สำหรับผู้ป่วยเบาหวาน)
+  const calories = calculateCaloriesRequirement({ tdee, bmi });
 
-  // 5. คำนวณสัดส่วนสารอาหาร
-  const macros = calculateMacros({
-    calories,
-    weight,
-    bmi,
-    hasDiabetes,
-    hasHypertension,
-  });
+  // 5. คำนวณสัดส่วนสารอาหาร (สำหรับผู้ป่วยเบาหวาน)
+  const macros = calculateMacros({ calories, weight, bmi });
 
   return {
     bmi: parseFloat(bmi),
@@ -247,23 +180,28 @@ const userData = {
   age: 30,
   gender: "male",
   activityLevel: 1.55, // ออกกำลังกายปานกลาง
-  hasDiabetes: false,
-  hasHypertension: false
 };
 
 const result = calculateNutrition(userData);
 console.log(result);
 
-ผลลัพธ์:
+ผลลัพธ์สำหรับผู้ป่วยเบาหวาน:
 {
   bmi: 24.2,
   bmiCategory: "น้ำหนักเกิน",
   bmr: 1679,
   tdee: 2602,
-  calories: 2102, // TDEE - 500 (เพราะ BMI >= 23)
-  carbs: 289,     // 55% ของ 2102 kcal
-  protein: 66,    // 12.5% ของ 2102 kcal
-  fat: 64,        // 27.5% ของ 2102 kcal
+  calories: 2102, // TDEE - 500 (เพราะ BMI >= 23 และเป็นผู้ป่วยเบาหวาน)
+  carbs: 263,     // 50% ของ 2102 kcal (สำหรับน้ำหนักเกิน)
+  protein: 105,   // 20% ของ 2102 kcal (สำหรับน้ำหนักเกิน)
+  fat: 70,        // 30% ของ 2102 kcal (สำหรับน้ำหนักเกิน)
   sodium: 2000
 }
+
+หมายเหตุ:
+- ลบพารามิเตอร์ hasDiabetes และ hasHypertension ออกแล้ว
+- ใช้เกณฑ์สำหรับผู้ป่วยเบาหวานเป็นค่าเริ่มต้น
+- น้ำหนักปกติ (BMI 18.5-22.9): คาร์โบ 55%, โปรตีน 12.5%, ไขมัน 27.5%
+- น้ำหนักเกิน/อ้วน (BMI >= 23): คาร์โบ 50%, โปรตีน 20%, ไขมัน 30%
+- ลดพลังงาน 500 kcal เมื่อ BMI >= 23
 */

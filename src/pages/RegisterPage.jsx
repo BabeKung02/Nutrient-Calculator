@@ -18,14 +18,14 @@ function RegisterPage() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [weightDate, setWeightDate] = useState("");
-  const [hasDiseaseOption, setHasDiseaseOption] = useState(false);
+  // const [hasDiseaseOption, setHasDiseaseOption] = useState(false);
 
-  const [hasDiabetes, setHasDiabetes] = useState(false);
-  const [hasHypertension, setHasHypertension] = useState(false);
-  const [hasKidneyDisease, setHasKidneyDisease] = useState(false);
-  const [kidneyStage, setKidneyStage] = useState("");
-  const [smoking, setSmoking] = useState("");
-  const [alcohol, setAlcohol] = useState("");
+  // const [hasDiabetes, setHasDiabetes] = useState(false);
+  // const [hasHypertension, setHasHypertension] = useState(false);
+  // const [hasKidneyDisease, setHasKidneyDisease] = useState(false);
+  // const [kidneyStage, setKidneyStage] = useState("");
+  // const [smoking, setSmoking] = useState("");
+  // const [alcohol, setAlcohol] = useState("");
   const [activityLevel, setActivityLevel] = useState("");
 
   const navigate = useNavigate();
@@ -39,12 +39,12 @@ function RegisterPage() {
     setHeight("");
     setWeightDate("");
 
-    setHasDiabetes(false);
-    setHasHypertension(false);
-    setHasKidneyDisease(false);
-    setKidneyStage("");
-    setSmoking("");
-    setAlcohol("");
+    // setHasDiabetes(false);
+    // setHasHypertension(false);
+    // setHasKidneyDisease(false);
+    // setKidneyStage("");
+    // setSmoking("");
+    // setAlcohol("");
     setActivityLevel("");
   };
 
@@ -73,19 +73,19 @@ function RegisterPage() {
       setWeight(userData.weight || "");
       setHeight(userData.height || "");
       setWeightDate(formatDateToYYYYMMDD(userData.weightDate) || "");
-      setHasDiseaseOption(
-        userData.hasDiabetes ||
-          userData.hasHypertension ||
-          userData.hasKidneyDisease ||
-          false
-      );
+      // setHasDiseaseOption(
+      //   userData.hasDiabetes ||
+      //     userData.hasHypertension ||
+      //     userData.hasKidneyDisease ||
+      //     false
+      // );
 
-      setHasDiabetes(userData.hasDiabetes || false);
-      setHasHypertension(userData.hasHypertension || false);
-      setHasKidneyDisease(userData.hasKidneyDisease || false);
-      setKidneyStage(userData.kidneyStage || "");
-      setSmoking(userData.smoking || "");
-      setAlcohol(userData.alcohol || "");
+      // setHasDiabetes(userData.hasDiabetes || false);
+      // setHasHypertension(userData.hasHypertension || false);
+      // setHasKidneyDisease(userData.hasKidneyDisease || false);
+      // setKidneyStage(userData.kidneyStage || "");
+      // setSmoking(userData.smoking || "");
+      // setAlcohol(userData.alcohol || "");
       setActivityLevel(userData.activityLevel || "");
     } else {
       // user ใหม่ → reset form เป็นค่าว่างทั้งหมด

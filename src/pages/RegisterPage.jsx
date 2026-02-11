@@ -315,20 +315,20 @@ function RegisterPage() {
       return;
     }
 
-    if (hasKidneyDisease && !kidneyStage) {
-      Swal.fire({
-        icon: "warning",
-        title: "กรุณาระบุระดับโรคไต",
-        text: "โปรดเลือกระดับโรคไตเรื้อรัง (1-4)",
-        customClass: { title: "swal2-title-custom" },
-      });
-      return;
-    }
+    // if (hasKidneyDisease && !kidneyStage) {
+    //   Swal.fire({
+    //     icon: "warning",
+    //     title: "กรุณาระบุระดับโรคไต",
+    //     text: "โปรดเลือกระดับโรคไตเรื้อรัง (1-4)",
+    //     customClass: { title: "swal2-title-custom" },
+    //   });
+    //   return;
+    // }
 
-    const diseases = [];
-    if (hasDiabetes) diseases.push("เบาหวาน");
-    if (hasHypertension) diseases.push("ความดันโลหิตสูง");
-    if (hasKidneyDisease) diseases.push(`โรคไตเรื้อรัง ระดับ ${kidneyStage}`);
+    // const diseases = [];
+    // if (hasDiabetes) diseases.push("เบาหวาน");
+    // if (hasHypertension) diseases.push("ความดันโลหิตสูง");
+    // if (hasKidneyDisease) diseases.push(`โรคไตเรื้อรัง ระดับ ${kidneyStage}`);
 
     // const getReligionText = (r) => {
     //   const religionMap = {
@@ -396,7 +396,7 @@ function RegisterPage() {
         tdee,
         bmr,
         calories,
-        diseases: diseases.join(", "),
+        // diseases: diseases.join(", "),
       };
       if (!currentUser) {
         Swal.fire({

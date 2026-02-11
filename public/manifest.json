@@ -1,6 +1,6 @@
 {
-  "short_name": "Nutrient",
-  "name": "Nutrient Application",
+  "short_name": "SmartDM",
+  "name": "SmartDM Application",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

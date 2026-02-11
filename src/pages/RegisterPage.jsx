@@ -353,8 +353,8 @@ function RegisterPage() {
     const calories = calculateCaloriesRequirement({
       tdee,
       bmi: parseFloat(bmi),
-      hasDiabetes,
-      hasHypertension,
+      // hasDiabetes,
+      // hasHypertension,
     });
 
     Swal.fire({

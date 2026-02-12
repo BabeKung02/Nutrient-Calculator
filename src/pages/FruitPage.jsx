@@ -61,7 +61,7 @@ function FruitPage() {
       });
       setPortions(loadedPortions);
     }
-  }, [currentUser, selectedMeal]);
+  }, [currentUser, selectedMeal, fruitItems]);
 
   const handleItemClick = (item) => {
     if (selectedItems.find((i) => i.id === item.id)) {

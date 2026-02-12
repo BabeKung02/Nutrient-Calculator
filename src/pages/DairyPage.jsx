@@ -64,7 +64,7 @@ function DairyPage() {
       });
       setPortions(loadedPortions);
     }
-  }, [currentUser, selectedMeal]);
+  }, [currentUser, selectedMeal, dairyItems]);
 
   const handleItemClick = (item) => {
     if (selectedItems.find((i) => i.id === item.id)) {

@@ -74,7 +74,7 @@ function RiceFlourPage() {
       });
       setPortions(loadedPortions);
     }
-  }, [currentUser, selectedMeal, riceFlourItems]);
+  }, [currentUser, selectedMeal]);
 
   const handleItemClick = (item) => {
     if (selectedItems.find((i) => i.id === item.id)) {

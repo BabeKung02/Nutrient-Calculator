@@ -3,6 +3,29 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
 
+const dairyItems = [
+  {
+    id: 1,
+    name: "นมสดจืดพร่องมันเนย",
+    portion: "1 แก้ว/กล่อง 240 มล.",
+    carbs: 12,
+    protein: 8,
+    fat: 8,
+    calories: 150,
+    emoji: "🥛",
+  },
+  {
+    id: 2,
+    name: "นมพร่องมันเนย",
+    portion: "1 แก้ว/กล่อง 240 มล.",
+    carbs: 12,
+    protein: 8,
+    fat: 5,
+    calories: 120,
+    emoji: "🥛",
+  },
+];
+
 function DairyPage() {
   const currentUser = localStorage.getItem("currentUser");
 
@@ -15,29 +38,6 @@ function DairyPage() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [portions, setPortions] = useState({});
   const [currentLogId, setCurrentLogId] = useState(null);
-
-  const dairyItems = [
-    {
-      id: 1,
-      name: "นมสดจืดพร่องมันเนย",
-      portion: "1 แก้ว/กล่อง 240 มล.",
-      carbs: 12,
-      protein: 8,
-      fat: 8,
-      calories: 150,
-      emoji: "🥛",
-    },
-    {
-      id: 2,
-      name: "นมพร่องมันเนย",
-      portion: "1 แก้ว/กล่อง 240 มล.",
-      carbs: 12,
-      protein: 8,
-      fat: 5,
-      calories: 120,
-      emoji: "🥛",
-    },
-  ];
 
   useEffect(() => {
     const existingLogs = JSON.parse(

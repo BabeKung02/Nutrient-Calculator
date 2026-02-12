@@ -3,6 +3,31 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
 
+const riceFlourItems = [
+  {
+    id: 1,
+    name: "ข้าวซ้อมมือ (สวย) / ข้าวขาว (สวย)",
+    weight: 55,
+    spoon: "1",
+    cup: "1/3",
+  },
+  { id: 2, name: "ข้าวเหนียว", weight: 35, spoon: "1/2", cup: "1/4" },
+  { id: 3, name: "ข้าวต้ม", weight: "150-170", spoon: "2", cup: "3/4" },
+  { id: 4, name: "โจ๊ก", weight: 135, spoon: "2", cup: "1/2" },
+  { id: 5, name: "ข้าวโอ๊ต", weight: 110, spoon: "1", cup: "1/2" },
+  { id: 6, name: "ลูกเดือยสุก", weight: 65, spoon: "1", cup: "1/2" },
+  {
+    id: 7,
+    name: "เส้นหมี่สุก / เส้นก๋วยเตี๋ยวสุก",
+    weight: 70,
+    spoon: "1",
+    cup: "1/2",
+  },
+  { id: 8, name: "วุ้นเส้นลวก", weight: 80, spoon: "1", cup: "1/2" },
+  { id: 9, name: "เส้นใหญ่ลวก", weight: "60-70", spoon: "1", cup: "1/2" },
+  { id: 10, name: "เส้นขนมจีน", weight: 75, spoon: "1 จับ", cup: "1/2" },
+];
+
 function RiceFlourPage() {
   const currentUser = localStorage.getItem("currentUser");
 
@@ -17,32 +42,6 @@ function RiceFlourPage() {
   const [portions, setPortions] = useState({});
   const [currentLogId, setCurrentLogId] = useState(null); // เก็บ ID ของ log ที่กำลังแก้ไข
 
-  // ข้อมูลรายการอาหาร (แก้ cup เป็น format 1/2 เพื่อความสวยงามตามที่เคยคุยกัน)
-  const riceFlourItems = [
-    {
-      id: 1,
-      name: "ข้าวซ้อมมือ (สวย) / ข้าวขาว (สวย)",
-      weight: 55,
-      spoon: "1",
-      cup: "1/3",
-    },
-    { id: 2, name: "ข้าวเหนียว", weight: 35, spoon: "1/2", cup: "1/4" },
-    { id: 3, name: "ข้าวต้ม", weight: "150-170", spoon: "2", cup: "3/4" },
-    { id: 4, name: "โจ๊ก", weight: 135, spoon: "2", cup: "1/2" },
-    { id: 5, name: "ข้าวโอ๊ต", weight: 110, spoon: "1", cup: "1/2" },
-    { id: 6, name: "ลูกเดือยสุก", weight: 65, spoon: "1", cup: "1/2" },
-    {
-      id: 7,
-      name: "เส้นหมี่สุก / เส้นก๋วยเตี๋ยวสุก",
-      weight: 70,
-      spoon: "1",
-      cup: "1/2",
-    },
-    { id: 8, name: "วุ้นเส้นลวก", weight: 80, spoon: "1", cup: "1/2" },
-    { id: 9, name: "เส้นใหญ่ลวก", weight: "60-70", spoon: "1", cup: "1/2" },
-    { id: 10, name: "เส้นขนมจีน", weight: 75, spoon: "1 จับ", cup: "1/2" },
-  ];
-
   // โหลดข้อมูลที่บันทึกไว้ของมื้อนี้วันนี้ (ถ้ามี)
   useEffect(() => {
     const existingLogs = JSON.parse(
@@ -52,17 +51,19 @@ function RiceFlourPage() {
     // หาว่ามี log ของมื้อนี้วันนี้หรือไม่
     const today = new Date().toLocaleDateString("th-TH");
     const todayMealLog = existingLogs.find(
-      (log) => log.mealId === selectedMeal && log.date === today
+      (log) => log.mealId === selectedMeal && log.date === today,
     );
 
     if (todayMealLog) {
       // ถ้ามี ให้โหลดข้อมูลที่เคยบันทึกไว้
       setCurrentLogId(todayMealLog.id);
-      
+
       // แปลง items กลับเป็น selectedItems
-      const items = todayMealLog.items.map((item) => {
-        return riceFlourItems.find((rfi) => rfi.id === item.id);
-      }).filter(Boolean); // กรองเอาเฉพาะที่หาเจอ
+      const items = todayMealLog.items
+        .map((item) => {
+          return riceFlourItems.find((rfi) => rfi.id === item.id);
+        })
+        .filter(Boolean); // กรองเอาเฉพาะที่หาเจอ
 
       setSelectedItems(items);
 
@@ -175,7 +176,10 @@ function RiceFlourPage() {
       JSON.stringify(updatedLogs),
     );
 
-    console.log("Saved to LocalStorage:", updatedLogs.find(log => log.id === logId));
+    console.log(
+      "Saved to LocalStorage:",
+      updatedLogs.find((log) => log.id === logId),
+    );
 
     Swal.fire({
       title: currentLogId ? "อัพเดทสำเร็จ!" : "บันทึกสำเร็จ!",
@@ -185,7 +189,7 @@ function RiceFlourPage() {
           <p style="font-size: 1.2rem; color: #667eea; font-weight: bold;">
             คาร์โบไฮเดรตรวม: ${totalCarbs.toFixed(1)} กรัม
           </p>
-          ${currentLogId ? '<p style="font-size: 0.9rem; color: #718096;">ข้อมูลถูกอัพเดทแล้ว</p>' : ''}
+          ${currentLogId ? '<p style="font-size: 0.9rem; color: #718096;">ข้อมูลถูกอัพเดทแล้ว</p>' : ""}
         </div>
       `,
       icon: "success",
@@ -194,7 +198,9 @@ function RiceFlourPage() {
       background: "#fff",
       borderRadius: "15px",
     });
-    navigate(`/meal?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`);
+    navigate(
+      `/meal?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`,
+    );
   };
 
   return (
@@ -226,12 +232,14 @@ function RiceFlourPage() {
 
           {/* Food Items List */}
           <div style={{ padding: "15px" }}>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "15px"
-            }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "15px",
+              }}
+            >
               <h3
                 style={{
                   margin: "5px 0",
@@ -447,7 +455,7 @@ function RiceFlourPage() {
             >
               {selectedItems.length === 0
                 ? "กรุณาเลือกรายการอาหาร"
-                : currentLogId 
+                : currentLogId
                   ? `อัพเดทข้อมูล (${calculateTotalCarbs().toFixed(1)} กรัม)`
                   : `บันทึกข้อมูล (${calculateTotalCarbs().toFixed(1)} กรัม)`}
             </button>

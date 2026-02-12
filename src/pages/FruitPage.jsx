@@ -3,6 +3,26 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
 
+const fruitItems = [
+  { id: 1, name: "กล้วยน้ำว้า", portion: "1 ผล" },
+  { id: 2, name: "กล้วยหอม", portion: "1/2 ผล" },
+  { id: 3, name: "กีวี", portion: "1 ผล" },
+  { id: 4, name: "แก้วมังกร", portion: "1/2 ผลกลาง หรือ 8 ชิ้นคำ" },
+  { id: 5, name: "ขนุน", portion: "3 ยวง" },
+  { id: 6, name: "แคนตาลูป", portion: "8 ชิ้นคำ" },
+  { id: 7, name: "เงาะ", portion: "4 ผล" },
+  { id: 8, name: "ชมพู่เมืองเพชร", portion: "3 ผลกลาง" },
+  { id: 9, name: "แตงโม", portion: "8 ชิ้นคำ" },
+  { id: 10, name: "แตงไทย", portion: "20 ชิ้นคำ" },
+  { id: 11, name: "ฝรั่ง", portion: "1 ผลเล็ก หรือ 1/2 ผลกลาง" },
+  { id: 12, name: "มะม่วงสุก", portion: "1/2 ผล" },
+  { id: 13, name: "มะละกอสุก", portion: "8 ชิ้นคำ" },
+  { id: 14, name: "มังคุด", portion: "4 ผล" },
+  { id: 15, name: "ลำไย", portion: "5-6 ผล" },
+  { id: 16, name: "ส้มเขียวหวาน", portion: "2 ผลกลาง" },
+  { id: 17, name: "แอปเปิ้ล", portion: "1 ผลเล็ก" },
+];
+
 function FruitPage() {
   const currentUser = localStorage.getItem("currentUser");
 
@@ -16,34 +36,14 @@ function FruitPage() {
   const [portions, setPortions] = useState({});
   const [currentLogId, setCurrentLogId] = useState(null);
 
-  const fruitItems = [
-    { id: 1,  name: "กล้วยน้ำว้า",           portion: "1 ผล" },
-    { id: 2,  name: "กล้วยหอม", portion: "1/2 ผล" },
-    { id: 3,  name: "กีวี",                   portion: "1 ผล" },
-    { id: 4,  name: "แก้วมังกร",              portion: "1/2 ผลกลาง หรือ 8 ชิ้นคำ" },
-    { id: 5,  name: "ขนุน",                   portion: "3 ยวง" },
-    { id: 6,  name: "แคนตาลูป",              portion: "8 ชิ้นคำ" },
-    { id: 7,  name: "เงาะ",                   portion: "4 ผล" },
-    { id: 8,  name: "ชมพู่เมืองเพชร",         portion: "3 ผลกลาง" },
-    { id: 9,  name: "แตงโม",                  portion: "8 ชิ้นคำ" },
-    { id: 10, name: "แตงไทย",                 portion: "20 ชิ้นคำ" },
-    { id: 11, name: "ฝรั่ง",                  portion: "1 ผลเล็ก หรือ 1/2 ผลกลาง" },
-    { id: 12, name: "มะม่วงสุก",              portion: "1/2 ผล" },
-    { id: 13, name: "มะละกอสุก",              portion: "8 ชิ้นคำ" },
-    { id: 14, name: "มังคุด",                 portion: "4 ผล" },
-    { id: 15, name: "ลำไย",                   portion: "5-6 ผล" },
-    { id: 16, name: "ส้มเขียวหวาน",           portion: "2 ผลกลาง" },
-    { id: 17, name: "แอปเปิ้ล",               portion: "1 ผลเล็ก" },
-  ];
-
   useEffect(() => {
     const existingLogs = JSON.parse(
-      localStorage.getItem(`fruitLogs_${currentUser}`) || "[]"
+      localStorage.getItem(`fruitLogs_${currentUser}`) || "[]",
     );
 
     const today = new Date().toLocaleDateString("th-TH");
     const todayMealLog = existingLogs.find(
-      (log) => log.mealId === selectedMeal && log.date === today
+      (log) => log.mealId === selectedMeal && log.date === today,
     );
 
     if (todayMealLog) {
@@ -103,7 +103,7 @@ function FruitPage() {
     const now = new Date();
 
     const existingLogs = JSON.parse(
-      localStorage.getItem(`fruitLogs_${currentUser}`) || "[]"
+      localStorage.getItem(`fruitLogs_${currentUser}`) || "[]",
     );
 
     let updatedLogs;
@@ -156,10 +156,13 @@ function FruitPage() {
 
     localStorage.setItem(
       `fruitLogs_${currentUser}`,
-      JSON.stringify(updatedLogs)
+      JSON.stringify(updatedLogs),
     );
 
-    console.log("Saved to LocalStorage:", updatedLogs.find((log) => log.id === logId));
+    console.log(
+      "Saved to LocalStorage:",
+      updatedLogs.find((log) => log.id === logId),
+    );
 
     Swal.fire({
       title: currentLogId ? "อัพเดทสำเร็จ!" : "บันทึกสำเร็จ!",
@@ -178,15 +181,28 @@ function FruitPage() {
       background: "#fff",
       borderRadius: "15px",
     });
-    navigate(`/meal?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`);
+    navigate(
+      `/meal?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`,
+    );
   };
 
-
   const fruitEmoji = {
-    1: "🍌", 2: "🍌", 3: "🥝", 4: "🐉",
-    5: "🍈", 6: "🍈", 7: "🍒", 8: "🍑",
-    9: "🍉", 10: "🍈", 11: "🍏", 12: "🥭",
-    13: "🍈", 14: "🟤", 15: "🍇", 16: "🍊",
+    1: "🍌",
+    2: "🍌",
+    3: "🥝",
+    4: "🐉",
+    5: "🍈",
+    6: "🍈",
+    7: "🍒",
+    8: "🍑",
+    9: "🍉",
+    10: "🍈",
+    11: "🍏",
+    12: "🥭",
+    13: "🍈",
+    14: "🟤",
+    15: "🍇",
+    16: "🍊",
     17: "🍎",
   };
 
@@ -230,7 +246,9 @@ function FruitPage() {
               <u>เลือกรายการผลไม้</u>
             </h3>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+            >
               {fruitItems.map((item) => {
                 const isSelected = selectedItems.find((i) => i.id === item.id);
                 const portion = portions[item.id] || 1;
@@ -263,7 +281,14 @@ function FruitPage() {
                           alignItems: "center",
                         }}
                       >
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", flex: 1 }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "10px",
+                            flex: 1,
+                          }}
+                        >
                           {/* Emoji */}
                           <span style={{ fontSize: "1.6rem", lineHeight: 1 }}>
                             {fruitEmoji[item.id] || "🍑"}
@@ -279,7 +304,9 @@ function FruitPage() {
                             >
                               {item.name}
                             </div>
-                            <div style={{ fontSize: "0.8rem", color: "#718096" }}>
+                            <div
+                              style={{ fontSize: "0.8rem", color: "#718096" }}
+                            >
                               {item.portion} = 15 กรัม
                             </div>
                           </div>
@@ -424,8 +451,8 @@ function FruitPage() {
               {selectedItems.length === 0
                 ? "กรุณาเลือกผลไม้"
                 : currentLogId
-                ? `อัพเดทข้อมูล (${calculateTotalCarbs().toFixed(1)} กรัม)`
-                : `บันทึกข้อมูล (${calculateTotalCarbs().toFixed(1)} กรัม)`}
+                  ? `อัพเดทข้อมูล (${calculateTotalCarbs().toFixed(1)} กรัม)`
+                  : `บันทึกข้อมูล (${calculateTotalCarbs().toFixed(1)} กรัม)`}
             </button>
           </div>
         </div>

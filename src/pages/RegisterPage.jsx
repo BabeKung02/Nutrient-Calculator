@@ -5,6 +5,7 @@ import {
   calculateBMR,
   calculateTDEE,
   calculateCaloriesRequirement,
+  calculateMacros,
 } from "../utils/nutritionCalculator";
 import "../styles/Register.css";
 
@@ -14,18 +15,9 @@ function RegisterPage() {
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
-  // const [religion, setReligion] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [weightDate, setWeightDate] = useState("");
-  // const [hasDiseaseOption, setHasDiseaseOption] = useState(false);
-
-  // const [hasDiabetes, setHasDiabetes] = useState(false);
-  // const [hasHypertension, setHasHypertension] = useState(false);
-  // const [hasKidneyDisease, setHasKidneyDisease] = useState(false);
-  // const [kidneyStage, setKidneyStage] = useState("");
-  // const [smoking, setSmoking] = useState("");
-  // const [alcohol, setAlcohol] = useState("");
   const [activityLevel, setActivityLevel] = useState("");
 
   const navigate = useNavigate();
@@ -38,13 +30,6 @@ function RegisterPage() {
     setWeight("");
     setHeight("");
     setWeightDate("");
-
-    // setHasDiabetes(false);
-    // setHasHypertension(false);
-    // setHasKidneyDisease(false);
-    // setKidneyStage("");
-    // setSmoking("");
-    // setAlcohol("");
     setActivityLevel("");
   };
 
@@ -52,7 +37,7 @@ function RegisterPage() {
     const currentUser = localStorage.getItem("currentUser");
 
     if (!currentUser) {
-      navigate("/"); // กลับหน้า login
+      navigate("/");
       return;
     }
 
@@ -60,7 +45,7 @@ function RegisterPage() {
   }, [navigate]);
 
   useEffect(() => {
-    if (!username) return; // ถ้า username ยังไม่ถูกกำหนด ให้หยุด
+    if (!username) return;
 
     const savedData = localStorage.getItem(`userData_${username}`);
     if (savedData) {
@@ -73,63 +58,38 @@ function RegisterPage() {
       setWeight(userData.weight || "");
       setHeight(userData.height || "");
       setWeightDate(formatDateToYYYYMMDD(userData.weightDate) || "");
-      // setHasDiseaseOption(
-      //   userData.hasDiabetes ||
-      //     userData.hasHypertension ||
-      //     userData.hasKidneyDisease ||
-      //     false
-      // );
-
-      // setHasDiabetes(userData.hasDiabetes || false);
-      // setHasHypertension(userData.hasHypertension || false);
-      // setHasKidneyDisease(userData.hasKidneyDisease || false);
-      // setKidneyStage(userData.kidneyStage || "");
-      // setSmoking(userData.smoking || "");
-      // setAlcohol(userData.alcohol || "");
       setActivityLevel(userData.activityLevel || "");
     } else {
-      // user ใหม่ → reset form เป็นค่าว่างทั้งหมด
       resetForm();
     }
-  }, [username]); // สังเกตว่า dependency เป็น username
+  }, [username]);
 
-  // ฟังก์ชันแปลงวันที่จาก yyyy-mm-dd เป็น dd/mm/yyyy
   const formatDateToDDMMYYYY = (dateString) => {
-    // ตรวจสอบค่าว่างหรือไม่ใช่สตริง
     if (!dateString || typeof dateString !== "string") return "";
 
-    // แยกส่วนปี เดือน วัน
     const parts = dateString.split("-");
     if (parts.length !== 3) return "";
 
     const [year, month, day] = parts;
 
-    // ตรวจสอบว่ามีค่า year, month, day ทุกตัว
     if (!year || !month || !day) return "";
 
-    // คืนค่าในรูปแบบ DD/MM/YYYY
     return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
   };
 
-  // ฟังก์ชันแปลงวันที่จาก dd/mm/yyyy เป็น yyyy-mm-dd
   const formatDateToYYYYMMDD = (dateString) => {
-    // ตรวจสอบค่าว่างหรือไม่ใช่สตริง
     if (!dateString || typeof dateString !== "string") return "";
 
-    // แยกส่วนวัน เดือน ปี
     const parts = dateString.split("/");
     if (parts.length !== 3) return "";
 
     const [day, month, year] = parts;
 
-    // ตรวจสอบว่ามีค่า day, month, year ทุกตัว
     if (!day || !month || !year) return "";
 
-    // คืนค่าในรูปแบบ YYYY-MM-DD
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
 
-  // คำนวณ BMI
   const calculateBMI = () => {
     const weightNum = parseFloat(weight);
     const heightNum = parseFloat(height) / 100;
@@ -140,13 +100,12 @@ function RegisterPage() {
     return null;
   };
 
-  // แปลผล BMI
   const getBMICategory = (bmi) => {
-    if (bmi < 18.5) return { text: "น้ำหนักน้อย", color: "#3498db" };
-    if (bmi < 23) return { text: "ปกติ", color: "#27ae60" };
+    if (bmi < 18.5) return { text: "ผอม", color: "#3498db" };
+    if (bmi < 23) return { text: "สมส่วน", color: "#27ae60" };
     if (bmi < 25) return { text: "น้ำหนักเกิน", color: "#f39c12" };
-    if (bmi < 30) return { text: "โรคอ้วน ระดับ 1", color: "#e67e22" };
-    return { text: "โรคอ้วน ระดับ 2", color: "#e74c3c" };
+    if (bmi < 30) return { text: "อ้วน", color: "#e67e22" };
+    return { text: "อ้วนอันตราย", color: "#e74c3c" };
   };
 
   const bmi = calculateBMI();
@@ -161,10 +120,6 @@ function RegisterPage() {
     if (!height || height === "") emptyFields.push("ส่วนสูง");
     if (!age || age === "") emptyFields.push("อายุ");
     if (!gender) emptyFields.push("เพศ");
-    // if (!religion) emptyFields.push("ศาสนา");
-    // if (!weightDate) emptyFields.push("วันที่ชั่งน้ำหนักล่าสุด");
-    // if (!smoking) emptyFields.push("สูบบุหรี่");
-    // if (!alcohol) emptyFields.push("ดื่มแอลกอฮอล์");
     if (!activityLevel) emptyFields.push("กิจกรรมที่ทำเป็นประจำ");
 
     if (emptyFields.length > 1) {
@@ -216,6 +171,7 @@ function RegisterPage() {
       });
       return;
     }
+
     if (height === null || height === undefined || height === "") {
       Swal.fire({
         icon: "error",
@@ -235,6 +191,7 @@ function RegisterPage() {
       });
       return;
     }
+
     if (age === null || age === undefined || age === "") {
       Swal.fire({
         icon: "error",
@@ -265,46 +222,6 @@ function RegisterPage() {
       return;
     }
 
-    // if (!religion) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "กรุณาเลือกศาสนา",
-    //     text: "โปรดเลือกศาสนาของคุณเพื่อดำเนินการต่อ",
-    //     customClass: { title: "swal2-title-custom" },
-    //   });
-    //   return;
-    // }
-
-    // if (!weightDate) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "กรุณาเลือกวันที่ชั่งน้ำหนัก",
-    //     text: "โปรดระบุวันที่ชั่งน้ำหนักล่าสุด",
-    //     customClass: { title: "swal2-title-custom" },
-    //   });
-    //   return;
-    // }
-
-    // if (!smoking) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "กรุณาเลือกสถานะการสูบบุหรี่",
-    //     text: "โปรดระบุว่าคุณสูบบุหรี่หรือไม่",
-    //     customClass: { title: "swal2-title-custom" },
-    //   });
-    //   return;
-    // }
-
-    // if (!alcohol) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     title: "กรุณาเลือกสถานะการดื่มแอลกอฮอล์",
-    //     text: "โปรดระบุว่าคุณดื่มแอลกอฮอล์หรือไม่",
-    //     customClass: { title: "swal2-title-custom" },
-    //   });
-    //   return;
-    // }
-
     if (!activityLevel) {
       Swal.fire({
         icon: "error",
@@ -315,63 +232,45 @@ function RegisterPage() {
       return;
     }
 
-    // if (hasKidneyDisease && !kidneyStage) {
-    //   Swal.fire({
-    //     icon: "warning",
-    //     title: "กรุณาระบุระดับโรคไต",
-    //     text: "โปรดเลือกระดับโรคไตเรื้อรัง (1-4)",
-    //     customClass: { title: "swal2-title-custom" },
-    //   });
-    //   return;
-    // }
-
-    // const diseases = [];
-    // if (hasDiabetes) diseases.push("เบาหวาน");
-    // if (hasHypertension) diseases.push("ความดันโลหิตสูง");
-    // if (hasKidneyDisease) diseases.push(`โรคไตเรื้อรัง ระดับ ${kidneyStage}`);
-
-    // const getReligionText = (r) => {
-    //   const religionMap = {
-    //     buddhism: "พุทธ",
-    //     islam: "อิสลาม",
-    //     christianity: "คริสต์",
-    //     other: "อื่นๆ",
-    //   };
-    //   return religionMap[r] || r;
-    // };
-    // คำนวณแคลอรี่โดยใช้ฟังก์ชันจาก nutritionCalculator
+    // คำนวณค่าต่างๆ ตามสูตรในภาพ
     const bmr = calculateBMR({
       weight: parseFloat(weight),
       height: parseFloat(height),
       age: parseFloat(age),
       gender,
     });
+
     const tdee = calculateTDEE({
       bmr,
       activityLevel: parseFloat(activityLevel),
     });
+
     const calories = calculateCaloriesRequirement({
       tdee,
       bmi: parseFloat(bmi),
-      // hasDiabetes,
-      // hasHypertension,
+    });
+
+    // คำนวณ carbs ตามสูตร: (TDEE × 20%) / 4
+    const macros = calculateMacros({
+      calories,
+      tdee, // ต้องส่ง tdee เพื่อคำนวณ carbs
+      weight: parseFloat(weight),
+      bmi: parseFloat(bmi),
     });
 
     Swal.fire({
       icon: "success",
       title: "บันทึกข้อมูลเรียบร้อย!",
       html: `
- <div style="text-align: center; margin-top: 10px;">
- <p><strong>ชื่อ-นามสกุล:</strong> ${firstName} ${lastName}</p>
- <p><strong>อายุ:</strong> ${parseFloat(age)} ปี</p>
- <p><strong>เพศ:</strong> ${gender === "male" ? "ชาย" : "หญิง"}</p>
- <p><strong>น้ำหนัก:</strong> ${parseFloat(weight)} กิโลกรัม</p>
- <p><strong>ส่วนสูง:</strong> ${parseFloat(height)} เซนติเมตร</p>
- <p><strong>BMI:</strong> ${bmi} (${bmiCategory.text})</p>
- <p><strong>พลังงานที่ควรได้รับต่อวัน:</strong> ${calories.toLocaleString()} kcal</p>
-
-</div>
-`,
+        <div style="text-align: center; margin-top: 10px;">
+          <p><strong>ชื่อ-นามสกุล:</strong> ${firstName} ${lastName}</p>
+          <p><strong>อายุ:</strong> ${parseFloat(age)} ปี</p>
+          <p><strong>เพศ:</strong> ${gender === "male" ? "ชาย" : "หญิง"}</p>
+          <p><strong>น้ำหนัก:</strong> ${parseFloat(weight)} กิโลกรัม</p>
+          <p><strong>ส่วนสูง:</strong> ${parseFloat(height)} เซนติเมตร</p>
+          <p><strong>BMI:</strong> ${bmi} (${bmiCategory.text})</p>
+        </div>
+      `,
       confirmButtonText: "ตกลง",
       customClass: { title: "swal2-title-custom" },
     }).then(() => {
@@ -386,18 +285,19 @@ function RegisterPage() {
         weightDate: formatDateToDDMMYYYY(weightDate),
         bmi: parseFloat(bmi),
         bmiCategory: bmiCategory.text,
-        // hasDiabetes,
-        // hasHypertension,
-        // hasKidneyDisease,
-        // kidneyStage,
-        // smoking,
-        // alcohol,
         activityLevel,
         tdee,
         bmr,
         calories,
-        // diseases: diseases.join(", "),
+        carbs: macros.carbs, // เพิ่ม carbs
+        carb : macros.carb,
+        carbsPerMeal: macros.carbsPerMeal, // เพิ่ม carbsPerMeal
+        carbChoices: macros.carbChoices, // เพิ่ม carbChoices
+        protein: macros.protein, // เพิ่ม protein
+        fat: macros.fat, // เพิ่ม fat
+        sodium: macros.sodium, // เพิ่ม sodium
       };
+
       if (!currentUser) {
         Swal.fire({
           icon: "error",
@@ -419,7 +319,7 @@ function RegisterPage() {
   return (
     <div className="main-container">
       <div
-        class="container-fluid d-flex align-items-center justify-content-center min-vh-100 p-4"
+        className="container-fluid d-flex align-items-center justify-content-center min-vh-100 p-4"
         style={{
           background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
           minHeight: "100vh",
@@ -579,175 +479,6 @@ function RegisterPage() {
                 </div>
               </div>
             </div>
-
-            {/* <div className="mb-4">
-              <label className="form-label text-center d-block fw-semibold mb-3">
-                ศาสนา <span className="required-star">*</span>
-              </label>
-              <div className="religion-radio-grid">
-                <div className="form-check religion-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="buddhism"
-                    name="religion"
-                    value="buddhism"
-                    checked={religion === "buddhism"}
-                    onChange={(e) => setReligion(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="buddhism">
-                    พุทธ
-                  </label>
-                </div>
-                <div className="form-check religion-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="islam"
-                    name="religion"
-                    value="islam"
-                    checked={religion === "islam"}
-                    onChange={(e) => setReligion(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="islam">
-                    อิสลาม
-                  </label>
-                </div>
-                <div className="form-check religion-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="christianity"
-                    name="religion"
-                    value="christianity"
-                    checked={religion === "christianity"}
-                    onChange={(e) => setReligion(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="christianity">
-                    คริสต์
-                  </label>
-                </div>
-                <div className="form-check religion-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="other"
-                    name="religion"
-                    value="other"
-                    checked={religion === "other"}
-                    onChange={(e) => setReligion(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="other">
-                    อื่นๆ
-                  </label>
-                </div>
-              </div>
-            </div> */}
-
-            {/* <div className="mb-4">
-              <label
-                htmlFor="weightDate"
-                className="form-label text-center d-block fw-semibold"
-              >
-                วันที่ชั่งน้ำหนักล่าสุด <span className="required-star">*</span>
-              </label>
-              <div className="date-input-wrapper">
-                <input
-                  type="date"
-                  id="weightDate"
-                  className="form-control weight-input date-picker-input"
-                  style={{
-                    color: weightDate ? "transparent" : "transparent",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                  value={weightDate}
-                  onChange={(e) => setWeightDate(e.target.value)}
-                />
-                <span className="date-display">
-                  {weightDate && formatDateToDDMMYYYY(weightDate) !== ""
-                    ? formatDateToDDMMYYYY(weightDate)
-                    : "เลือกวันที่"}
-                </span>
-              </div>
-            </div> */}
-
-            {/* <div className="mb-4">
-              <label className="form-label text-center d-block fw-semibold mb-3">
-                สูบบุหรี่ <span className="required-star">*</span>
-              </label>
-              <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ gap: "80px", paddingRight: "20px" }}
-              >
-                <div className="form-check">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="smoking-yes"
-                    name="smoking"
-                    value="yes"
-                    checked={smoking === "yes"}
-                    onChange={(e) => setSmoking(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="smoking-yes">
-                    ใช่
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="smoking-no"
-                    name="smoking"
-                    value="no"
-                    checked={smoking === "no"}
-                    onChange={(e) => setSmoking(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="smoking-no">
-                    ไม่ใช่
-                  </label>
-                </div>
-              </div>
-            </div> */}
-
-            {/* <div className="mb-4">
-              <label className="form-label text-center d-block fw-semibold mb-3">
-                ดื่มแอลกอฮอล์ <span className="required-star">*</span>
-              </label>
-              <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ gap: "80px", paddingRight: "20px" }}
-              >
-                <div className="form-check">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="alcohol-yes"
-                    name="alcohol"
-                    value="yes"
-                    checked={alcohol === "yes"}
-                    onChange={(e) => setAlcohol(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="alcohol-yes">
-                    ใช่
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="alcohol-no"
-                    name="alcohol"
-                    value="no"
-                    checked={alcohol === "no"}
-                    onChange={(e) => setAlcohol(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="alcohol-no">
-                    ไม่ใช่
-                  </label>
-                </div>
-              </div>
-            </div> */}
 
             <div className="mb-4">
               <label className="form-label text-center d-block fw-semibold mb-3">

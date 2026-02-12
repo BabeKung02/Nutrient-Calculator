@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 const styles = {
@@ -128,7 +127,9 @@ const PersonalPage = () => {
               marginBottom: "16px",
             }}
           >
-            <div style={{ fontSize: "14px", color: "#718096" }}>BMI</div>
+            <div style={{ fontSize: "14px", color: "#718096" }}>
+              ค่าดัชนีมวลกาย (BMI)
+            </div>
             <div style={{ fontSize: "32px", color: "#667eea" }}>
               {userData.bmi}
             </div>
@@ -144,7 +145,35 @@ const PersonalPage = () => {
           >
             <div>พลังงานต่อวัน</div>
             <div style={{ fontSize: "32px", color: "#e53e3e" }}>
-              {userData.calories?.toLocaleString()} kcal
+              {userData.calories?.toLocaleString()} กิโลแคลอรี
+            </div>
+          </div>
+
+          <div
+            style={{
+              ...styles.infoCard,
+              marginTop: "15px",
+              background: "linear-gradient(135deg, #fff4e6, #ffe0b2)",
+              border: "2px solid #ffb74d",
+            }}
+          >
+            <div>ปริมาณคาร์โบไฮเดรตต่อวัน</div>
+            <div style={{ fontSize: "32px", color: "#f89704" }}>
+              {userData.carbs?.toLocaleString()} กรัม
+            </div>
+          </div>
+
+          <div
+            style={{
+              ...styles.infoCard,
+              marginTop: "15px",
+              background: "linear-gradient(135deg, #fff4e6, #ffe0b2)",
+              border: "2px solid #ffb74d",
+            }}
+          >
+            <div>ปริมาณคาร์บต่อวัน</div>
+            <div style={{ fontSize: "32px", color: "#f89704" }}>
+              {userData.carb?.toLocaleString()} คาร์บ
             </div>
           </div>
 

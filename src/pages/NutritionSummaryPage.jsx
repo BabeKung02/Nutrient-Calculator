@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 
-// Food recommendations with detailed nutritional info
 const getFoodRecommendations = (weight, calories, category) => {
   const recommendations = {
     grains: {
@@ -17,8 +16,8 @@ const getFoodRecommendations = (weight, calories, category) => {
             weight < 60
               ? "2-3 ทัพพี/มื้อ"
               : weight < 80
-              ? "3-4 ทัพพี/มื้อ"
-              : "4-5 ทัพพี/มื้อ",
+                ? "3-4 ทัพพี/มื้อ"
+                : "4-5 ทัพพี/มื้อ",
           detail: "ประมาณ 6-12 ทัพพี/วัน",
           calories: 130,
           protein: 2.7,
@@ -210,8 +209,8 @@ const getFoodRecommendations = (weight, calories, category) => {
             weight < 60
               ? "3-4 ช้อนโต๊ะ/มื้อ"
               : weight < 80
-              ? "4-5 ช้อนโต๊ะ/มื้อ"
-              : "5-6 ช้อนโต๊ะ/มื้อ",
+                ? "4-5 ช้อนโต๊ะ/มื้อ"
+                : "5-6 ช้อนโต๊ะ/มื้อ",
           detail: "เลือกส่วนอกไก่",
           calories: 165,
           protein: 31,
@@ -303,24 +302,52 @@ const getFoodRecommendations = (weight, calories, category) => {
 };
 
 function NutritionSummaryPage() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state;
+  const location = useLocation();
 
+  // ✅ Hooks ทั้งหมดต้องอยู่บนสุด
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showFoodDetailModal, setShowFoodDetailModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFood, setSelectedFood] = useState(null);
+  const [userData, setUserData] = useState(null);
 
+  // โหลดข้อมูล user
   useEffect(() => {
-    if (!state || !state.weight) {
+    const stateData = location.state;
+    const savedData = localStorage.getItem("userData");
+
+    if (stateData) {
+      setUserData(stateData);
+      localStorage.setItem("userData", JSON.stringify(stateData));
+    } else if (savedData) {
+      setUserData(JSON.parse(savedData));
+    } else {
+      navigate("/");
+    }
+  }, [location, navigate]);
+
+  // เช็ค weight หลังจากได้ userData แล้ว
+  useEffect(() => {
+    if (userData && !userData.weight) {
       navigate("/register");
     }
-  }, [state, navigate]);
+  }, [userData, navigate]);
 
-  if (!state || !state.weight) {
-    return null;
-  }
+  // ✅ return หลังจาก Hooks ทั้งหมด
+  if (!userData) return null;
+
+  const state = location.state;
+
+  // const menuItems = [
+  //   {
+  //     id: 1,
+  //     title: "บันทึกการรับประทานอาหาร",
+  //     icon: "🍽️",
+  //     color: "#FFA500",
+  //     onClick: () => navigate("/meal", { state: userData }),
+  //   },
+  // ];
 
   // Define clickable regions for the food chart
   const handleImageClick = (e) => {
@@ -414,6 +441,70 @@ function NutritionSummaryPage() {
           }}
         >
           <Header title="โภชนาการอาหาร" backTo="/menu" />
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              marginTop: "12px",
+            }}
+          >
+            {/* {menuItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={item.onClick}
+                style={{
+                  background: `linear-gradient(135deg, ${item.color}, ${item.color}dd)`,
+                  padding: "10px 15px",
+                  borderRadius: "10px",
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  boxShadow: "0 3px 8px rgba(0,0,0,0.15)",
+                  transition: "transform 0.2s",
+                  width: "90%",
+                  margin: "20px auto",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "translateY(-2px)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "translateY(0)")
+                }
+              >
+                <div style={{ fontSize: "30px", marginTop: "-8px" }}>{item.icon}</div>
+                <div
+                  style={{
+                    fontSize: "15px",
+                    fontWeight: 600,
+                    flex: 1,
+                    marginLeft: "15px",
+                    whiteSpace: "pre-line",
+                    marginLeft: "5px",
+                  }}
+                >
+                  {item.title}
+                </div>
+                <div
+                  style={{
+                    background: "rgba(255,255,255,0.2)",
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "18px",
+                  }}
+                >
+                  ➜
+                </div>
+              </div>
+            ))} */}
+          </div>
 
           <div style={{}}>
             <p

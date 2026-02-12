@@ -1,0 +1,351 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useNotification } from "../hooks/useNotification";
+
+// ── Mock Header ────────────────────────────────────────────────
+const Header = ({ title, backTo }) => {
+  const navigate = useNavigate();
+  return (
+    <div style={headerStyles.wrapper}>
+      <button style={headerStyles.backBtn} onClick={() => navigate(backTo || -1)}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <span style={headerStyles.title}>{title}</span>
+      <div style={{ width: 36 }} />
+    </div>
+  );
+};
+const headerStyles = {
+  wrapper: { display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 20px", borderBottom:"1.5px solid #ede9fe", background:"white" },
+  backBtn: { background:"#f3f0ff", border:"none", borderRadius:"12px", width:36, height:36, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:"#7c3aed" },
+  title: { fontSize:"18px", fontWeight:700, color:"#2d2050", fontFamily:"'Prompt',sans-serif" },
+};
+
+// ── Permission Banner ──────────────────────────────────────────
+const PermissionBanner = ({ permission, onRequest }) => {
+  if (permission === "granted") return null;
+  if (permission === "denied") return (
+    <div style={{ ...banner.wrap, background:"#fff1f2", border:"1.5px solid #fecdd3" }}>
+      <span>🚫</span>
+      <div>
+        <div style={banner.title}>การแจ้งเตือนถูกบล็อก</div>
+        <div style={banner.sub}>กรุณาเปิดใน Settings ของ Browser</div>
+      </div>
+    </div>
+  );
+  return (
+    <div style={{ ...banner.wrap, background:"#f5f3ff", border:"1.5px solid #c4b5fd" }}>
+      <span>🔔</span>
+      <div style={{ flex:1 }}>
+        <div style={banner.title}>เปิดการแจ้งเตือน</div>
+        <div style={banner.sub}>รับแจ้งเตือนเวลารับประทานยาทุกวัน</div>
+      </div>
+      <button style={banner.btn} onClick={onRequest}>เปิด</button>
+    </div>
+  );
+};
+const banner = {
+  wrap: { display:"flex", alignItems:"center", gap:"12px", padding:"14px 16px", borderRadius:"16px", marginBottom:"16px" },
+  title: { fontWeight:700, fontSize:"14px", color:"#2d2050", fontFamily:"'Prompt',sans-serif" },
+  sub: { fontSize:"12px", color:"#9ca3af", marginTop:"2px", fontFamily:"'Prompt',sans-serif" },
+  btn: { padding:"8px 16px", borderRadius:"10px", background:"linear-gradient(135deg,#7c3aed,#a855f7)", color:"white", border:"none", fontWeight:700, fontSize:"13px", cursor:"pointer", whiteSpace:"nowrap", fontFamily:"'Prompt',sans-serif" },
+};
+
+// ── Pill Selector ──────────────────────────────────────────────
+const PillSelector = ({ options, value, onChange }) => (
+  <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
+    {options.map((opt) => (
+      <button key={opt.value} onClick={() => onChange(opt.value)}
+        style={{ padding:"8px 16px", borderRadius:"30px", border:"2px solid transparent", fontSize:"14px", fontWeight:600, cursor:"pointer", fontFamily:"'Prompt',sans-serif", transition:"all .2s",
+          ...(value === opt.value
+            ? { background:"linear-gradient(135deg,#7c3aed,#a855f7)", color:"white", border:"2px solid #7c3aed", boxShadow:"0 4px 12px rgba(124,58,237,.35)" }
+            : { background:"white", color:"#7c3aed", border:"2px solid #ddd6fe" })
+        }}>
+        {opt.label}
+      </button>
+    ))}
+  </div>
+);
+
+// ── Tag Checkbox ───────────────────────────────────────────────
+const TagCheckbox = ({ label, checked, onChange, color }) => (
+  <button onClick={() => onChange(!checked)}
+    style={{ padding:"9px 18px", borderRadius:"14px", border:`2px solid ${checked ? color.border : "#e2d9f3"}`,
+      background:checked ? color.bg : "white", color:checked ? color.text : "#9ca3af",
+      fontWeight:600, fontSize:"14px", cursor:"pointer", fontFamily:"'Prompt',sans-serif",
+      transition:"all .2s", boxShadow:checked ? `0 3px 10px ${color.shadow}` : "none" }}>
+    {checked && "✓ "}{label}
+  </button>
+);
+
+// ── Notification Badge ─────────────────────────────────────────
+const NotifBadge = ({ scheduled }) => {
+  if (!scheduled) return null;
+  return (
+    <div style={{ display:"flex", alignItems:"center", gap:"6px", marginTop:"6px",
+      background:"#f0fdf4", border:"1px solid #bbf7d0", borderRadius:"8px",
+      padding:"5px 10px", width:"fit-content" }}>
+      <span style={{ fontSize:"12px" }}>🔔</span>
+      <span style={{ fontSize:"11px", color:"#16a34a", fontWeight:600, fontFamily:"'Prompt',sans-serif" }}>
+        แจ้งเตือน {scheduled.fireAt} น.
+      </span>
+    </div>
+  );
+};
+
+// ── Meal Card ──────────────────────────────────────────────────
+const MealCard = ({ entry, onDelete, onTest, scheduled }) => {
+  const timingColors = {
+    หลังอาหาร: { bg:"#f0fdf4", text:"#16a34a", border:"#bbf7d0" },
+    ก่อนอาหาร: { bg:"#fef9c3", text:"#a16207", border:"#fde047" },
+    ก่อนนอน:  { bg:"#f5f3ff", text:"#7c3aed", border:"#ddd6fe" },
+  };
+  const c = timingColors[entry.timing] || timingColors["หลังอาหาร"];
+  const mealIcons = { เช้า:"🌅", เที่ยง:"☀️", เย็น:"🌆", ก่อนนอน:"🌙" };
+  return (
+    <div style={{ background:"white", borderRadius:"16px", padding:"14px 16px",
+      boxShadow:"0 2px 12px rgba(124,58,237,.1)", border:"1.5px solid #ede9fe", marginBottom:"10px" }}>
+      <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+        <span style={{ fontSize:"24px" }}>{mealIcons[entry.meal] || "🍽️"}</span>
+        <div style={{ flex:1 }}>
+          <div style={{ fontWeight:700, color:"#2d2050", fontSize:"15px", fontFamily:"'Prompt',sans-serif" }}>{entry.name}</div>
+          <div style={{ fontSize:"12px", color:"#9ca3af", marginTop:"2px", fontFamily:"'Prompt',sans-serif" }}>{entry.freq} • {entry.meal}</div>
+          <NotifBadge scheduled={scheduled} />
+        </div>
+        <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"6px" }}>
+          <span style={{ padding:"4px 10px", borderRadius:"20px", fontSize:"12px", fontWeight:600, whiteSpace:"nowrap",
+            background:c.bg, color:c.text, border:`1.5px solid ${c.border}` }}>
+            {entry.timing}
+          </span>
+          <div style={{ display:"flex", gap:"6px" }}>
+            <button onClick={() => onTest(entry)} title="ทดสอบแจ้งเตือน"
+              style={{ background:"#fef9c3", border:"none", borderRadius:"10px", width:28, height:28,
+                cursor:"pointer", fontSize:"14px", display:"flex", alignItems:"center", justifyContent:"center" }}>
+              🔔
+            </button>
+            <button onClick={onDelete}
+              style={{ background:"#fef2f2", border:"none", borderRadius:"10px", width:28, height:28,
+                cursor:"pointer", color:"#ef4444", fontSize:"13px", fontWeight:700 }}>
+              ✕
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ── Toast ──────────────────────────────────────────────────────
+const Toast = ({ msg, visible }) => (
+  <div style={{ position:"fixed", bottom:90, left:"50%", transform:`translateX(-50%) translateY(${visible ? 0 : "20px"})`,
+    opacity:visible ? 1 : 0, transition:"all .3s ease", background:"#2d2050", color:"white",
+    padding:"12px 20px", borderRadius:"14px", fontSize:"14px", fontWeight:600,
+    boxShadow:"0 6px 20px rgba(0,0,0,.2)", zIndex:200, whiteSpace:"nowrap",
+    fontFamily:"'Prompt',sans-serif", pointerEvents:"none" }}>
+    {msg}
+  </div>
+);
+
+// ── Add Modal ──────────────────────────────────────────────────
+const AddModal = ({ onClose, onAdd }) => {
+  const [name, setName]   = useState("");
+  const [freq, setFreq]   = useState(1);
+  const [meals, setMeals] = useState({ เช้า:false, เที่ยง:false, เย็น:false, ก่อนนอน:false });
+  const [timing, setTiming] = useState("หลังอาหาร");
+
+  const mealOptions = [
+    { label:"เช้า",     color:{ bg:"#fff7ed", text:"#ea580c", border:"#fdba74", shadow:"rgba(234,88,12,.2)" } },
+    { label:"เที่ยง",   color:{ bg:"#fefce8", text:"#ca8a04", border:"#fde047", shadow:"rgba(202,138,4,.2)" } },
+    { label:"เย็น",     color:{ bg:"#eff6ff", text:"#2563eb", border:"#93c5fd", shadow:"rgba(37,99,235,.2)" } },
+    { label:"ก่อนนอน", color:{ bg:"#f5f3ff", text:"#7c3aed", border:"#c4b5fd", shadow:"rgba(124,58,237,.2)" } },
+  ];
+
+  const handleAdd = () => {
+    const selected = Object.entries(meals).filter(([,v]) => v).map(([k]) => k);
+    if (!name.trim() || selected.length === 0) return;
+    selected.forEach((m) => onAdd({ name, freq:`${freq} เวลา`, meal:m, timing }));
+    onClose();
+  };
+
+  const lbl = { display:"block", fontSize:"13px", fontWeight:600, color:"#7c3aed", marginBottom:"8px",
+    fontFamily:"'Prompt',sans-serif", textTransform:"uppercase", letterSpacing:".05em" };
+  const inp = { width:"100%", padding:"12px 16px", borderRadius:"14px", border:"2px solid #ede9fe",
+    fontSize:"15px", fontFamily:"'Prompt',sans-serif", outline:"none", marginBottom:"16px",
+    boxSizing:"border-box", color:"#2d2050" };
+
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.45)", display:"flex",
+      alignItems:"flex-end", justifyContent:"center", zIndex:100 }}
+      onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div style={{ width:"100%", maxWidth:"480px", background:"white", borderRadius:"28px 28px 0 0",
+        padding:"20px 24px 36px", boxShadow:"0 -8px 40px rgba(0,0,0,.2)", animation:"slideUp .3s ease" }}>
+        <div style={{ width:48, height:5, borderRadius:99, background:"#e2d9f3", margin:"0 auto 18px" }} />
+        <h3 style={{ fontSize:"20px", fontWeight:700, color:"#2d2050", marginBottom:"20px", fontFamily:"'Prompt',sans-serif" }}>
+          เพิ่มรายการใหม่
+        </h3>
+
+        <label style={lbl}>ชื่อยา / อาหาร</label>
+        <input style={inp} placeholder="ระบุชื่อ..." value={name} onChange={(e) => setName(e.target.value)} />
+
+        <label style={lbl}>วิธีรับประทาน</label>
+        <PillSelector options={[{label:"1 เวลา",value:1},{label:"2 เวลา",value:2},{label:"3 เวลา",value:3}]}
+          value={freq} onChange={setFreq} />
+
+        <label style={{ ...lbl, marginTop:"16px" }}>มื้ออาหาร</label>
+        <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
+          {mealOptions.map(({ label, color }) => (
+            <TagCheckbox key={label} label={label} checked={meals[label]}
+              onChange={(v) => setMeals((p) => ({ ...p, [label]:v }))} color={color} />
+          ))}
+        </div>
+
+        <label style={{ ...lbl, marginTop:"16px" }}>เวลารับประทาน</label>
+        <PillSelector
+          options={[{label:"หลังอาหาร",value:"หลังอาหาร"},{label:"ก่อนอาหาร",value:"ก่อนอาหาร"},{label:"ก่อนนอน",value:"ก่อนนอน"}]}
+          value={timing} onChange={setTiming} />
+
+        <div style={{ background:"#f5f3ff", borderRadius:"12px", padding:"10px 14px", marginTop:"16px" }}>
+          <span style={{ fontSize:"12px", color:"#7c3aed", fontWeight:600, fontFamily:"'Prompt',sans-serif" }}>
+            🔔 ระบบจะแจ้งเตือนตามมื้อที่เลือกโดยอัตโนมัติ
+          </span>
+        </div>
+
+        <button style={{ width:"100%", marginTop:"18px", padding:"16px", borderRadius:"16px", border:"none",
+          fontSize:"16px", fontWeight:700, color:"white", background:"linear-gradient(135deg,#7c3aed,#a855f7)",
+          cursor:"pointer", boxShadow:"0 6px 20px rgba(124,58,237,.4)", fontFamily:"'Prompt',sans-serif" }}
+          onClick={handleAdd}>
+          บันทึก + ตั้งการแจ้งเตือน
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ── Main Page ──────────────────────────────────────────────────
+export default function MedicationPage() {
+  const [entries, setEntries] = useState([
+    { id:1, name:"เมตฟอร์มิน", freq:"2 เวลา", meal:"เช้า",  timing:"หลังอาหาร" },
+    { id:2, name:"เมตฟอร์มิน", freq:"2 เวลา", meal:"เย็น",  timing:"หลังอาหาร" },
+    { id:3, name:"วิตามิน C",  freq:"1 เวลา", meal:"เช้า",  timing:"ก่อนอาหาร" },
+  ]);
+  const [showModal, setShowModal] = useState(false);
+  const [toast, setToast]         = useState({ msg:"", visible:false });
+  const [notifMap, setNotifMap]   = useState({});
+
+  const { permission, scheduleNotification, requestPermission, testNotification } = useNotification();
+
+  const showToast = (msg) => {
+    setToast({ msg, visible:true });
+    setTimeout(() => setToast((p) => ({ ...p, visible:false })), 2800);
+  };
+
+  const handleAdd = async (entry) => {
+    const id = Date.now() + Math.random();
+    const newEntry = { ...entry, id };
+    setEntries((p) => [...p, newEntry]);
+    const record = await scheduleNotification(newEntry);
+    if (record) {
+      setNotifMap((p) => ({ ...p, [id]: record }));
+      showToast(`🔔 ตั้งแจ้งเตือน ${entry.meal} เวลา ${record.fireAt} น.`);
+    }
+  };
+
+  const handleDelete = (id) => {
+    setEntries((p) => p.filter((e) => e.id !== id));
+    setNotifMap((p) => { const n = { ...p }; delete n[id]; return n; });
+  };
+
+  const handleTest = async (entry) => {
+    await testNotification(entry);
+    showToast("🔔 ส่งแจ้งเตือนทดสอบใน 2 วินาที...");
+  };
+
+  const grouped = entries.reduce((acc, e) => {
+    if (!acc[e.timing]) acc[e.timing] = [];
+    acc[e.timing].push(e);
+    return acc;
+  }, {});
+
+  const timingOrder = ["หลังอาหาร", "ก่อนอาหาร", "ก่อนนอน"];
+  const timingEmoji = { หลังอาหาร:"🍽️", ก่อนอาหาร:"⏰", ก่อนนอน:"🌙" };
+
+  return (
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap');
+        @keyframes slideUp { from { transform:translateY(100%); opacity:0; } to { transform:translateY(0); opacity:1; } }
+        @keyframes fadeIn  { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body { background:#f0ebff; }
+      `}</style>
+
+      <div style={{ minHeight:"100vh", display:"flex", justifyContent:"center",
+        background:"#f0ebff", fontFamily:"'Prompt',sans-serif" }}>
+        <div style={{ width:"100%", maxWidth:"430px", minHeight:"100vh", background:"#faf8ff",
+          boxShadow:"0 0 60px rgba(124,58,237,.15)", display:"flex", flexDirection:"column" }}>
+
+          <Header title="ข้อมูลยา" backTo="/menu" />
+
+          <div style={{ flex:1, padding:"20px 16px 100px", overflowY:"auto" }}>
+
+            <PermissionBanner permission={permission} onRequest={requestPermission} />
+
+            <button style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center",
+              gap:"8px", padding:"15px", borderRadius:"18px", border:"2.5px dashed #c4b5fd",
+              background:"white", color:"#7c3aed", fontSize:"16px", fontWeight:700, cursor:"pointer",
+              marginBottom:"20px", fontFamily:"'Prompt',sans-serif" }}
+              onClick={() => setShowModal(true)}>
+              <span style={{ fontSize:"20px" }}>＋</span> เพิ่มรายการ
+            </button>
+
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px", marginBottom:"20px" }}>
+              {timingOrder.map((t) => (
+                <div key={t} style={{ background:"white", borderRadius:"16px", padding:"14px 10px",
+                  textAlign:"center", boxShadow:"0 2px 10px rgba(124,58,237,.1)", border:"1.5px solid #ede9fe",
+                  display:"flex", flexDirection:"column", alignItems:"center", gap:"4px" }}>
+                  <span style={{ fontSize:"18px" }}>{timingEmoji[t]}</span>
+                  <span style={{ fontSize:"22px", fontWeight:700, color:"#7c3aed", lineHeight:1 }}>
+                    {(grouped[t] || []).length}
+                  </span>
+                  <span style={{ fontSize:"11px", color:"#9ca3af", fontWeight:600 }}>{t}</span>
+                </div>
+              ))}
+            </div>
+
+            {timingOrder.map((timing) =>
+              grouped[timing] ? (
+                <div key={timing} style={{ animation:"fadeIn .4s ease" }}>
+                  <div style={{ fontSize:"14px", fontWeight:700, color:"#7c3aed", marginBottom:"10px",
+                    marginTop:"6px", textTransform:"uppercase", letterSpacing:".06em" }}>
+                    {timingEmoji[timing]} {timing}
+                  </div>
+                  {grouped[timing].map((e) => (
+                    <MealCard key={e.id} entry={e}
+                      onDelete={() => handleDelete(e.id)}
+                      onTest={handleTest}
+                      scheduled={notifMap[e.id]} />
+                  ))}
+                </div>
+              ) : null
+            )}
+
+            {entries.length === 0 && (
+              <div style={{ textAlign:"center", paddingTop:"60px" }}>
+                <div style={{ fontSize:"48px", marginBottom:"12px" }}>💊</div>
+                <p style={{ color:"#a78bfa", fontWeight:600, fontFamily:"'Prompt',sans-serif" }}>
+                  ยังไม่มีรายการ<br />กด + เพื่อเพิ่มรายการ
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {showModal && <AddModal onClose={() => setShowModal(false)} onAdd={handleAdd} />}
+      <Toast msg={toast.msg} visible={toast.visible} />
+    </>
+  );
+}

@@ -108,22 +108,16 @@ export function calculateMacros({ calories, weight, bmi }) {
 
   let carbPercent, proteinPercent, fatPercent;
 
-  if (b >= 18.5 && b < 23) {
-    // น้ำหนักปกติ - ผู้ป่วยเบาหวาน
-    carbPercent = 0.55;
-    proteinPercent = 0.125;
-    fatPercent = 0.275;
-  } else {
-    // น้ำหนักเกิน/อ้วน - ผู้ป่วยเบาหวาน
     carbPercent = 0.5;
     proteinPercent = 0.2;
     fatPercent = 0.3;
-  }
+
 
   // คำนวณปริมาณสารอาหารในหน่วยกรัม
   // คาร์โบไฮเดรต: 1g = 4 kcal
   const carbsGrams = Math.round((cal * carbPercent) / 4);
 
+  const carbs = Math.round((carbsGrams / 15) * 100) / 100;
   // โปรตีน: 1g = 4 kcal
   const proteinGrams = Math.round((cal * proteinPercent) / 4);
 
@@ -132,6 +126,7 @@ export function calculateMacros({ calories, weight, bmi }) {
 
   return {
     carbs: carbsGrams,
+    carb : carbs,
     protein: proteinGrams,
     fat: fatGrams,
     sodium: 2000, // โซเดียมน้อยกว่า 2,000 mg
@@ -157,8 +152,13 @@ export function calculateNutrition(userData) {
   // 4. คำนวณพลังงานที่ต้องการ (สำหรับผู้ป่วยเบาหวาน)
   const calories = calculateCaloriesRequirement({ tdee, bmi });
 
-  // 5. คำนวณสัดส่วนสารอาหาร (สำหรับผู้ป่วยเบาหวาน)
-  const macros = calculateMacros({ calories, weight, bmi });
+
+  const macros = calculateMacros({
+    calories,
+    tdee, // ส่ง tdee เพื่อคำนวณ (TDEE × 20%) / 4
+    weight: parseFloat(weight),
+    bmi: parseFloat(bmi),
+  });
 
   return {
     bmi: parseFloat(bmi),

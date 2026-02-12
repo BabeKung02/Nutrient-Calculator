@@ -43,36 +43,45 @@ function MenuPage() {
       color: "#f093fb",
       onClick: () => navigate("/summary", { state: userData }),
     },
+
     {
       id: 3,
+      title: "บันทึกการรับประทานอาหาร",
+      icon: "🍽️",
+      color: "#FFA500",
+      onClick: () => navigate("/meal", { state: userData }),
+    },
+
+    {
+      id: 4,
       title: "บันทึกค่าน้ำตาล",
       icon: "⬜",
       color: "#4facfe",
       onClick: () => navigate("/sugar-level", { state: userData }),
     },
     {
-      id: 4,
+      id: 5,
       title: "บันทึกยาที่ได้รับ",
       icon: "💊",
-      color: "#fa709a",
-      onClick: () => alert("Coming soon!"),
-    },
-    {
-      id: 5,
-      title: "บันทึกการตรวจเท้า",
-      icon: "🏥",
-      color: "#ff6b6b",
-      onClick: () => alert("Coming soon!"),
+      color: "#fa709a", 
+      onClick: () => navigate("/medication", { state: userData }),
     },
     {
       id: 6,
+      title: "บันทึกการตรวจเท้า",
+      icon: "🏥",
+      color: "#ff6b6b",
+      onClick: () => navigate("/foot-exam", { state: userData }),
+    },
+    {
+      id: 7,
       title: "บันทึกนัดที่ต้องไปพบแพทย์",
       icon: "👨‍⚕️",
       color: "#48dbfb",
       onClick: () => alert("Coming soon!"),
     },
     {
-      id: 7,
+      id: 8,
       title: "บทความให้ความรู้ต่างๆ\nเกี่ยวกับเบาหวาน",
       icon: "📝",
       color: "#54a0ff",
@@ -81,17 +90,17 @@ function MenuPage() {
   ];
 
   return (
-<div
-    style={{
-      width: "100vw",
-      minHeight: "100vh",
-      padding: "40px 15px", // เพิ่ม padding บนเล็กน้อยเพื่อให้กล่องไม่ชิดขอบจอเกินไป
-      background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "flex-start",
-    }}
-  >
+    <div
+      style={{
+        width: "100vw",
+        minHeight: "100vh",
+        padding: "40px 15px", // เพิ่ม padding บนเล็กน้อยเพื่อให้กล่องไม่ชิดขอบจอเกินไป
+        background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+      }}
+    >
       <style>{`
         * {
           outline: none !important;
@@ -108,46 +117,46 @@ function MenuPage() {
       `}</style>
       <div style={{ maxWidth: "600px", width: "100%" }}>
         <div
-        style={{
-          position: "relative", // เพิ่มบรรทัดนี้เพื่อให้ปุ่มอ้างอิงตำแหน่งกับกล่องขาว
-          background: "white",
-          padding: "40px 15px 15px 15px", // เพิ่ม padding top เพื่อเว้นที่ให้ปุ่มไม่บังเนื้อหา
-          borderRadius: "12px",
-          boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-          overflow: "hidden", // ช่วยให้มุมของปุ่มตัดพอดีกับความโค้งของกล่อง (ถ้าต้องการ)
-        }}
-      >
-        <button
-          onClick={handleLogout}
           style={{
-            position: "absolute",
-            top: "0",    // ชิดขอบบนสุด
-            right: "0",  // ชิดขอบขวาสุด
-            background: "#f1f5f9",
-            border: "none",
-            borderBottomLeftRadius: "12px", // มนเฉพาะมุมล่างซ้าย
-            padding: "8px 16px",
-            fontSize: "13px",
-            fontWeight: 600,
-            cursor: "pointer",
-            color: "#64748b",
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            transition: "all 0.2s",
-            zIndex: 10,
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#fee2e2";
-            e.currentTarget.style.color = "#b91c1c";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "#f1f5f9";
-            e.currentTarget.style.color = "#64748b";
+            position: "relative", // เพิ่มบรรทัดนี้เพื่อให้ปุ่มอ้างอิงตำแหน่งกับกล่องขาว
+            background: "white",
+            padding: "40px 15px 15px 15px", // เพิ่ม padding top เพื่อเว้นที่ให้ปุ่มไม่บังเนื้อหา
+            borderRadius: "12px",
+            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+            overflow: "hidden", // ช่วยให้มุมของปุ่มตัดพอดีกับความโค้งของกล่อง (ถ้าต้องการ)
           }}
         >
-          ออกจากระบบ
-        </button>
+          <button
+            onClick={handleLogout}
+            style={{
+              position: "absolute",
+              top: "0", // ชิดขอบบนสุด
+              right: "0", // ชิดขอบขวาสุด
+              background: "#f1f5f9",
+              border: "none",
+              borderBottomLeftRadius: "12px", // มนเฉพาะมุมล่างซ้าย
+              padding: "8px 16px",
+              fontSize: "13px",
+              fontWeight: 600,
+              cursor: "pointer",
+              color: "#64748b",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              transition: "all 0.2s",
+              zIndex: 10,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#fee2e2";
+              e.currentTarget.style.color = "#b91c1c";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#f1f5f9";
+              e.currentTarget.style.color = "#64748b";
+            }}
+          >
+            ออกจากระบบ
+          </button>
 
           <div
             style={{

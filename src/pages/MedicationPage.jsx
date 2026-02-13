@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";          // ✅ ใช้ Header จริงเหมือนทุกหน้า
 import { useNotification } from "../hooks/useNotification";
 
@@ -278,7 +277,7 @@ export default function MedicationPage() {
             }}
           >
             {/* ✅ Header จริง เหมือนทุกหน้า */}
-            <Header title="ข้อมูลยา" backTo="/menu" />
+            <Header title="บันทึกยาที่ได้รับ" backTo="/menu" />
 
             <div style={{ padding: "15px" }}>
               <PermissionBanner permission={permission} onRequest={requestPermission} />

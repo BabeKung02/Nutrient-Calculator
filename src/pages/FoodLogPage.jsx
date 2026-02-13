@@ -50,7 +50,21 @@ function FoodLogPage() {
       name: "ขนม",
       icon: "🍰",
       gradient: "linear-gradient(135deg, #fd79a8 0%, #e84393 100%)",
-      route: "/food/desserts",
+      route: "/food/dessert",
+    },
+        {
+      id: 7,
+      name: "ไขมัน",
+      icon: "🧈",
+      gradient: "linear-gradient(135deg, #feca57 0%, #ff9ff3 100%)",
+      route: "/food/fat",
+    },
+        {
+      id: 8,
+      name: "อาหารจานเดียว",
+      icon: "🍛",
+      gradient: "linear-gradient(135deg, #fd79a8 0%, #e84393 100%)",
+      route: "/food/single-dish",
     },
   ];
 

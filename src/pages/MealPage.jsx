@@ -26,87 +26,103 @@ function MealPage() {
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser") || "default";
 
-    // ดึงข้อมูลเป้าหมายของผู้ใช้
+    // 1. ดึงเป้าหมายผู้ใช้
     const userDataStr = localStorage.getItem(`userData_${currentUser}`);
     if (userDataStr) {
       const userData = JSON.parse(userDataStr);
       setUserTarget({
-        calories: userData.calories || 2000,
-        protein: userData.protein || 100,
-        carbs: userData.carbs || 250,
-        fat: userData.fat || 67,
+        calories: Number(userData.calories) || 2000,
+        protein: Number(userData.protein) || 100,
+        carbs: Number(userData.carbs) || 250,
+        fat: Number(userData.fat) || 67,
       });
     }
 
-    // ดึงข้อมูลจาก daily_logs
-    const dailyLogs = JSON.parse(localStorage.getItem("daily_logs") || "[]");
+    // 2. ฟังก์ชันช่วยดึงข้อมูล
+    const getLogs = (key) =>
+      JSON.parse(localStorage.getItem(`${key}_${currentUser}`) || "[]");
 
-    // ดึงข้อมูลจาก riceLogs (เฉพาะของวันนี้)
-    const riceLogs = JSON.parse(
-      localStorage.getItem(`riceLogs_${currentUser}`) || "[]",
-    );
+    const rawRice = getLogs("riceLogs");
+    const rawFruit = getLogs("fruitLogs");
+    const rawDairy = getLogs("dairyLogs");
+    const rawMeat = getLogs("meatLogs");
+    const rawVegetable = getLogs("vegetableLogs");
+    const rawFat = getLogs("fatLogs");
+    const rawDessert = getLogs("dessertLogs");
+    const rawDaily = getLogs("dailyLogs");
 
-    // กรองเฉพาะข้อมูลของวันนี้
-    const today = new Date();
-    const todayStr = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear() + 543}`;
+    // ... (โค้ดก่อนหน้า)
 
-    const todayRiceLogs = riceLogs.filter((log) => log.date === todayStr);
+    // 🌟 3. สร้างวันที่วันนี้
+    const now = new Date();
+    const todayStr = now.toLocaleDateString("th-TH"); // "13/2/2569"
 
-    // รวมข้อมูลทั้งหมด
-    const allLogs = [...dailyLogs];
+    // 4. กรองเฉพาะของวันนี้ และ Normalization (ปรับปรุงใหม่ตาม JSON จริงของคุณ)
+    const todayLogs = [
+      ...rawRice.filter((l) => l.date === todayStr),
+      ...rawFruit.filter((l) => l.date === todayStr),
+      ...rawDairy.filter((l) => l.date === todayStr),
+      ...rawMeat.filter((l) => l.date === todayStr),
+      ...rawVegetable.filter((l) => l.date === todayStr),
+      ...rawFat.filter((l) => l.date === todayStr),
+      ...rawDessert.filter((l) => l.date === todayStr),
+      ...rawDaily.filter((l) => l.date === todayStr),
+    ].map((log) => {
+      // 🔍 เจาะจงดึง totalCarbs ที่คุณใช้ใน JSON
+      const carbValue = Number(log.totalCarb || log.carb || log.carbs || 0);
 
-    // เพิ่มข้อมูลข้าวจาก riceLogs (แปลง totalCarbs เป็นข้อมูลโภชนาการ)
-    todayRiceLogs.forEach((riceLog) => {
-      const totalCarbs = riceLog.totalCarbs || 0;
-      // คำนวณคร่าวๆ: 1g carbs = 4 kcal
-      const estimatedKcal = totalCarbs * 4;
+      const proteinValue = Number(
+        log.totalProtein || log.protein || log.proteins || 0,
+      );
+      const FatValue = Number(log.totalFat || log.fat || 0);
 
-      allLogs.push({
-        name: `ข้าว (${riceLog.items?.length || 0} รายการ)`,
-        kcal: estimatedKcal,
-        protein: 0,
-        carb: totalCarbs,
-        fat: 0,
-        mealId: riceLog.mealId || "snack",
-        timestamp: riceLog.timestamp || new Date(riceLog.date).getTime(),
-      });
+      const kcalValue = Number(log.totalCalories || log.calories || carbValue * 4);
+
+      return {
+        ...log,
+        kcal: kcalValue,
+        carb: carbValue,
+        protein: proteinValue,
+        fat: FatValue,
+      };
     });
 
-    if (allLogs.length > 0) {
-      // แยกข้อมูลตามมื้อ
-      const breakdown = {
-        breakfast: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
-        lunch: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
-        dinner: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
-        snack: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
-      };
+    // --- หลังจากนั้นคำนวณ totals และ breakdown ตามเดิม ---
+    // ...
 
-      allLogs.forEach((log) => {
-        const mealId = log.mealId || "snack";
-        if (breakdown[mealId]) {
-          breakdown[mealId].kcal += log.kcal || 0;
-          breakdown[mealId].protein += log.protein || 0;
-          breakdown[mealId].carb += log.carb || 0;
-          breakdown[mealId].fat += log.fat || 0;
-          breakdown[mealId].items.push(log);
-        }
-      });
+    // 🌟 5. คำนวณ Totals (จะกลายเป็น 0 ทันทีถ้าวันนี้ยังไม่มี log ใหม่)
+    const totals = todayLogs.reduce(
+      (acc, curr) => ({
+        kcal: acc.kcal + (Number(curr.kcal) || 0),
+        protein: acc.protein + (Number(curr.protein) || 0),
+        carb: acc.carb + (Number(curr.carb) || 0),
+        fat: acc.fat + (Number(curr.fat) || 0),
+      }),
+      { kcal: 0, protein: 0, carb: 0, fat: 0 },
+    );
 
-      setMealBreakdown(breakdown);
+    setSummary(totals);
 
-      // คำนวณรวมทั้งหมด
-      const totals = allLogs.reduce(
-        (acc, curr) => ({
-          kcal: acc.kcal + (curr.kcal || 0),
-          protein: acc.protein + (curr.protein || 0),
-          carb: acc.carb + (curr.carb || 0),
-          fat: acc.fat + (curr.fat || 0),
-        }),
-        { kcal: 0, protein: 0, carb: 0, fat: 0 },
-      );
+    // 6. แยกรายละเอียดตามมื้อ (Breakdown)
+    const breakdown = {
+      breakfast: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
+      lunch: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
+      dinner: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
+      snack: { kcal: 0, protein: 0, carb: 0, fat: 0, items: [] },
+    };
 
-      setSummary(totals);
-    }
+    todayLogs.forEach((log) => {
+      const mealId = log.mealId || "snack";
+      if (breakdown[mealId]) {
+        breakdown[mealId].kcal += Number(log.kcal) || 0;
+        breakdown[mealId].protein += Number(log.protein) || 0;
+        breakdown[mealId].carb += Number(log.carb) || 0;
+        breakdown[mealId].fat += Number(log.fat) || 0;
+        breakdown[mealId].items.push(log);
+      }
+    });
+
+    setMealBreakdown(breakdown);
   }, []);
 
   const meals = [
@@ -259,14 +275,16 @@ function MealPage() {
                   style={{
                     fontSize: "0.7rem",
                     color:
-                      summary.kcal > userTarget.calories ? "#E53E3E" : "#38A169",
+                      summary.kcal > userTarget.calories
+                        ? "#E53E3E"
+                        : "#38A169",
                     marginTop: "6px",
                     fontWeight: "600",
                   }}
                 >
                   {summary.kcal > userTarget.calories
                     ? `เกินเป้าหมาย +${Math.round(summary.kcal - userTarget.calories)} kcal`
-                    : `เหลืออีก ${Math.round(userTarget.calories - summary.kcal)} kcal`}
+                    : ``}
                 </div>
               </div>
             </div>
@@ -280,21 +298,21 @@ function MealPage() {
               }}
             >
               <MacroItem
-                label="Protein"
+                label="โปรตีน"
                 value={Math.round(summary.protein)}
                 target={userTarget.protein}
                 unit="g"
                 color="#FF6B9D"
               />
               <MacroItem
-                label="Carbs"
+                label="คาร์บ"
                 value={Math.round(summary.carb)}
                 target={userTarget.carbs}
                 unit="g"
                 color="#FFB84D"
               />
               <MacroItem
-                label="Fat"
+                label="ไขมัน"
                 value={Math.round(summary.fat)}
                 target={userTarget.fat}
                 unit="g"
@@ -561,9 +579,7 @@ function MacroItem({ label, value, target, unit, color }) {
           fontWeight: "600",
         }}
       >
-        {isOver
-          ? `+${value - target}${unit}`
-          : `เหลือ ${target - value}${unit}`}
+        {isOver ? `+${value - target}${unit}` : ``}
       </div>
     </div>
   );

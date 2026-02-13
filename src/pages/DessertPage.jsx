@@ -3,150 +3,173 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
 
-const riceFlourItems = [
+const dessertItems = [
   {
     id: 1,
-    name: "ข้าวสวย",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍚",
+    name: "กล้วยแขก",
+    portion: "1 ชิ้น (20 กรัม)",
+    carbs: 15,
+    calories: 60,
   },
   {
     id: 2,
-    name: "ข้าวเหนียว",
-    portion: "½ ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍚",
+    name: "ขนมกล้วย",
+    portion: "1 ชิ้น (50 กรัม)",
+    carbs: 21,
+    calories: 84,
   },
   {
     id: 3,
-    name: "ข้าวต้ม",
-    portion: "2 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍲",
+    name: "ขนมครก",
+    portion: "3 คู่ (90 กรัม)",
+    carbs: 45,
+    calories: 180,
   },
-  {
-    id: 4,
-    name: "ขนมจีน",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍜",
-  },
+  { id: 4, name: "ขนมชั้น", portion: "1 ชิ้น", carbs: 26, calories: 104 },
   {
     id: 5,
-    name: "เส้นใหญ่",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍜",
+    name: "ขนมตาล",
+    portion: "1 ชิ้น (30 กรัม)",
+    carbs: 15,
+    calories: 60,
   },
-  {
-    id: 6,
-    name: "วุ้นเส้น",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍜",
-  },
+  { id: 6, name: "ขนมถังแตก", portion: "1 ชิ้น", carbs: 57, calories: 228 },
   {
     id: 7,
-    name: "บะหมี่",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍜",
+    name: "ขนมบัวลอยเผือก",
+    portion: "1/2 ถ้วยตวง (100 กรัม)",
+    carbs: 30,
+    calories: 120,
   },
   {
     id: 8,
-    name: "ลูกเดือยสุก",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🥔",
+    name: "ขนมบ้าบิ่น",
+    portion: "5 ชิ้น (100 กรัม)",
+    carbs: 62,
+    calories: 248,
   },
   {
     id: 9,
-    name: "มันเทศต้มสุก",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍠",
+    name: "ขนมเบื้องครีมไส้เค็ม",
+    portion: "6 ชิ้น (30 กรัม)",
+    carbs: 21,
+    calories: 84,
   },
   {
     id: 10,
-    name: "ฟักทองสุก",
-    portion: "2 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🎃",
+    name: "ขนมปากหม้อ",
+    portion: "4 ชิ้น (48 กรัม)",
+    carbs: 16,
+    calories: 64,
   },
   {
     id: 11,
-    name: "ถั่วแดงสุก",
-    portion: "1 ทัพพี",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🫘",
+    name: "ขนมลอดช่องน้ำกะทิ",
+    portion: "1/2 ถ้วยตวง (100 กรัม)",
+    carbs: 24,
+    calories: 96,
   },
   {
     id: 12,
-    name: "ขนมปัง",
-    portion: "1 แผ่น",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍞",
+    name: "ขนมลูกชุบ",
+    portion: "4 ชิ้น (35 กรัม)",
+    carbs: 16,
+    calories: 64,
   },
   {
     id: 13,
-    name: "ข้าวโพด",
-    portion: "½ ฝักใหญ่",
-    carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🌽",
+    name: "ขนมสาคูไส้หมู",
+    portion: "4 ลูก (48 กรัม)",
+    carbs: 16,
+    calories: 64,
   },
   {
     id: 14,
-    name: "แครกเกอร์",
-    portion: "6 แผ่น",
+    name: "ขนมใส่ไส้",
+    portion: "1 ชิ้น (55 กรัม)",
+    carbs: 14,
+    calories: 56,
+  },
+  {
+    id: 15,
+    name: "ข้าวต้มมัดไส้กล้วย",
+    portion: "1 กลีบ (70 กรัม)",
+    carbs: 31,
+    calories: 124,
+  },
+  {
+    id: 16,
+    name: "ข้าวเหนียวปิ้งไส้กล้วย",
+    portion: "1 ชิ้น (85 กรัม)",
+    carbs: 36,
+    calories: 144,
+  },
+  {
+    id: 17,
+    name: "ข้าวเหนียวมูล",
+    portion: "1 ช้อนโต๊ะ (15 กรัม)",
+    carbs: 8,
+    calories: 32,
+  },
+  {
+    id: 18,
+    name: "เฉาก๊วยในน้ำเชื่อม",
+    portion: "1 ถุง (160 กรัม)",
+    carbs: 60,
+    calories: 240,
+  },
+  {
+    id: 19,
+    name: "ซ่าหริ่ม",
+    portion: "1/2 ถ้วย (100 กรัม)",
+    carbs: 29,
+    calories: 116,
+  },
+  {
+    id: 20,
+    name: "เต้าทึง",
+    portion: "1 ถ้วยตวง (200 กรัม)",
+    carbs: 45,
+    calories: 180,
+  },
+  {
+    id: 21,
+    name: "ทองม้วน",
+    portion: "4 ชิ้นกลม (14 กรัม)",
+    carbs: 12,
+    calories: 48,
+  },
+  {
+    id: 22,
+    name: "ทุเรียนทอดอบกรอบ",
+    portion: "1/2 ถ้วยตวง (30 กรัม)",
     carbs: 18,
-    protein: 2,
-    fat: 0,
-    calories: 80,
-    // emoji: "🍘",
+    calories: 72,
+  },
+  {
+    id: 23,
+    name: "บะจ่าง",
+    portion: "1 ชิ้น (180 กรัม)",
+    carbs: 59,
+    calories: 236,
+  },
+  {
+    id: 24,
+    name: "บัวลอยน้ำขิง",
+    portion: "1 ถ้วยตวง (200 กรัม)",
+    carbs: 40,
+    calories: 160,
+  },
+  {
+    id: 25,
+    name: "ปาท่องโก๋",
+    portion: "1 คู่ (20 กรัม)",
+    carbs: 9,
+    calories: 36,
   },
 ];
 
-function RiceFlourPage() {
+function DessertPage() {
   const currentUser = localStorage.getItem("currentUser");
 
   const navigate = useNavigate();
@@ -161,7 +184,7 @@ function RiceFlourPage() {
 
   useEffect(() => {
     const existingLogs = JSON.parse(
-      localStorage.getItem(`riceLogs_${currentUser}`) || "[]",
+      localStorage.getItem(`dessertLogs_${currentUser}`) || "[]",
     );
 
     const today = new Date().toLocaleDateString("th-TH");
@@ -173,7 +196,7 @@ function RiceFlourPage() {
       setCurrentLogId(todayMealLog.id);
 
       const items = todayMealLog.items
-        .map((item) => riceFlourItems.find((rfi) => rfi.id === item.id))
+        .map((item) => dessertItems.find((di) => di.id === item.id))
         .filter(Boolean);
 
       setSelectedItems(items);
@@ -211,13 +234,6 @@ function RiceFlourPage() {
     }, 0);
   };
 
-  const calculateTotalProteins = () => {
-    return selectedItems.reduce((total, item) => {
-      const portion = portions[item.id] || 1;
-      return total + portion * item.protein;
-    }, 0);
-  };
-
   const calculateTotalCalories = () => {
     return selectedItems.reduce((total, item) => {
       const portion = portions[item.id] || 1;
@@ -230,20 +246,18 @@ function RiceFlourPage() {
       Swal.fire({
         icon: "warning",
         title: "ไม่ได้เลือกรายการ",
-        text: "กรุณาเลือกอาหารอย่างน้อย 1 รายการ",
+        text: "กรุณาเลือกขนมอย่างน้อย 1 รายการ",
         confirmButtonColor: "#f6ad55",
       });
       return;
     }
 
     const totalCarbs = calculateTotalCarbs();
-    const totalProteins = calculateTotalProteins();
-    // const totalCalories = calculateTotalCalories();
-
+    const totalCalories = calculateTotalCalories();
     const now = new Date();
 
     const existingLogs = JSON.parse(
-      localStorage.getItem(`riceLogs_${currentUser}`) || "[]",
+      localStorage.getItem(`dessertLogs_${currentUser}`) || "[]",
     );
 
     let updatedLogs;
@@ -261,7 +275,7 @@ function RiceFlourPage() {
             })} น.`,
             timestamp: now.toISOString(),
             totalCarb: totalCarbs,
-            totalProtein: totalProteins,
+            totalCalories: totalCalories,
             items: selectedItems.map((item) => ({
               id: item.id,
               name: item.name,
@@ -284,7 +298,7 @@ function RiceFlourPage() {
         })} น.`,
         timestamp: now.toISOString(),
         totalCarb: totalCarbs,
-        totalProtein: totalProteins,
+        totalCalories: totalCalories,
         items: selectedItems.map((item) => ({
           id: item.id,
           name: item.name,
@@ -297,7 +311,7 @@ function RiceFlourPage() {
     }
 
     localStorage.setItem(
-      `riceLogs_${currentUser}`,
+      `dessertLogs_${currentUser}`,
       JSON.stringify(updatedLogs),
     );
 
@@ -312,9 +326,8 @@ function RiceFlourPage() {
         <div style="text-align:center;">
           <p>มื้ออาหาร: <b>${mealName}</b></p>
           <p style="font-size: 1.2rem; color: #667eea; font-weight: bold;">
-            คาร์โบไฮเดรตรวม: ${calculateTotalCarbs().toFixed(1)} กรัม
-            <br>โปรตีนรวม: ${calculateTotalProteins().toFixed(1)} กรัม
-            <br>พลังงานรวม: ${calculateTotalCalories().toFixed(0)} กิโลแคลอรี่
+            คาร์โบไฮเดรตรวม: ${totalCarbs.toFixed(1)} กรัม
+            พลังงานรวม: ${totalCalories.toFixed(0)} กิโลแคลอรี่
           </p>
           ${currentLogId ? '<p style="font-size: 0.9rem; color: #718096;">ข้อมูลถูกอัพเดทแล้ว</p>' : ""}
         </div>
@@ -352,11 +365,11 @@ function RiceFlourPage() {
           }}
         >
           <Header
-            title={`ข้าว - แป้ง (${mealName})`}
+            title={`ขนม (${mealName})`}
             backTo={`/food-log?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`}
           />
 
-          {/* Food Items List */}
+          {/* Dessert Items List */}
           <div style={{ padding: "15px" }}>
             <h3
               style={{
@@ -367,7 +380,7 @@ function RiceFlourPage() {
                 textAlign: "center",
               }}
             >
-              <u>เลือกรายการข้าว - แป้ง</u>
+              <u>เลือกรายการขนม</u>
             </h3>
 
             <div
@@ -377,7 +390,7 @@ function RiceFlourPage() {
                 gap: "10px",
               }}
             >
-              {riceFlourItems.map((item) => {
+              {dessertItems.map((item) => {
                 const isSelected = selectedItems.find((i) => i.id === item.id);
                 const portion = portions[item.id] || 1;
 
@@ -417,16 +430,6 @@ function RiceFlourPage() {
                             flex: 1,
                           }}
                         >
-                          {/* Emoji */}
-                          <span
-                            style={{
-                              fontSize: "1.6rem",
-                              lineHeight: 1,
-                              marginTop: "2px",
-                            }}
-                          >
-                            {item.emoji}
-                          </span>
                           <div style={{ flex: 1 }}>
                             <div
                               style={{
@@ -457,9 +460,6 @@ function RiceFlourPage() {
                             >
                               <span style={chipStyle("#FEF3C7", "#92400E")}>
                                 คาร์บ {item.carbs} g
-                              </span>
-                              <span style={chipStyle("#DBEAFE", "#1E40AF")}>
-                                โปรตีน {item.protein} g
                               </span>
                               <span style={chipStyle("#FCE7F3", "#9F1239")}>
                                 {item.calories} kcal
@@ -518,7 +518,7 @@ function RiceFlourPage() {
                               color: "#4a5568",
                             }}
                           >
-                            จำนวนหน่วยบริโภค
+                            จำนวนส่วน
                           </span>
                           <div
                             style={{
@@ -587,7 +587,6 @@ function RiceFlourPage() {
                             marginTop: "8px",
                             color: "#3b82f6",
                             fontWeight: "600",
-                            // ใส่หน่วย px ให้ชัดเจน และใช้ค่าที่ครอบคลุม
                             fontSize: "15px",
                           }}
                         >
@@ -599,12 +598,7 @@ function RiceFlourPage() {
                           <div
                             style={{ textAlign: "left", fontSize: "inherit" }}
                           >
-                            โปรตีน • {(portion * item.protein).toFixed(1)} g
-                          </div>
-                          <div
-                            style={{ textAlign: "left", fontSize: "inherit" }}
-                          >
-                            พลังงาน • {(portion * item.calories).toFixed(0)}{" "}
+                            พลังงาน • {(portion * item.carbs * 4).toFixed(0)}{" "}
                             kcal
                           </div>
                         </div>
@@ -643,7 +637,7 @@ function RiceFlourPage() {
               }}
             >
               {selectedItems.length === 0
-                ? "กรุณาเลือกรายการอาหาร"
+                ? "กรุณาเลือกขนม"
                 : currentLogId
                   ? `อัพเดทข้อมูล`
                   : `บันทึกข้อมูล`}
@@ -667,4 +661,4 @@ function chipStyle(bg, color) {
   };
 }
 
-export default RiceFlourPage;
+export default DessertPage;

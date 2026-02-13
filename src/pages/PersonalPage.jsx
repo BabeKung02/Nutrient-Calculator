@@ -163,7 +163,7 @@ const PersonalPage = () => {
             </div>
           </div>
 
-          <div
+          {/* <div
             style={{
               ...styles.infoCard,
               marginTop: "15px",
@@ -175,7 +175,7 @@ const PersonalPage = () => {
             <div style={{ fontSize: "32px", color: "#f89704" }}>
               {userData.carb?.toLocaleString()} คาร์บ
             </div>
-          </div>
+          </div> */}
 
           <button
             style={styles.editBtn}

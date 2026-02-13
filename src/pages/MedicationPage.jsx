@@ -1,28 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";          // ✅ ใช้ Header จริงเหมือนทุกหน้า
 import { useNotification } from "../hooks/useNotification";
-
-// ── Mock Header ────────────────────────────────────────────────
-const Header = ({ title, backTo }) => {
-  const navigate = useNavigate();
-  return (
-    <div style={headerStyles.wrapper}>
-      <button style={headerStyles.backBtn} onClick={() => navigate(backTo || -1)}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
-      </button>
-      <span style={headerStyles.title}>{title}</span>
-      <div style={{ width: 36 }} />
-    </div>
-  );
-};
-const headerStyles = {
-  wrapper: { display:"flex", alignItems:"center", justifyContent:"space-between", padding:"16px 20px", borderBottom:"1.5px solid #ede9fe", background:"white" },
-  backBtn: { background:"#f3f0ff", border:"none", borderRadius:"12px", width:36, height:36, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", color:"#7c3aed" },
-  title: { fontSize:"18px", fontWeight:700, color:"#2d2050", fontFamily:"'Prompt',sans-serif" },
-};
 
 // ── Permission Banner ──────────────────────────────────────────
 const PermissionBanner = ({ permission, onRequest }) => {
@@ -226,11 +205,7 @@ const AddModal = ({ onClose, onAdd }) => {
 
 // ── Main Page ──────────────────────────────────────────────────
 export default function MedicationPage() {
-  const [entries, setEntries] = useState([
-    { id:1, name:"เมตฟอร์มิน", freq:"2 เวลา", meal:"เช้า",  timing:"หลังอาหาร" },
-    { id:2, name:"เมตฟอร์มิน", freq:"2 เวลา", meal:"เย็น",  timing:"หลังอาหาร" },
-    { id:3, name:"วิตามิน C",  freq:"1 เวลา", meal:"เช้า",  timing:"ก่อนอาหาร" },
-  ]);
+  const [entries, setEntries] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast]         = useState({ msg:"", visible:false });
   const [notifMap, setNotifMap]   = useState({});
@@ -282,64 +257,98 @@ export default function MedicationPage() {
         body { background:#f0ebff; }
       `}</style>
 
-      <div style={{ minHeight:"100vh", display:"flex", justifyContent:"center",
-        background:"#f0ebff", fontFamily:"'Prompt',sans-serif" }}>
-        <div style={{ width:"100%", maxWidth:"430px", minHeight:"100vh", background:"#faf8ff",
-          boxShadow:"0 0 60px rgba(124,58,237,.15)", display:"flex", flexDirection:"column" }}>
+      <div
+        style={{
+          width: "100vw",
+          minHeight: "100vh",
+          padding: "40px 15px",
+          background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+        }}
+      >
+        <div style={{ maxWidth: "600px", width: "100%" }}>
+          <div
+            style={{
+              background: "white",
+              borderRadius: "12px",
+              boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+              overflow: "hidden",
+            }}
+          >
+            {/* ✅ Header จริง เหมือนทุกหน้า */}
+            <Header title="ข้อมูลยา" backTo="/menu" />
 
-          <Header title="ข้อมูลยา" backTo="/menu" />
+            <div style={{ padding: "15px" }}>
+              <PermissionBanner permission={permission} onRequest={requestPermission} />
 
-          <div style={{ flex:1, padding:"20px 16px 100px", overflowY:"auto" }}>
+              {/* Add Button */}
+              <button
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  padding: "15px",
+                  borderRadius: "18px",
+                  border: "2.5px dashed #c4b5fd",
+                  background: "white",
+                  color: "#7c3aed",
+                  fontSize: "16px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  marginBottom: "20px",
+                  fontFamily: "'Prompt',sans-serif",
+                }}
+                onClick={() => setShowModal(true)}
+              >
+                <span style={{ fontSize: "20px" }}>＋</span> เพิ่มรายการ
+              </button>
 
-            <PermissionBanner permission={permission} onRequest={requestPermission} />
-
-            <button style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center",
-              gap:"8px", padding:"15px", borderRadius:"18px", border:"2.5px dashed #c4b5fd",
-              background:"white", color:"#7c3aed", fontSize:"16px", fontWeight:700, cursor:"pointer",
-              marginBottom:"20px", fontFamily:"'Prompt',sans-serif" }}
-              onClick={() => setShowModal(true)}>
-              <span style={{ fontSize:"20px" }}>＋</span> เพิ่มรายการ
-            </button>
-
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px", marginBottom:"20px" }}>
-              {timingOrder.map((t) => (
-                <div key={t} style={{ background:"white", borderRadius:"16px", padding:"14px 10px",
-                  textAlign:"center", boxShadow:"0 2px 10px rgba(124,58,237,.1)", border:"1.5px solid #ede9fe",
-                  display:"flex", flexDirection:"column", alignItems:"center", gap:"4px" }}>
-                  <span style={{ fontSize:"18px" }}>{timingEmoji[t]}</span>
-                  <span style={{ fontSize:"22px", fontWeight:700, color:"#7c3aed", lineHeight:1 }}>
-                    {(grouped[t] || []).length}
-                  </span>
-                  <span style={{ fontSize:"11px", color:"#9ca3af", fontWeight:600 }}>{t}</span>
-                </div>
-              ))}
-            </div>
-
-            {timingOrder.map((timing) =>
-              grouped[timing] ? (
-                <div key={timing} style={{ animation:"fadeIn .4s ease" }}>
-                  <div style={{ fontSize:"14px", fontWeight:700, color:"#7c3aed", marginBottom:"10px",
-                    marginTop:"6px", textTransform:"uppercase", letterSpacing:".06em" }}>
-                    {timingEmoji[timing]} {timing}
+              {/* Summary chips */}
+              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px", marginBottom:"20px" }}>
+                {timingOrder.map((t) => (
+                  <div key={t} style={{ background:"white", borderRadius:"16px", padding:"14px 10px",
+                    textAlign:"center", boxShadow:"0 2px 10px rgba(124,58,237,.1)", border:"1.5px solid #ede9fe",
+                    display:"flex", flexDirection:"column", alignItems:"center", gap:"4px" }}>
+                    <span style={{ fontSize:"18px" }}>{timingEmoji[t]}</span>
+                    <span style={{ fontSize:"22px", fontWeight:700, color:"#7c3aed", lineHeight:1 }}>
+                      {(grouped[t] || []).length}
+                    </span>
+                    <span style={{ fontSize:"11px", color:"#9ca3af", fontWeight:600 }}>{t}</span>
                   </div>
-                  {grouped[timing].map((e) => (
-                    <MealCard key={e.id} entry={e}
-                      onDelete={() => handleDelete(e.id)}
-                      onTest={handleTest}
-                      scheduled={notifMap[e.id]} />
-                  ))}
-                </div>
-              ) : null
-            )}
-
-            {entries.length === 0 && (
-              <div style={{ textAlign:"center", paddingTop:"60px" }}>
-                <div style={{ fontSize:"48px", marginBottom:"12px" }}>💊</div>
-                <p style={{ color:"#a78bfa", fontWeight:600, fontFamily:"'Prompt',sans-serif" }}>
-                  ยังไม่มีรายการ<br />กด + เพื่อเพิ่มรายการ
-                </p>
+                ))}
               </div>
-            )}
+
+              {/* Grouped list */}
+              {timingOrder.map((timing) =>
+                grouped[timing] ? (
+                  <div key={timing} style={{ animation:"fadeIn .4s ease" }}>
+                    <div style={{ fontSize:"14px", fontWeight:700, color:"#7c3aed", marginBottom:"10px",
+                      marginTop:"6px", textTransform:"uppercase", letterSpacing:".06em" }}>
+                      {timingEmoji[timing]} {timing}
+                    </div>
+                    {grouped[timing].map((e) => (
+                      <MealCard key={e.id} entry={e}
+                        onDelete={() => handleDelete(e.id)}
+                        onTest={handleTest}
+                        scheduled={notifMap[e.id]} />
+                    ))}
+                  </div>
+                ) : null
+              )}
+
+              {entries.length === 0 && (
+                <div style={{ textAlign:"center", paddingTop:"60px" }}>
+                  <div style={{ fontSize:"48px", marginBottom:"12px" }}>💊</div>
+                  <p style={{ color:"#a78bfa", fontWeight:600, fontFamily:"'Prompt',sans-serif" }}>
+                    ยังไม่มีรายการ<br />กด + เพื่อเพิ่มรายการ
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

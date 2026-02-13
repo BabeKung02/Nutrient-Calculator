@@ -14,6 +14,10 @@ import VegetablePage from "./pages/VegetablePage";
 import FruitPage from "./pages/FruitPage";
 import MedicationPage from "./pages/MedicationPage";
 import DairyPage from "./pages/DairyPage";
+import MeatPage from "./pages/MeatPage";
+import SingleDishPage from "./pages/SingleDishPage";
+import DessertPage from "./pages/DessertPage";
+import FatPage from "./pages/FatPage";
 
 import "./App.css";
 function App() {
@@ -35,6 +39,10 @@ function App() {
         <Route path="/medication" element={<MedicationPage />} />
         <Route path="/food/fruit" element={<FruitPage />} />
         <Route path="/food/dairy" element={<DairyPage />} />
+        <Route path="/food/meat" element={<MeatPage />} />
+        <Route path="/food/single-dish" element={<SingleDishPage />} />
+        <Route path="/food/dessert" element={<DessertPage />} />
+        <Route path="/food/fat" element={<FatPage />} />  
       </Routes>
     </BrowserRouter>
   );

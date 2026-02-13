@@ -1,4 +1,3 @@
-// ============================================
 // ฟังก์ชันคำนวณ BMI
 // ============================================
 export function calculateBMI(weight, height) {
@@ -65,7 +64,7 @@ export function calculateTDEE({ bmr, activityLevel }) {
 }
 
 // ============================================
-// คำนวณพลังงานที่ต้องการสำหรับผู้ป่วยเบาหวาน
+// คำนวณพลังงานที่ต้องการ
 // ============================================
 export function calculateCaloriesRequirement({ tdee, bmi }) {
   const b = parseFloat(bmi);
@@ -75,13 +74,17 @@ export function calculateCaloriesRequirement({ tdee, bmi }) {
     return 0;
   }
 
-  // เงื่อนไข: BMI 18.5 – 22.9 (น้ำหนักปกติ)
-  if (b >= 18.5 && b < 23) {
-    return Math.round(t); // ใช้ TDEE ตามปกติ
+  // 1. กรณี BMI < 18.5 (ผอม) -> เพิ่ม 500 kcal
+  if (b < 18.5) {
+    return Math.round(t + 500);
   }
 
-  // เงื่อนไข: BMI >= 23 (น้ำหนักเกิน/อ้วน)
-  // สำหรับผู้ป่วยเบาหวาน ลด 500 kcal
+  // 2. กรณี BMI 18.5 - 22.9 (สมส่วน) -> ใช้ TDEE ตามปกติ
+  if (b >= 18.5 && b < 23) {
+    return Math.round(t);
+  }
+
+  // 3. กรณี BMI >= 23 (น้ำหนักเกิน/อ้วน) -> ลด 500 kcal
   if (b >= 23) {
     return Math.round(t - 500);
   }
@@ -90,16 +93,18 @@ export function calculateCaloriesRequirement({ tdee, bmi }) {
 }
 
 // ============================================
-// คำนวณสัดส่วนสารอาหาร (สำหรับผู้ป่วยเบาหวาน)
+// คำนวณสัดส่วนสารอาหาร (Macros)
 // ============================================
-export function calculateMacros({ calories, weight, bmi }) {
+export function calculateMacros({ calories, tdee, weight, bmi }) {
   const cal = parseFloat(calories);
+  const t = parseFloat(tdee);
   const w = parseFloat(weight);
   const b = parseFloat(bmi);
 
-  if (isNaN(cal) || isNaN(w) || isNaN(b)) {
+  if (isNaN(cal) || isNaN(t) || isNaN(w) || isNaN(b)) {
     return {
       carbs: 0,
+      carb: 0,
       protein: 0,
       fat: 0,
       sodium: 2000,
@@ -107,34 +112,57 @@ export function calculateMacros({ calories, weight, bmi }) {
   }
 
   let carbPercent, proteinPercent, fatPercent;
+  let carbsGrams, proteinGrams, fatGrams;
 
-    carbPercent = 0.5;
-    proteinPercent = 0.2;
-    fatPercent = 0.3;
+  if (b >= 23.0) {
+    // กรณีน้ำหนักเกิน (BMI ≥ 23.0)
+    // พลังงาน = TDEE - 500
+    // คำนวณทุกอย่างจาก calories (TDEE - 500)
+    carbPercent = 0.50;
+    proteinPercent = 0.20;
+    fatPercent = 0.30;
 
+    carbsGrams = Math.round((cal * carbPercent) / 4); // 50% ของ TDEE-500
+    proteinGrams = Math.round((cal * proteinPercent) / 4); // 20% ของ TDEE-500
+    fatGrams = Math.round((cal * fatPercent) / 9); // 30% ของ TDEE-500
+  } else if (b >= 18.5 && b < 23) {
+    // กรณีสมส่วน (BMI 18.5-22.9)
+    // พลังงาน = TDEE
+    // คำนวณทุกอย่างจาก calories (TDEE)
+    carbPercent = 0.50;
+    proteinPercent = 0.15;
+    fatPercent = 0.35;
 
-  // คำนวณปริมาณสารอาหารในหน่วยกรัม
-  // คาร์โบไฮเดรต: 1g = 4 kcal
-  const carbsGrams = Math.round((cal * carbPercent) / 4);
+    carbsGrams = Math.round((cal * carbPercent) / 4); // 50% ของ TDEE
+    proteinGrams = Math.round((cal * proteinPercent) / 4); // 15% ของ TDEE
+    fatGrams = Math.round((cal * fatPercent) / 9); // 35% ของ TDEE
+  } else {
+    // กรณีผอม (BMI < 18.5)
+    // พลังงาน = TDEE + 500
+    // คำนวณทุกอย่างจาก calories (TDEE + 500)
+    carbPercent = 0.50;
+    proteinPercent = 0.15;
+    fatPercent = 0.35;
 
-  const carbs = Math.round((carbsGrams / 15) * 100) / 100;
-  // โปรตีน: 1g = 4 kcal
-  const proteinGrams = Math.round((cal * proteinPercent) / 4);
+    carbsGrams = Math.round((cal * carbPercent) / 4); // 50% ของ TDEE+500
+    proteinGrams = Math.round((cal * proteinPercent) / 4); // 15% ของ TDEE+500
+    fatGrams = Math.round((cal * fatPercent) / 9); // 35% ของ TDEE+500
+  }
 
-  // ไขมัน: 1g = 9 kcal
-  const fatGrams = Math.round((cal * fatPercent) / 9);
+  // คำนวณหน่วยแลกเปลี่ยนคาร์โบไฮเดรต (1 หน่วย = 15 กรัม)
+  const carb = Math.round((carbsGrams / 15) * 100) / 100;
 
   return {
     carbs: carbsGrams,
-    carb : carbs,
+    carb: carb,
     protein: proteinGrams,
     fat: fatGrams,
-    sodium: 2000, // โซเดียมน้อยกว่า 2,000 mg
+    sodium: 2000, // โซเดียมไม่เกิน 2000 มิลลิกรัม/วัน
   };
 }
 
 // ============================================
-// ฟังก์ชันหลักที่รวมการคำนวณทั้งหมด (สำหรับผู้ป่วยเบาหวาน)
+// ฟังก์ชันหลักที่รวมการคำนวณทั้งหมด
 // ============================================
 export function calculateNutrition(userData) {
   const { weight, height, age, gender, activityLevel } = userData;
@@ -149,13 +177,13 @@ export function calculateNutrition(userData) {
   // 3. คำนวณ TDEE
   const tdee = calculateTDEE({ bmr, activityLevel });
 
-  // 4. คำนวณพลังงานที่ต้องการ (สำหรับผู้ป่วยเบาหวาน)
+  // 4. คำนวณพลังงานที่ต้องการ
   const calories = calculateCaloriesRequirement({ tdee, bmi });
 
-
+  // 5. คำนวณสารอาหาร
   const macros = calculateMacros({
     calories,
-    tdee, // ส่ง tdee เพื่อคำนวณ (TDEE × 20%) / 4
+    tdee,
     weight: parseFloat(weight),
     bmi: parseFloat(bmi),
   });
@@ -185,23 +213,41 @@ const userData = {
 const result = calculateNutrition(userData);
 console.log(result);
 
-ผลลัพธ์สำหรับผู้ป่วยเบาหวาน:
+ผลลัพธ์ตัวอย่าง (BMI 24.2 - น้ำหนักเกิน):
 {
   bmi: 24.2,
   bmiCategory: "น้ำหนักเกิน",
   bmr: 1679,
   tdee: 2602,
-  calories: 2102, // TDEE - 500 (เพราะ BMI >= 23 และเป็นผู้ป่วยเบาหวาน)
-  carbs: 263,     // 50% ของ 2102 kcal (สำหรับน้ำหนักเกิน)
-  protein: 105,   // 20% ของ 2102 kcal (สำหรับน้ำหนักเกิน)
-  fat: 70,        // 30% ของ 2102 kcal (สำหรับน้ำหนักเกิน)
+  calories: 2102,  // TDEE - 500 (เพราะ BMI >= 23)
+  carbs: 263,      // 50% ของ TDEE-500 (2102 * 0.5 / 4)
+  carb: 17.53,     // หน่วยแลกเปลี่ยน (263 / 15)
+  protein: 105,    // 20% ของ TDEE-500 (2102 * 0.2 / 4)
+  fat: 70,         // 30% ของ TDEE-500 (2102 * 0.3 / 9)
   sodium: 2000
 }
 
 หมายเหตุ:
-- ลบพารามิเตอร์ hasDiabetes และ hasHypertension ออกแล้ว
-- ใช้เกณฑ์สำหรับผู้ป่วยเบาหวานเป็นค่าเริ่มต้น
-- น้ำหนักปกติ (BMI 18.5-22.9): คาร์โบ 55%, โปรตีน 12.5%, ไขมัน 27.5%
-- น้ำหนักเกิน/อ้วน (BMI >= 23): คาร์โบ 50%, โปรตีน 20%, ไขมัน 30%
-- ลดพลังงาน 500 kcal เมื่อ BMI >= 23
+เงื่อนไขการคำนวณ:
+
+1. BMI < 18.5 (ผอม):
+   - พลังงาน: TDEE + 500 kcal
+   - คาร์โบไฮเดรต: 50% ของ TDEE+500
+   - โปรตีน: 15% ของ TDEE+500
+   - ไขมัน: 35% ของ TDEE+500
+
+2. BMI 18.5 - 22.9 (สมส่วน):
+   - พลังงาน: TDEE
+   - คาร์โบไฮเดรต: 50% ของ TDEE
+   - โปรตีน: 15% ของ TDEE
+   - ไขมัน: 35% ของ TDEE
+
+3. BMI ≥ 23.0 (น้ำหนักเกิน/อ้วน):
+   - พลังงาน: TDEE - 500 kcal
+   - คาร์โบไฮเดรต: 50% ของ TDEE-500
+   - โปรตีน: 20% ของ TDEE-500
+   - ไขมัน: 30% ของ TDEE-500
+
+4. โซเดียม: ไม่เกิน 2000 มิลลิกรัม/วัน
+   (เทียบเท่าเกลือแกงหรือเกลือโซเดียมคลอร์ไรด์ 1 ช้อนชา หรือ 5 กรัม)
 */

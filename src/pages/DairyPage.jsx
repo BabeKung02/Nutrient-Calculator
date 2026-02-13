@@ -91,6 +91,20 @@ function DairyPage() {
     }, 0);
   };
 
+  const calculateTotalProtein = () => {
+    return selectedItems.reduce((total, item) => {
+      const portion = portions[item.id] || 1;
+      return total + portion * item.protein;
+    }, 0);
+  };
+
+  const calculateTotalFat = () => {
+    return selectedItems.reduce((total, item) => {
+      const portion = portions[item.id] || 1;
+      return total + portion * item.fat;
+    }, 0);
+  };
+
   const calculateTotalCalories = () => {
     return selectedItems.reduce((total, item) => {
       const portion = portions[item.id] || 1;
@@ -110,6 +124,10 @@ function DairyPage() {
     }
 
     const totalCarbs = calculateTotalCarbs();
+    const totalProtein = calculateTotalProtein();
+    const totalFat = calculateTotalFat();
+    const totalCalories = calculateTotalCalories();
+
     const now = new Date();
 
     const existingLogs = JSON.parse(
@@ -130,7 +148,10 @@ function DairyPage() {
               minute: "2-digit",
             })} น.`,
             timestamp: now.toISOString(),
-            totalCarbs: totalCarbs,
+            totalCarb: totalCarbs,
+            totalProtein: totalProtein,
+            totalFat: totalFat,
+            totalCalories: totalCalories,
             items: selectedItems.map((item) => ({
               id: item.id,
               name: item.name,
@@ -152,7 +173,10 @@ function DairyPage() {
           minute: "2-digit",
         })} น.`,
         timestamp: now.toISOString(),
-        totalCarbs: totalCarbs,
+        totalCarb: totalCarbs,
+        totalProtein: totalProtein,
+        totalFat: totalFat,
+        totalCalories: totalCalories,
         items: selectedItems.map((item) => ({
           id: item.id,
           name: item.name,
@@ -181,6 +205,9 @@ function DairyPage() {
           <p>มื้ออาหาร: <b>${mealName}</b></p>
           <p style="font-size: 1.2rem; color: #667eea; font-weight: bold;">
             คาร์โบไฮเดรตรวม: ${totalCarbs.toFixed(1)} กรัม
+            โปรตีนรวม: ${totalProtein.toFixed(1)} กรัม
+            ไขมันรวม: ${totalFat.toFixed(1)} กรัม
+            พลังงานรวม: ${totalCalories.toFixed(0)} กิโลแคลอรี่
           </p>
           ${currentLogId ? '<p style="font-size: 0.9rem; color: #718096;">ข้อมูลถูกอัพเดทแล้ว</p>' : ""}
         </div>
@@ -229,7 +256,7 @@ function DairyPage() {
                 margin: "0 0 15px 0",
                 fontSize: "1rem",
                 fontWeight: "600",
-                color: "#3b82f6",
+                color: "orange",
                 textAlign: "center",
               }}
             >
@@ -268,18 +295,24 @@ function DairyPage() {
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
-                          alignItems: "center",
+                          alignItems: "flex-start",
                         }}
                       >
                         <div
                           style={{
                             display: "flex",
-                            alignItems: "center",
+                            alignItems: "flex-start",
                             gap: "10px",
                             flex: 1,
                           }}
                         >
-                          <span style={{ fontSize: "2rem", lineHeight: 1 }}>
+                          <span
+                            style={{
+                              fontSize: "1.6rem",
+                              lineHeight: 1,
+                              marginTop: "2px",
+                            }}
+                          >
                             {item.emoji}
                           </span>
                           <div style={{ flex: 1 }}>
@@ -295,7 +328,7 @@ function DairyPage() {
                             </div>
                             <div
                               style={{
-                                fontSize: "0.78rem",
+                                fontSize: "0.8rem",
                                 color: "#718096",
                                 marginBottom: "6px",
                               }}
@@ -306,22 +339,21 @@ function DairyPage() {
                             {/* Nutrition chips */}
                             <div
                               style={{
-                                display: "grid",
-                                gridTemplateColumns: "repeat(2, 1fr)", // แบ่งเป็น 2 คอลัมน์ ขนาดเท่ากัน
-                                gap: "8px", // ระยะห่างระหว่าง Chip
-                                marginTop: "8px",
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: "4px",
                               }}
                             >
-                              <span style={chipStyle("#dbeafe", "#1d4ed8")}>
-                                คาร์บ {item.carbs} ก.
+                              <span style={chipStyle("#FEF3C7", "#92400E")}>
+                                คาร์บ {item.carbs} g
                               </span>
-                              <span style={chipStyle("#dcfce7", "#15803d")}>
-                                โปรตีน {item.protein} ก.
+                              <span style={chipStyle("#DBEAFE", "#1E40AF")}>
+                                โปรตีน {item.protein} g
                               </span>
-                              <span style={chipStyle("#fef9c3", "#92400e")}>
-                                ไขมัน {item.fat} ก.
+                              <span style={chipStyle("#FEF9C3", "#92400E")}>
+                                ไขมัน {item.fat} g
                               </span>
-                              <span style={chipStyle("#fce7f3", "#9d174d")}>
+                              <span style={chipStyle("#FCE7F3", "#9F1239")}>
                                 {item.calories} kcal
                               </span>
                             </div>
@@ -331,8 +363,8 @@ function DairyPage() {
                         {/* Checkbox */}
                         <div
                           style={{
-                            width: "26px",
-                            height: "26px",
+                            width: "24px",
+                            height: "24px",
                             borderRadius: "50%",
                             border: isSelected
                               ? "2px solid #3b82f6"
@@ -344,7 +376,6 @@ function DairyPage() {
                             fontSize: "0.75rem",
                             color: "white",
                             flexShrink: 0,
-                            marginLeft: "8px",
                           }}
                         >
                           {isSelected && "✓"}
@@ -357,15 +388,21 @@ function DairyPage() {
                       <div
                         style={{
                           display: "flex",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          background: "white",
-                          padding: "8px 12px",
-                          borderRadius: "8px",
-                          border: "1px solid #e2e8f0",
+                          flexDirection: "column",
+                          gap: "8px",
                         }}
                       >
-                        <div>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            background: "white",
+                            padding: "8px 12px",
+                            borderRadius: "8px",
+                            border: "1px solid #e2e8f0",
+                          }}
+                        >
                           <span
                             style={{
                               fontSize: "0.85rem",
@@ -377,71 +414,96 @@ function DairyPage() {
                           </span>
                           <div
                             style={{
-                              fontSize: "0.75rem",
-                              color: "#3b82f6",
-                              fontWeight: 600,
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "12px",
                             }}
                           >
-                            รวม {(portion * item.carbs).toFixed(1)} ก. คาร์บ •{" "}
-                            {(portion * item.calories).toFixed(0)} kcal
+                            <button
+                              onClick={() => updatePortion(item.id, -0.5)}
+                              style={{
+                                width: "32px",
+                                height: "32px",
+                                borderRadius: "8px",
+                                border: "2px solid #3b82f6",
+                                background: "white",
+                                color: "#3b82f6",
+                                fontSize: "1.2rem",
+                                fontWeight: "700",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              −
+                            </button>
+                            <span
+                              style={{
+                                fontSize: "1.1rem",
+                                fontWeight: "700",
+                                color: "#3b82f6",
+                                minWidth: "50px",
+                                textAlign: "center",
+                              }}
+                            >
+                              {portion}
+                            </span>
+                            <button
+                              onClick={() => updatePortion(item.id, 0.5)}
+                              style={{
+                                width: "32px",
+                                height: "32px",
+                                borderRadius: "8px",
+                                border: "2px solid #3b82f6",
+                                background: "#3b82f6",
+                                color: "white",
+                                fontSize: "1.2rem",
+                                fontWeight: "700",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              +
+                            </button>
                           </div>
                         </div>
+                        {/* Mini summary per item */}
                         <div
                           style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "12px",
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            gap: "2px 10px",
+                            marginTop: "8px",
+                            color: "#3b82f6",
+                            fontWeight: "600",
+                            // ใส่หน่วย px ให้ชัดเจน และใช้ค่าที่ครอบคลุม
+                            fontSize: "15px",
                           }}
                         >
-                          <button
-                            onClick={() => updatePortion(item.id, -0.5)}
-                            style={{
-                              width: "32px",
-                              height: "32px",
-                              borderRadius: "8px",
-                              border: "2px solid #3b82f6",
-                              background: "white",
-                              color: "#3b82f6",
-                              fontSize: "1.2rem",
-                              fontWeight: "700",
-                              cursor: "pointer",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
+                          <div
+                            style={{ textAlign: "left", fontSize: "inherit" }}
                           >
-                            −
-                          </button>
-                          <span
-                            style={{
-                              fontSize: "1.1rem",
-                              fontWeight: "700",
-                              color: "#3b82f6",
-                              minWidth: "50px",
-                              textAlign: "center",
-                            }}
+                            คาร์บ • {(portion * item.carbs).toFixed(1)} g
+                          </div>
+                          <div
+                            style={{ textAlign: "left", fontSize: "inherit" }}
                           >
-                            {portion}
-                          </span>
-                          <button
-                            onClick={() => updatePortion(item.id, 0.5)}
-                            style={{
-                              width: "32px",
-                              height: "32px",
-                              borderRadius: "8px",
-                              border: "2px solid #3b82f6",
-                              background: "#3b82f6",
-                              color: "white",
-                              fontSize: "1.2rem",
-                              fontWeight: "700",
-                              cursor: "pointer",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
+                            โปรตีน • {(portion * item.protein).toFixed(1)} g
+                          </div>
+                          <div
+                            style={{ textAlign: "left", fontSize: "inherit" }}
                           >
-                            +
-                          </button>
+                            ไขมัน • {(portion * item.fat).toFixed(1)} g
+                          </div>
+                          <div
+                            style={{ textAlign: "left", fontSize: "inherit" }}
+                          >
+                            พลังงาน • {(portion * item.calories).toFixed(0)}{" "}
+                            kcal
+                          </div>
                         </div>
                       </div>
                     )}
@@ -450,53 +512,6 @@ function DairyPage() {
               })}
             </div>
           </div>
-
-          {/* Summary strip (แสดงเมื่อเลือกแล้ว) */}
-          {selectedItems.length > 0 && (
-            <div style={{ padding: "0 15px 12px 15px" }}>
-              <div
-                style={{
-                  background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
-                  border: "1.5px solid #93c5fd",
-                  borderRadius: "10px",
-                  padding: "10px 14px",
-                  display: "flex",
-                  justifyContent: "space-around",
-                  textAlign: "center",
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: "0.72rem", color: "#6b7280" }}>
-                    คาร์โบไฮเดรต
-                  </div>
-                  <div
-                    style={{
-                      fontWeight: 700,
-                      color: "#1d4ed8",
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {calculateTotalCarbs().toFixed(1)} ก.
-                  </div>
-                </div>
-                <div style={{ width: "1px", background: "#bfdbfe" }} />
-                <div>
-                  <div style={{ fontSize: "0.72rem", color: "#6b7280" }}>
-                    แคลอรี่รวม
-                  </div>
-                  <div
-                    style={{
-                      fontWeight: 700,
-                      color: "#dc2626",
-                      fontSize: "1rem",
-                    }}
-                  >
-                    {calculateTotalCalories().toFixed(0)} kcal
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Save Button */}
           <div style={{ padding: "0 15px 20px 15px" }}>

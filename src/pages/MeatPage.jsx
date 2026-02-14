@@ -470,7 +470,7 @@ function MeatPage() {
                           }}
                         >
                           {/* Emoji */}
-                          <span
+                          {/* <span
                             style={{
                               fontSize: "1.6rem",
                               lineHeight: 1,
@@ -478,7 +478,7 @@ function MeatPage() {
                             }}
                           >
                             {item.emoji}
-                          </span>
+                          </span> */}
                           <div style={{ flex: 1 }}>
                             <div
                               style={{

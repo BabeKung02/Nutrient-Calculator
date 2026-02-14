@@ -350,7 +350,7 @@ function DairyPage() {
                               <span style={chipStyle("#DBEAFE", "#1E40AF")}>
                                 โปรตีน {item.protein} g
                               </span>
-                              <span style={chipStyle("#FEF9C3", "#92400E")}>
+                              <span style={chipStyle("#FED7AA", "#9A3412")}>
                                 ไขมัน {item.fat} g
                               </span>
                               <span style={chipStyle("#FCE7F3", "#9F1239")}>

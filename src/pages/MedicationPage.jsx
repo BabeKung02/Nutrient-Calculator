@@ -134,6 +134,15 @@ const AddModal = ({ onClose, onAdd }) => {
   const [meals, setMeals] = useState({ เช้า:false, เที่ยง:false, เย็น:false, ก่อนนอน:false });
   const [timing, setTiming] = useState("หลังอาหาร");
 
+  const medicineOptions = [
+    "Glipizide",
+    "Metformin",
+    "Pioglitazone",
+    "Empagliflozin",
+    "Sitagliptin",
+    "Semaglutide",
+  ];
+
   const mealOptions = [
     { label:"เช้า",     color:{ bg:"#fff7ed", text:"#ea580c", border:"#fdba74", shadow:"rgba(234,88,12,.2)" } },
     { label:"เที่ยง",   color:{ bg:"#fefce8", text:"#ca8a04", border:"#fde047", shadow:"rgba(202,138,4,.2)" } },
@@ -143,16 +152,27 @@ const AddModal = ({ onClose, onAdd }) => {
 
   const handleAdd = () => {
     const selected = Object.entries(meals).filter(([,v]) => v).map(([k]) => k);
-    if (!name.trim() || selected.length === 0) return;
+    if (!name || selected.length === 0) return;
     selected.forEach((m) => onAdd({ name, freq:`${freq} เวลา`, meal:m, timing }));
     onClose();
   };
 
   const lbl = { display:"block", fontSize:"13px", fontWeight:600, color:"#7c3aed", marginBottom:"8px",
     fontFamily:"'Prompt',sans-serif", textTransform:"uppercase", letterSpacing:".05em" };
-  const inp = { width:"100%", padding:"12px 16px", borderRadius:"14px", border:"2px solid #ede9fe",
-    fontSize:"15px", fontFamily:"'Prompt',sans-serif", outline:"none", marginBottom:"16px",
-    boxSizing:"border-box", color:"#2d2050" };
+  const selectStyle = { 
+    width:"100%", 
+    padding:"12px 16px", 
+    borderRadius:"14px", 
+    border:"2px solid #ede9fe",
+    fontSize:"15px", 
+    fontFamily:"'Prompt',sans-serif", 
+    outline:"none", 
+    marginBottom:"16px",
+    boxSizing:"border-box", 
+    color:"#2d2050",
+    background:"white",
+    cursor:"pointer"
+  };
 
   return (
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.45)", display:"flex",
@@ -165,8 +185,17 @@ const AddModal = ({ onClose, onAdd }) => {
           เพิ่มรายการใหม่
         </h3>
 
-        <label style={lbl}>ชื่อยา / อาหาร</label>
-        <input style={inp} placeholder="ระบุชื่อ..." value={name} onChange={(e) => setName(e.target.value)} />
+        <label style={lbl}>เลือกยา</label>
+        <select 
+          style={selectStyle}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        >
+          <option value="">-- เลือกยา --</option>
+          {medicineOptions.map((med) => (
+            <option key={med} value={med}>{med}</option>
+          ))}
+        </select>
 
         <label style={lbl}>วิธีรับประทาน</label>
         <PillSelector options={[{label:"1 เวลา",value:1},{label:"2 เวลา",value:2},{label:"3 เวลา",value:3}]}

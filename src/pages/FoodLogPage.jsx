@@ -61,7 +61,7 @@ function FoodLogPage() {
     },
         {
       id: 8,
-      name: "อาหารจานเดียว",
+      name: "อาหาร",
       icon: "🍛",
       gradient: "linear-gradient(135deg, #fd79a8 0%, #e84393 100%)",
       route: "/food/single-dish",

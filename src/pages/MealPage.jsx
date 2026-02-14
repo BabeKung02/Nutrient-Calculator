@@ -49,6 +49,7 @@ function MealPage() {
     const rawVegetable = getLogs("vegetableLogs");
     const rawFat = getLogs("fatLogs");
     const rawDessert = getLogs("dessertLogs");
+    const rawSingleDish = getLogs("singleDishLogs");
     const rawDaily = getLogs("dailyLogs");
 
     // ... (โค้ดก่อนหน้า)
@@ -66,6 +67,7 @@ function MealPage() {
       ...rawVegetable.filter((l) => l.date === todayStr),
       ...rawFat.filter((l) => l.date === todayStr),
       ...rawDessert.filter((l) => l.date === todayStr),
+      ...rawSingleDish.filter((l) => l.date === todayStr),
       ...rawDaily.filter((l) => l.date === todayStr),
     ].map((log) => {
       // 🔍 เจาะจงดึง totalCarbs ที่คุณใช้ใน JSON
@@ -76,7 +78,9 @@ function MealPage() {
       );
       const FatValue = Number(log.totalFat || log.fat || 0);
 
-      const kcalValue = Number(log.totalCalories || log.calories || carbValue * 4);
+      const kcalValue = Number(
+        log.totalCalories || log.calories || carbValue * 4,
+      );
 
       return {
         ...log,

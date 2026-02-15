@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Header from "../components/Header";          // ✅ ใช้ Header จริงเหมือนทุกหน้า
 import { useNotification } from "../hooks/useNotification";
+import Swal from "sweetalert2";
 
 // ── Permission Banner ──────────────────────────────────────────
 const PermissionBanner = ({ permission, onRequest }) => {
@@ -49,12 +50,14 @@ const PillSelector = ({ options, value, onChange }) => (
 );
 
 // ── Tag Checkbox ───────────────────────────────────────────────
-const TagCheckbox = ({ label, checked, onChange, color }) => (
-  <button onClick={() => onChange(!checked)}
+const TagCheckbox = ({ label, checked, onChange, color, disabled }) => (
+  <button onClick={() => !disabled && onChange(!checked)}
     style={{ padding:"9px 18px", borderRadius:"14px", border:`2px solid ${checked ? color.border : "#e2d9f3"}`,
-      background:checked ? color.bg : "white", color:checked ? color.text : "#9ca3af",
-      fontWeight:600, fontSize:"14px", cursor:"pointer", fontFamily:"'Prompt',sans-serif",
-      transition:"all .2s", boxShadow:checked ? `0 3px 10px ${color.shadow}` : "none" }}>
+      background:checked ? color.bg : (disabled ? "#f3f4f6" : "white"), 
+      color:checked ? color.text : (disabled ? "#d1d5db" : "#9ca3af"),
+      fontWeight:600, fontSize:"14px", cursor:disabled ? "not-allowed" : "pointer", fontFamily:"'Prompt',sans-serif",
+      transition:"all .2s", boxShadow:checked ? `0 3px 10px ${color.shadow}` : "none",
+      opacity: disabled ? 0.5 : 1 }}>
     {checked && "✓ "}{label}
   </button>
 );
@@ -134,6 +137,24 @@ const AddModal = ({ onClose, onAdd }) => {
   const [meals, setMeals] = useState({ เช้า:false, เที่ยง:false, เย็น:false, ก่อนนอน:false });
   const [timing, setTiming] = useState("หลังอาหาร");
 
+  // Reset meals เมื่อเปลี่ยน freq
+  useEffect(() => {
+    setMeals({ เช้า:false, เที่ยง:false, เย็น:false, ก่อนนอน:false });
+  }, [freq]);
+
+  // ⭐ Set timing เป็น "ก่อนนอน" เฉพาะเมื่อเลือกเฉพาะมื้อก่อนนอนเท่านั้น
+  useEffect(() => {
+    const hasNonBedtimeMeal = meals.เช้า || meals.เที่ยง || meals.เย็น;
+    const hasOnlyBedtime = meals.ก่อนนอน && !hasNonBedtimeMeal;
+    
+    if (hasOnlyBedtime) {
+      setTiming("ก่อนนอน");
+    } else if (timing === "ก่อนนอน" && hasNonBedtimeMeal) {
+      // ถ้าเคย set เป็น "ก่อนนอน" แต่ตอนนี้มีมื้ออื่นด้วย ให้ reset
+      setTiming("หลังอาหาร");
+    }
+  }, [meals]);
+
   const medicineOptions = [
     "Glipizide",
     "Metformin",
@@ -150,10 +171,68 @@ const AddModal = ({ onClose, onAdd }) => {
     { label:"ก่อนนอน", color:{ bg:"#f5f3ff", text:"#7c3aed", border:"#c4b5fd", shadow:"rgba(124,58,237,.2)" } },
   ];
 
+  // นับจำนวนมื้อที่เลือกแล้ว
+  const selectedMealsCount = Object.values(meals).filter(Boolean).length;
+
+  // จัดการการเลือกมื้ออาหาร (จำกัดตามจำนวน freq)
+  const handleMealToggle = (label, currentValue) => {
+    if (currentValue) {
+      // ถ้ากำลัง uncheck → อนุญาตเสมอ
+      setMeals((p) => ({ ...p, [label]: false }));
+    } else {
+      // ถ้ากำลัง check → ตรวจสอบว่าเกิน freq หรือไม่
+      if (selectedMealsCount < freq) {
+        setMeals((p) => ({ ...p, [label]: true }));
+      }
+    }
+  };
+
   const handleAdd = () => {
     const selected = Object.entries(meals).filter(([,v]) => v).map(([k]) => k);
-    if (!name || selected.length === 0) return;
-    selected.forEach((m) => onAdd({ name, freq:`${freq} เวลา`, meal:m, timing }));
+    
+    // Validation 1: ตรวจสอบว่ากรอกยาหรือยัง
+    if (!name) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาเลือกยา",
+        text: "กรุณาเลือกยาที่ต้องการเพิ่ม",
+        confirmButtonColor: "#7c3aed",
+      });
+      return;
+    }
+
+    // Validation 2: ตรวจสอบว่าเลือกมื้ออาหารครบหรือยัง
+    if (selected.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาเลือกมื้อ",
+        text: "กรุณาเลือกมื้ออาหารอย่างน้อย 1 มื้อ",
+        confirmButtonColor: "#7c3aed",
+      });
+      return;
+    }
+
+    // Validation 3: ตรวจสอบว่าเลือกมื้อตรงกับจำนวน freq หรือไม่
+    if (selected.length !== freq) {
+      Swal.fire({
+        icon: "warning",
+        title: "กรุณาเลือกช่วงเวลาให้ครบถ้วน",
+        text: `คุณเลือกรับประทาน ${freq} เวลา กรุณาเลือกช่วงเวลา ${freq} มื้อ (ตอนนี้เลือกไว้ ${selected.length} มื้อ)`,
+        confirmButtonColor: "#7c3aed",
+      });
+      return;
+    }
+    
+    // สร้าง array ของ entries ทั้งหมด
+    const entriesToAdd = selected.map((m) => ({
+      name,
+      freq: `${freq} เวลา`,
+      meal: m,
+      timing
+    }));
+    
+    // ส่งกลับเป็น array เดียว
+    onAdd(entriesToAdd);
     onClose();
   };
 
@@ -201,18 +280,51 @@ const AddModal = ({ onClose, onAdd }) => {
         <PillSelector options={[{label:"1 เวลา",value:1},{label:"2 เวลา",value:2},{label:"3 เวลา",value:3}]}
           value={freq} onChange={setFreq} />
 
-        <label style={{ ...lbl, marginTop:"16px" }}>มื้ออาหาร</label>
+        <label style={{ ...lbl, marginTop:"16px" }}>มื้อ อาหาร (เลือก {freq} มื้อ)</label>
         <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
-          {mealOptions.map(({ label, color }) => (
-            <TagCheckbox key={label} label={label} checked={meals[label]}
-              onChange={(v) => setMeals((p) => ({ ...p, [label]:v }))} color={color} />
-          ))}
+          {mealOptions.map(({ label, color }) => {
+            const isChecked = meals[label];
+            const isDisabled = !isChecked && selectedMealsCount >= freq;
+            
+            return (
+              <TagCheckbox 
+                key={label} 
+                label={label} 
+                checked={isChecked}
+                onChange={() => handleMealToggle(label, isChecked)} 
+                color={color}
+                disabled={isDisabled}
+              />
+            );
+          })}
+        </div>
+        
+        {/* แสดงจำนวนที่เลือก */}
+        <div style={{ marginTop:"8px", fontSize:"12px", color:"#7c3aed", fontWeight:600 }}>
+          เลือกแล้ว {selectedMealsCount}/{freq} มื้อ
         </div>
 
-        <label style={{ ...lbl, marginTop:"16px" }}>เวลารับประทาน</label>
-        <PillSelector
-          options={[{label:"หลังอาหาร",value:"หลังอาหาร"},{label:"ก่อนอาหาร",value:"ก่อนอาหาร"},{label:"ก่อนนอน",value:"ก่อนนอน"}]}
-          value={timing} onChange={setTiming} />
+        {/* ตรวจสอบว่ามีมื้ออื่นนอกจากก่อนนอนหรือไม่ */}
+        {(() => {
+          const hasNonBedtimeMeal = meals.เช้า || meals.เที่ยง || meals.เย็น;
+          const hasOnlyBedtime = meals.ก่อนนอน && !hasNonBedtimeMeal;
+          
+          return (
+            <>
+              {/* แสดงเวลารับประทานเมื่อมีมื้ออื่นนอกจากก่อนนอน */}
+              {hasNonBedtimeMeal && (
+                <>
+                  <label style={{ ...lbl, marginTop:"16px" }}>
+                    เวลารับประทาน
+                  </label>
+                  <PillSelector
+                    options={[{label:"หลังอาหาร",value:"หลังอาหาร"},{label:"ก่อนอาหาร",value:"ก่อนอาหาร"}]}
+                    value={timing} onChange={setTiming} />
+                </>
+              )}
+            </>
+          );
+        })()}
 
         <div style={{ background:"#f5f3ff", borderRadius:"12px", padding:"10px 14px", marginTop:"16px" }}>
           <span style={{ fontSize:"12px", color:"#7c3aed", fontWeight:600, fontFamily:"'Prompt',sans-serif" }}>
@@ -282,20 +394,43 @@ export default function MedicationPage() {
     setTimeout(() => setToast((p) => ({ ...p, visible:false })), 2800);
   };
 
-  const handleAdd = async (entry) => {
-    const id = Date.now() + Math.random();
-    const newEntry = { ...entry, id };
-    const updatedEntries = [...entries, newEntry];
+  const handleAdd = async (entriesToAdd) => {
+    // รองรับทั้ง single entry และ array of entries
+    const newEntries = Array.isArray(entriesToAdd) ? entriesToAdd : [entriesToAdd];
     
+    // สร้าง entries พร้อม id
+    const entriesWithIds = newEntries.map(entry => ({
+      ...entry,
+      id: Date.now() + Math.random()
+    }));
+    
+    // เพิ่ม entries ทั้งหมดพร้อมกัน
+    const updatedEntries = [...entries, ...entriesWithIds];
     setEntries(updatedEntries);
     saveToLocalStorage(updatedEntries); // ⭐ Save entries
     
-    const record = await scheduleNotification(newEntry);
-    if (record) {
-      const newNotifMap = { ...notifMap, [id]: record };
-      setNotifMap(newNotifMap);
-      saveNotifMapToLocalStorage(newNotifMap); // ⭐ Save notifMap
-      showToast(`✅ ตั้งแจ้งเตือน ${entry.meal} เวลา ${record.fireAt}`);
+    // ตั้งการแจ้งเตือนสำหรับแต่ละ entry
+    const newNotifMap = { ...notifMap };
+    const successMessages = [];
+    
+    for (const newEntry of entriesWithIds) {
+      const record = await scheduleNotification(newEntry);
+      if (record) {
+        newNotifMap[newEntry.id] = record;
+        successMessages.push(`${newEntry.meal} เวลา ${record.fireAt}`);
+      }
+    }
+    
+    setNotifMap(newNotifMap);
+    saveNotifMapToLocalStorage(newNotifMap); // ⭐ Save notifMap
+    
+    // แสดง toast สรุป
+    if (successMessages.length > 0) {
+      if (successMessages.length === 1) {
+        showToast(`✅ ตั้งแจ้งเตือน ${successMessages[0]}`);
+      } else {
+        showToast(`✅ ตั้งแจ้งเตือน ${successMessages.length} มื้อสำเร็จ`);
+      }
     }
   };
 

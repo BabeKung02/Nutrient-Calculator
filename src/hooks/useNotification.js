@@ -67,27 +67,35 @@ export function useNotification() {
       const mealTime = MEAL_TIMES[entry.meal];
       if (!mealTime) return null;
 
-      const timingOffset = {
-        ก่อนอาหาร: -30, // 15 นาทีก่อน
-        หลังอาหาร: 45,  // 15 นาทีหลัง (เปลี่ยนจาก 5 → 15)
-        ก่อนนอน:  0,
-      };
+      // ⭐ กรณีพิเศษ: มื้อก่อนนอน ให้ fix เวลาที่ 20:00 เสมอ (ไม่ + - เวลา)
+      let targetHour, targetMin;
+      
+      if (entry.meal === "ก่อนนอน") {
+        targetHour = 20;
+        targetMin = 0;
+      } else {
+        // มื้ออื่นๆ ให้คำนวณตามปกติ
+        const timingOffset = {
+          ก่อนอาหาร: -15, // 15 นาทีก่อน
+          หลังอาหาร: 15,  // 15 นาทีหลัง
+        };
 
-      const offsetMin = timingOffset[entry.timing] ?? 0;
-      
-      // คำนวณเวลาเป้าหมาย (รองรับนาทีติดลบ)
-      let targetHour = mealTime.hour;
-      let targetMin  = mealTime.minute + offsetMin;
-      
-      // ถ้านาทีติดลบ → ลด hour ลง 1 และปรับนาที
-      if (targetMin < 0) {
-        targetHour -= 1;
-        targetMin += 60;
-      }
-      // ถ้านาที >= 60 → เพิ่ม hour ขึ้น 1 และปรับนาที
-      else if (targetMin >= 60) {
-        targetHour += 1;
-        targetMin -= 60;
+        const offsetMin = timingOffset[entry.timing] ?? 0;
+        
+        // คำนวณเวลาเป้าหมาย (รองรับนาทีติดลบ)
+        targetHour = mealTime.hour;
+        targetMin  = mealTime.minute + offsetMin;
+        
+        // ถ้านาทีติดลบ → ลด hour ลง 1 และปรับนาที
+        if (targetMin < 0) {
+          targetHour -= 1;
+          targetMin += 60;
+        }
+        // ถ้านาที >= 60 → เพิ่ม hour ขึ้น 1 และปรับนาที
+        else if (targetMin >= 60) {
+          targetHour += 1;
+          targetMin -= 60;
+        }
       }
 
       const delayMs = getMsUntil(targetHour, targetMin);
@@ -98,7 +106,9 @@ export function useNotification() {
         type: "SCHEDULE_NOTIFICATION",
         payload: {
           delayMs,
-          title: `ถึงเวลา${entry.timing}แล้ว! 💊`,
+          title: entry.meal === "ก่อนนอน" 
+            ? `ถึงเวลารับประทานยาก่อนนอนแล้ว! 💊`
+            : `ถึงเวลา${entry.timing}แล้ว! 💊`,
           body: `${entry.name} • ${entry.freq} (มื้อ${entry.meal})`,
           tag: id,
         },

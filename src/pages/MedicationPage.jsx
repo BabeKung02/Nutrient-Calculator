@@ -307,7 +307,6 @@ const AddModal = ({ onClose, onAdd }) => {
         {/* ตรวจสอบว่ามีมื้ออื่นนอกจากก่อนนอนหรือไม่ */}
         {(() => {
           const hasNonBedtimeMeal = meals.เช้า || meals.เที่ยง || meals.เย็น;
-          const hasOnlyBedtime = meals.ก่อนนอน && !hasNonBedtimeMeal;
           
           return (
             <>

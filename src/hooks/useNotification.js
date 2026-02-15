@@ -76,8 +76,8 @@ export function useNotification() {
       } else {
         // มื้ออื่นๆ ให้คำนวณตามปกติ
         const timingOffset = {
-          ก่อนอาหาร: -15, // 15 นาทีก่อน
-          หลังอาหาร: 15,  // 15 นาทีหลัง
+          ก่อนอาหาร: -30, // 15 นาทีก่อน
+          หลังอาหาร: 30,  // 15 นาทีหลัง
         };
 
         const offsetMin = timingOffset[entry.timing] ?? 0;

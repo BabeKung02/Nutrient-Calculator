@@ -75,15 +75,15 @@ const calcDairyPortions = (logs) => logs.reduce((s, l) => {
 }, 0);
 
 // น้ำตาล: 1 ช้อนชา = 4g carb
-const calcSugarPortions = (logs) => logs.reduce((s, l) => {
-  const carb = Number(l.totalCarb || l.carb || l.carbs || 0);
-  if (carb > 0) return s + carb / 4;
+// const calcSugarPortions = (logs) => logs.reduce((s, l) => {
+//   const carb = Number(l.totalCarb || l.carb || l.carbs || 0);
+//   if (carb > 0) return s + carb / 4;
   
-  const sv = Number(l.servings || l.serving || l.amount || 0);
-  if (sv > 0) return s + sv;
+//   const sv = Number(l.servings || l.serving || l.amount || 0);
+//   if (sv > 0) return s + sv;
   
-  return s;
-}, 0);
+//   return s;
+// }, 0);
 
 // น้ำมัน: 1 ช้อนชา = 5g fat
 const calcFatPortions = (logs) => logs.reduce((s, l) => {
@@ -267,9 +267,9 @@ function MealPage() {
     { id: "snack",     name: "มื้อว่าง",  icon: "🍪", gradient: "linear-gradient(135deg,#FCE7F3 0%,#FBCFE8 100%)", borderColor: "#F9A8D4" },
   ];
 
-  const handleFoodClick = (category) => {
-    navigate(`${category.route}?mealId=breakfast&mealName=${encodeURIComponent("มื้อเช้า")}`);
-  };
+//   const handleFoodClick = (category) => {
+//     navigate(`${category.route}?mealId=breakfast&mealName=${encodeURIComponent("มื้อเช้า")}`);
+//   };
   const handleMealClick = (meal) => {
     navigate(`/food-log?mealId=${meal.id}&mealName=${encodeURIComponent(meal.name)}`);
   };
@@ -383,7 +383,7 @@ function MacroBox({ label, value, target, unit, gradient, color }) {
 
 // ─── FoodProgressCard ────────────────────────────────────────────────────────
 function FoodProgressCard({ category, compact }) {
-  const { consumed: eaten = 0, target, unit, name, icon, gradient, shadowColor, isLimit } = category;
+  const { consumed: eaten = 0, target, unit, name, icon, gradient, shadowColor } = category;
   const pct    = target > 0 ? Math.min((eaten / target) * 100, 100) : 0;
   const isOver = eaten > target;
 

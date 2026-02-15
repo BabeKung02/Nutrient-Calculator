@@ -47,7 +47,7 @@ function MenuPage() {
     {
       id: 3,
       title: "บันทึกการรับประทานอาหาร",
-      icon: "🍽️",
+      icon: "📋",
       color: "#FFA500",
       onClick: () => navigate("/meal", { state: userData }),
     },

@@ -153,7 +153,7 @@ const AddModal = ({ onClose, onAdd }) => {
       // ถ้าเคย set เป็น "ก่อนนอน" แต่ตอนนี้มีมื้ออื่นด้วย ให้ reset
       setTiming("หลังอาหาร");
     }
-  }, [meals,timing]);
+  }, [meals, timing]); // ← เพิ่ม timing
 
   const medicineOptions = [
     "Glipizide",
@@ -307,6 +307,7 @@ const AddModal = ({ onClose, onAdd }) => {
         {/* ตรวจสอบว่ามีมื้ออื่นนอกจากก่อนนอนหรือไม่ */}
         {(() => {
           const hasNonBedtimeMeal = meals.เช้า || meals.เที่ยง || meals.เย็น;
+          const hasOnlyBedtime = meals.ก่อนนอน && !hasNonBedtimeMeal;
           
           return (
             <>
@@ -314,13 +315,14 @@ const AddModal = ({ onClose, onAdd }) => {
               {hasNonBedtimeMeal && (
                 <>
                   <label style={{ ...lbl, marginTop:"16px" }}>
-                    เวลารับประทาน
+
                   </label>
                   <PillSelector
                     options={[{label:"หลังอาหาร",value:"หลังอาหาร"},{label:"ก่อนอาหาร",value:"ก่อนอาหาร"}]}
                     value={timing} onChange={setTiming} />
                 </>
               )}
+
             </>
           );
         })()}
@@ -451,6 +453,16 @@ export default function MedicationPage() {
   };
 
   const grouped = entries.reduce((acc, e) => {
+    if (!acc[e.meal]) acc[e.meal] = [];
+    acc[e.meal].push(e);
+    return acc;
+  }, {});
+
+  const mealOrder = ["เช้า", "เที่ยง", "เย็น", "ก่อนนอน"];
+  const mealEmoji = { เช้า:"🌅", เที่ยง:"☀️", เย็น:"🌆", ก่อนนอน:"🌙" };
+
+  // สำหรับ Summary chips - นับตาม timing
+  const groupedByTiming = entries.reduce((acc, e) => {
     if (!acc[e.timing]) acc[e.timing] = [];
     acc[e.timing].push(e);
     return acc;
@@ -519,7 +531,7 @@ export default function MedicationPage() {
                 <span style={{ fontSize: "20px" }}>＋</span> เพิ่มรายการ
               </button>
 
-              {/* Summary chips */}
+              {/* Summary chips - แสดงตาม timing */}
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px", marginBottom:"20px" }}>
                 {timingOrder.map((t) => (
                   <div key={t} style={{ background:"white", borderRadius:"16px", padding:"14px 10px",
@@ -527,22 +539,22 @@ export default function MedicationPage() {
                     display:"flex", flexDirection:"column", alignItems:"center", gap:"4px" }}>
                     <span style={{ fontSize:"18px" }}>{timingEmoji[t]}</span>
                     <span style={{ fontSize:"22px", fontWeight:700, color:"#7c3aed", lineHeight:1 }}>
-                      {(grouped[t] || []).length}
+                      {(groupedByTiming[t] || []).length}
                     </span>
                     <span style={{ fontSize:"11px", color:"#9ca3af", fontWeight:600 }}>{t}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Grouped list */}
-              {timingOrder.map((timing) =>
-                grouped[timing] ? (
-                  <div key={timing} style={{ animation:"fadeIn .4s ease" }}>
+              {/* Grouped list - แสดงตาม meal */}
+              {mealOrder.map((meal) =>
+                grouped[meal] ? (
+                  <div key={meal} style={{ animation:"fadeIn .4s ease" }}>
                     <div style={{ fontSize:"14px", fontWeight:700, color:"#7c3aed", marginBottom:"10px",
                       marginTop:"6px", textTransform:"uppercase", letterSpacing:".06em" }}>
-                      {timingEmoji[timing]} {timing}
+                      {mealEmoji[meal]} {meal}
                     </div>
-                    {grouped[timing].map((e) => (
+                    {grouped[meal].map((e) => (
                       <MealCard key={e.id} entry={e}
                         onDelete={() => handleDelete(e.id)}
                         onTest={handleTest}

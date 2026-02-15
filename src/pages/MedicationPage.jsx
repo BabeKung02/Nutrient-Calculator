@@ -68,7 +68,7 @@ const NotifBadge = ({ scheduled }) => {
       padding:"5px 10px", width:"fit-content" }}>
       <span style={{ fontSize:"12px" }}>🔔</span>
       <span style={{ fontSize:"11px", color:"#16a34a", fontWeight:600, fontFamily:"'Prompt',sans-serif" }}>
-        แจ้งเตือน {scheduled.fireAt} น.
+        แจ้งเตือน {scheduled.fireAt}
       </span>
     </div>
   );
@@ -242,8 +242,9 @@ export default function MedicationPage() {
 
   const { permission, scheduleNotification, requestPermission, testNotification } = useNotification();
 
-  // ⭐ Load entries from localStorage on mount
+  // ⭐ Load entries AND notifMap from localStorage on mount
   useEffect(() => {
+    // Load medication entries
     const savedEntries = localStorage.getItem(`medication_${currentUser}`);
     if (savedEntries) {
       try {
@@ -253,11 +254,27 @@ export default function MedicationPage() {
         console.error("Error loading medication data:", e);
       }
     }
+
+    // Load notification map
+    const savedNotifMap = localStorage.getItem(`medicationNotifs_${currentUser}`);
+    if (savedNotifMap) {
+      try {
+        const parsed = JSON.parse(savedNotifMap);
+        setNotifMap(parsed);
+      } catch (e) {
+        console.error("Error loading notification map:", e);
+      }
+    }
   }, [currentUser]);
 
   // ⭐ Save entries to localStorage whenever they change
   const saveToLocalStorage = (newEntries) => {
     localStorage.setItem(`medication_${currentUser}`, JSON.stringify(newEntries));
+  };
+
+  // ⭐ Save notifMap to localStorage whenever it changes
+  const saveNotifMapToLocalStorage = (newNotifMap) => {
+    localStorage.setItem(`medicationNotifs_${currentUser}`, JSON.stringify(newNotifMap));
   };
 
   const showToast = (msg) => {
@@ -271,12 +288,14 @@ export default function MedicationPage() {
     const updatedEntries = [...entries, newEntry];
     
     setEntries(updatedEntries);
-    saveToLocalStorage(updatedEntries); // ⭐ Save to localStorage
+    saveToLocalStorage(updatedEntries); // ⭐ Save entries
     
     const record = await scheduleNotification(newEntry);
     if (record) {
-      setNotifMap((p) => ({ ...p, [id]: record }));
-      showToast(`🔔 ตั้งแจ้งเตือน ${entry.meal} เวลา ${record.fireAt} น.`);
+      const newNotifMap = { ...notifMap, [id]: record };
+      setNotifMap(newNotifMap);
+      saveNotifMapToLocalStorage(newNotifMap); // ⭐ Save notifMap
+      showToast(`✅ ตั้งแจ้งเตือน ${entry.meal} เวลา ${record.fireAt}`);
     }
   };
 
@@ -284,9 +303,12 @@ export default function MedicationPage() {
     const updatedEntries = entries.filter((e) => e.id !== id);
     
     setEntries(updatedEntries);
-    saveToLocalStorage(updatedEntries); // ⭐ Save to localStorage
+    saveToLocalStorage(updatedEntries); // ⭐ Save entries
     
-    setNotifMap((p) => { const n = { ...p }; delete n[id]; return n; });
+    const newNotifMap = { ...notifMap };
+    delete newNotifMap[id];
+    setNotifMap(newNotifMap);
+    saveNotifMapToLocalStorage(newNotifMap); // ⭐ Save notifMap
   };
 
   const handleTest = async (entry) => {

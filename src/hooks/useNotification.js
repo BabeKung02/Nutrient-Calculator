@@ -7,7 +7,7 @@ export const MEAL_TIMES = {
   เช้า: { hour: 8,  minute: 0  },
   เที่ยง: { hour: 12, minute: 0  },
   เย็น:  { hour: 18, minute: 0  },
-  ก่อนนอน: { hour: 21, minute: 0  },
+  ก่อนนอน: { hour: 20, minute: 0  },
 };
 
 // คำนวณ ms จนถึงเวลาถัดไปของวันนี้ (หรือพรุ่งนี้ถ้าผ่านแล้ว)
@@ -68,16 +68,29 @@ export function useNotification() {
       if (!mealTime) return null;
 
       const timingOffset = {
-        ก่อนอาหาร: -15, // 15 นาทีก่อน
-        หลังอาหาร: 5,   //  5 นาทีหลัง
+        ก่อนอาหาร: -30, // 15 นาทีก่อน
+        หลังอาหาร: 45,  // 15 นาทีหลัง (เปลี่ยนจาก 5 → 15)
         ก่อนนอน:  0,
       };
 
       const offsetMin = timingOffset[entry.timing] ?? 0;
-      const targetHour = mealTime.hour;
-      const targetMin  = mealTime.minute + offsetMin;
+      
+      // คำนวณเวลาเป้าหมาย (รองรับนาทีติดลบ)
+      let targetHour = mealTime.hour;
+      let targetMin  = mealTime.minute + offsetMin;
+      
+      // ถ้านาทีติดลบ → ลด hour ลง 1 และปรับนาที
+      if (targetMin < 0) {
+        targetHour -= 1;
+        targetMin += 60;
+      }
+      // ถ้านาที >= 60 → เพิ่ม hour ขึ้น 1 และปรับนาที
+      else if (targetMin >= 60) {
+        targetHour += 1;
+        targetMin -= 60;
+      }
 
-      const delayMs = getMsUntil(targetHour, targetMin < 0 ? targetMin + 60 : targetMin);
+      const delayMs = getMsUntil(targetHour, targetMin);
       const id = `${entry.meal}-${entry.timing}-${entry.name}-${Date.now()}`;
 
       const sw = await navigator.serviceWorker.ready;

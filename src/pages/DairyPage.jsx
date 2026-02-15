@@ -354,7 +354,7 @@ function DairyPage() {
                                 ไขมัน {item.fat} g
                               </span>
                               <span style={chipStyle("#FCE7F3", "#9F1239")}>
-                                {item.calories} kcal
+                                พลังงาน {item.calories} kcal
                               </span>
                             </div>
                           </div>

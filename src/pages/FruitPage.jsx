@@ -4,147 +4,316 @@ import Swal from "sweetalert2";
 import Header from "../components/Header";
 
 const fruitItems = [
+  // ─── ควรเลือกบริโภค ───────────────────────────────────────────────
   {
     id: 1,
-    name: "กล้วยน้ำว้า",
-    portion: "1 ผล",
+    name: "กล้วยน้ำว้าสุก",
+    portion: "1 ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // image: "/banana1.png",
+    category: "green",
   },
   {
     id: 2,
-    name: "กล้วยหอม",
-    portion: "½ ผล",
+    name: "กล้วยไข่สุก",
+    portion: "1 ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // image: "/banana2.png",
+    category: "green",
   },
   {
     id: 3,
-    name: "กีวี",
-    portion: "1 ผล",
+    name: "กล้วยหอมสุก",
+    portion: "½ ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🥝",
+    category: "green",
   },
   {
     id: 4,
     name: "แก้วมังกร",
-    portion: "½ ผลกลาง / 8 ชิ้นคำ",
+    portion: "½ ผล หรือ 8 ชิ้นคำ เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🐉",
+    category: "green",
   },
   {
     id: 5,
     name: "ขนุน",
-    portion: "3 ยวง",
+    portion: "2 ชิ้น เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍈",
+    category: "green",
   },
   {
     id: 6,
-    name: "แคนตาลูป",
-    portion: "8 ชิ้นคำ",
+    name: "ชมพู่",
+    portion: "4 ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍈",
+    category: "green",
   },
   {
     id: 7,
-    name: "เงาะ",
-    portion: "4 ผล",
+    name: "เชอรรี่",
+    portion: "12 ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🔴",
+    category: "green",
   },
   {
     id: 8,
-    name: "ชมพู่เมืองเพชร",
-    portion: "3 ผลกลาง",
+    name: "แตงไทย",
+    portion: "20 ชิ้นคำ เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍑",
+    category: "green",
   },
   {
     id: 9,
-    name: "แตงโม",
-    portion: "8 ชิ้นคำ",
+    name: "ฝรั่ง",
+    portion: "1 ผลเล็ก หรือ ½ ผลกลาง เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍉",
+    category: "green",
   },
   {
     id: 10,
-    name: "แตงไทย",
-    portion: "20 ชิ้นคำ",
+    name: "พรุน",
+    portion: "3 ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍈",
+    category: "green",
   },
   {
     id: 11,
-    name: "ฝรั่ง",
-    portion: "1 ผลเล็ก / ½ ผลกลาง",
+    name: "พุทรา",
+    portion: "4 ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍏",
+    category: "green",
   },
   {
     id: 12,
-    name: "มะม่วงสุก",
-    portion: "½ ผล",
+    name: "สตรอว์เบอรี",
+    portion: "8-10 ผลเล็ก เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🥭",
+    category: "green",
   },
   {
     id: 13,
-    name: "มะละกอสุก",
-    portion: "8 ชิ้นคำ",
+    name: "ส้มเขียวหวาน",
+    portion: "1 ผลใหญ่ เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍈",
+    category: "green",
   },
   {
     id: 14,
-    name: "มังคุด",
-    portion: "4 ผล",
+    name: "ส้มเช้ง",
+    portion: "1 ผลใหญ่ เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🟣",
+    category: "green",
   },
   {
     id: 15,
-    name: "ลำไย",
-    portion: "5-6 ผล",
+    name: "ส้มสายน้ำผึ้ง",
+    portion: "2 ผลเล็ก เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍇",
+    category: "green",
   },
   {
     id: 16,
-    name: "ส้มเขียวหวาน",
-    portion: "2 ผลกลาง",
+    name: "ส้มโอ",
+    portion: "2 ชิ้น เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍊",
+    category: "green",
   },
   {
     id: 17,
-    name: "แอปเปิ้ล",
-    portion: "1 ผลเล็ก",
+    name: "องุ่น",
+    portion: "20 ผล เท่ากับ 1 ส่วน",
     carbs: 15,
     calories: 60,
-    // emoji: "🍎",
+    category: "green",
+  },
+  {
+    id: 18,
+    name: "แอปเปิ้ล",
+    portion: "1 ผลเล็ก เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "green",
+  },
+
+  // ─── เลือกบริโภคพอประมาณ ─────────────────────────────────────────
+  {
+    id: 101,
+    name: "กีวี",
+    portion: "1 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 102,
+    name: "แคนตาลูป",
+    portion: "6-8 ชิ้นคำ เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 103,
+    name: "เงาะ",
+    portion: "4 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 104,
+    name: "มะขามหวาน",
+    portion: "1-2 ฝักใหญ่ เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 105,
+    name: "มะเดื่ออบแห้ง",
+    portion: "1 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 106,
+    name: "มะปราง",
+    portion: "2 ผลกลาง เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 107,
+    name: "มะม่วงสุก",
+    portion: "½ ผลเล็ก เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 108,
+    name: "มะละกอสุก",
+    portion: "8 ชิ้นคำ เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 109,
+    name: "มังคุด",
+    portion: "4 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 110,
+    name: "ลองกอง",
+    portion: "6 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 111,
+    name: "ลำไย",
+    portion: "5-6 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 112,
+    name: "ลิ้นจี่",
+    portion: "5-6 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 113,
+    name: "สละ",
+    portion: "6 ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+  {
+    id: 114,
+    name: "สับปะรดสด",
+    portion: "8 ชิ้นคำ เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "orange",
+  },
+
+  // ─── บริโภคแต่น้อย ────────────────────────────────────────────────
+  {
+    id: 201,
+    name: "แตงโม",
+    portion: "8 ชิ้นคำ เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "red",
+  },
+  {
+    id: 202,
+    name: "ทุเรียน",
+    portion: "1 เม็ดเล็ก เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "red",
+  },
+  {
+    id: 203,
+    name: "น้อยหน่า",
+    portion: "½ ผล เท่ากับ 1 ส่วน",
+    carbs: 15,
+    calories: 60,
+    category: "red",
   },
 ];
 
+const categoryConfig = {
+  green: {
+    title: "ควรเลือกบริโภค",
+    color: "#16a34a",
+    bgColor: "#f0fdf4",
+    borderColor: "#16a34a",
+  },
+  orange: {
+    title: "เลือกบริโภคพอประมาณ",
+    color: "#ea580c",
+    bgColor: "#fff7ed",
+    borderColor: "#fb923c",
+  },
+  red: {
+    title: "บริโภคแต่น้อย",
+    color: "#dc2626",
+    bgColor: "#fef2f2",
+    borderColor: "#dc2626",
+  },
+};
+
 function FruitPage() {
   const currentUser = localStorage.getItem("currentUser");
-
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -159,21 +328,16 @@ function FruitPage() {
     const existingLogs = JSON.parse(
       localStorage.getItem(`fruitLogs_${currentUser}`) || "[]",
     );
-
     const today = new Date().toLocaleDateString("th-TH");
     const todayMealLog = existingLogs.find(
       (log) => log.mealId === selectedMeal && log.date === today,
     );
-
     if (todayMealLog) {
       setCurrentLogId(todayMealLog.id);
-
       const items = todayMealLog.items
         .map((item) => fruitItems.find((fi) => fi.id === item.id))
         .filter(Boolean);
-
       setSelectedItems(items);
-
       const loadedPortions = {};
       todayMealLog.items.forEach((item) => {
         loadedPortions[item.id] = item.portion;
@@ -195,24 +359,15 @@ function FruitPage() {
   };
 
   const updatePortion = (itemId, change) => {
-    const currentPortion = portions[itemId] || 1;
-    const newPortion = Math.max(0.5, currentPortion + change);
-    setPortions({ ...portions, [itemId]: newPortion });
+    const current = portions[itemId] || 1;
+    setPortions({ ...portions, [itemId]: Math.max(0.5, current + change) });
   };
 
-  const calculateTotalCarbs = () => {
-    return selectedItems.reduce((total, item) => {
-      const portion = portions[item.id] || 1;
-      return total + portion * item.carbs;
-    }, 0);
-  };
+  const calculateTotalCarbs = () =>
+    selectedItems.reduce((t, i) => t + (portions[i.id] || 1) * i.carbs, 0);
 
-  const calculateTotalCalories = () => {
-    return selectedItems.reduce((total, item) => {
-      const portion = portions[item.id] || 1;
-      return total + portion * item.calories;
-    }, 0);
-  };
+  const calculateTotalCalories = () =>
+    selectedItems.reduce((t, i) => t + (portions[i.id] || 1) * i.calories, 0);
 
   const handleSave = () => {
     if (selectedItems.length === 0) {
@@ -228,58 +383,50 @@ function FruitPage() {
     const totalCarbs = calculateTotalCarbs();
     const totalCalories = calculateTotalCalories();
     const now = new Date();
-
     const existingLogs = JSON.parse(
       localStorage.getItem(`fruitLogs_${currentUser}`) || "[]",
     );
-
     let updatedLogs;
     let logId;
 
     if (currentLogId) {
       logId = currentLogId;
-      updatedLogs = existingLogs.map((log) => {
-        if (log.id === currentLogId) {
-          return {
-            ...log,
-            time: `${now.toLocaleTimeString("th-TH", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })} น.`,
-            timestamp: now.toISOString(),
-            totalCarb: totalCarbs,
-            totalCalories: totalCalories,
-            items: selectedItems.map((item) => ({
-              id: item.id,
-              name: item.name,
-              portion: portions[item.id] || 1,
-            })),
-          };
-        }
-        return log;
-      });
+      updatedLogs = existingLogs.map((log) =>
+        log.id === currentLogId
+          ? {
+              ...log,
+              time: `${now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`,
+              timestamp: now.toISOString(),
+              totalCarb: totalCarbs,
+              totalCalories,
+              items: selectedItems.map((item) => ({
+                id: item.id,
+                name: item.name,
+                portion: portions[item.id] || 1,
+              })),
+            }
+          : log,
+      );
     } else {
       logId = Date.now();
-      const newLog = {
-        id: logId,
-        mealId: selectedMeal,
-        mealName: mealName,
-        date: now.toLocaleDateString("th-TH"),
-        time: `${now.toLocaleTimeString("th-TH", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })} น.`,
-        timestamp: now.toISOString(),
-        totalCarb: totalCarbs,
-        totalCalories: totalCalories,
-        items: selectedItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          portion: portions[item.id] || 1,
-        })),
-      };
-
-      updatedLogs = [...existingLogs, newLog];
+      updatedLogs = [
+        ...existingLogs,
+        {
+          id: logId,
+          mealId: selectedMeal,
+          mealName,
+          date: now.toLocaleDateString("th-TH"),
+          time: `${now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })} น.`,
+          timestamp: now.toISOString(),
+          totalCarb: totalCarbs,
+          totalCalories,
+          items: selectedItems.map((item) => ({
+            id: item.id,
+            name: item.name,
+            portion: portions[item.id] || 1,
+          })),
+        },
+      ];
       setCurrentLogId(logId);
     }
 
@@ -288,31 +435,258 @@ function FruitPage() {
       JSON.stringify(updatedLogs),
     );
 
-    console.log(
-      "Saved to LocalStorage:",
-      updatedLogs.find((log) => log.id === logId),
-    );
-
     Swal.fire({
       title: currentLogId ? "อัพเดทสำเร็จ!" : "บันทึกสำเร็จ!",
       html: `
         <div style="text-align:center;">
           <p>มื้ออาหาร: <b>${mealName}</b></p>
-          <p style="font-size: 1.2rem; color: #667eea; font-weight: bold;">
+          <p style="font-size:1.2rem;color:#667eea;font-weight:bold;">
             คาร์โบไฮเดรตรวม: ${totalCarbs.toFixed(1)} กรัม
-            พลังงานรวม: ${calculateTotalCalories().toFixed(0)} กิโลแคลอรี่
+            <br>พลังงานรวม: ${totalCalories.toFixed(0)} กิโลแคลอรี่
           </p>
-          ${currentLogId ? '<p style="font-size: 0.9rem; color: #718096;">ข้อมูลถูกอัพเดทแล้ว</p>' : ""}
+          ${currentLogId ? '<p style="font-size:0.9rem;color:#718096;">ข้อมูลถูกอัพเดทแล้ว</p>' : ""}
         </div>
       `,
       icon: "success",
       confirmButtonText: "ตกลง",
       confirmButtonColor: "#667eea",
       background: "#fff",
-      borderRadius: "15px",
     });
     navigate(
       `/meal?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`,
+    );
+  };
+
+  const groupedItems = {
+    green: fruitItems.filter((i) => i.category === "green"),
+    orange: fruitItems.filter((i) => i.category === "orange"),
+    red: fruitItems.filter((i) => i.category === "red"),
+  };
+
+  const renderCategory = (categoryKey) => {
+    const config = categoryConfig[categoryKey];
+    const items = groupedItems[categoryKey];
+
+    return (
+      <div style={{ marginBottom: "20px" }}>
+        {/* Zone label — same style as MeatPage */}
+        <div
+          style={{
+            fontSize: "0.85rem",
+            fontWeight: "600",
+            color: config.color,
+            marginBottom: "8px",
+          }}
+        >
+          <u>{config.title}</u>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {items.map((item) => {
+            const isSelected = !!selectedItems.find((i) => i.id === item.id);
+            const portion = portions[item.id] || 1;
+
+            return (
+              <div
+                key={item.id}
+                style={{
+                  background: isSelected ? config.bgColor : "white",
+                  border: isSelected
+                    ? `2px solid ${config.borderColor}`
+                    : "2px solid #e2e8f0",
+                  borderRadius: "12px",
+                  padding: "12px",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                {/* Item header row */}
+                <div
+                  onClick={() => handleItemClick(item)}
+                  style={{
+                    cursor: "pointer",
+                    marginBottom: isSelected ? "10px" : "0",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "10px",
+                        flex: 1,
+                      }}
+                    >
+                      <div style={{ flex: 1 }}>
+                        <div
+                          style={{
+                            fontSize: "0.95rem",
+                            fontWeight: "600",
+                            color: "#2d3748",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          {item.name}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "0.8rem",
+                            color: "#718096",
+                            marginBottom: "6px",
+                          }}
+                        >
+                          {item.portion}
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "4px",
+                          }}
+                        >
+                          <span style={chipStyle("#FEF3C7", "#92400E")}>
+                            คาร์บ {item.carbs} g
+                          </span>
+                          <span style={chipStyle("#FCE7F3", "#9F1239")}>
+                            พลังงาน {item.calories} kcal
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Checkbox circle */}
+                    <div
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "50%",
+                        border: isSelected
+                          ? `2px solid ${config.borderColor}`
+                          : "2px solid #cbd5e0",
+                        background: isSelected ? config.borderColor : "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.75rem",
+                        color: "white",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {isSelected && "✓"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Portion control — shown when selected */}
+                {isSelected && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        background: "white",
+                        padding: "8px 12px",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "0.85rem",
+                          fontWeight: "600",
+                          color: "#4a5568",
+                        }}
+                      >
+                        จำนวนส่วน
+                      </span>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <button
+                          onClick={() => updatePortion(item.id, -0.5)}
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "8px",
+                            border: `2px solid ${config.borderColor}`,
+                            background: "white",
+                            color: config.borderColor,
+                            fontSize: "1.2rem",
+                            fontWeight: "700",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          −
+                        </button>
+                        <span
+                          style={{
+                            fontSize: "1.1rem",
+                            fontWeight: "700",
+                            color: config.borderColor,
+                            minWidth: "50px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {portion}
+                        </span>
+                        <button
+                          onClick={() => updatePortion(item.id, 0.5)}
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "8px",
+                            border: `2px solid ${config.borderColor}`,
+                            background: config.borderColor,
+                            color: "white",
+                            fontSize: "1.2rem",
+                            fontWeight: "700",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.75rem",
+                        color: config.color,
+                        textAlign: "right",
+                        fontWeight: "600",
+                      }}
+                    >
+                      รวม {(portion * item.carbs).toFixed(1)} g คาร์บ •{" "}
+                      {(portion * item.calories).toFixed(0)} kcal พลังงาน
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     );
   };
 
@@ -342,7 +716,6 @@ function FruitPage() {
             backTo={`/food-log?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`}
           />
 
-          {/* Food Items List */}
           <div style={{ padding: "15px" }}>
             <h3
               style={{
@@ -356,240 +729,9 @@ function FruitPage() {
               <u>เลือกรายการผลไม้</u>
             </h3>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-              }}
-            >
-              {fruitItems.map((item) => {
-                const isSelected = selectedItems.find((i) => i.id === item.id);
-                const portion = portions[item.id] || 1;
-
-                return (
-                  <div
-                    key={item.id}
-                    style={{
-                      background: isSelected ? "#f0f4ff" : "white",
-                      border: isSelected
-                        ? "2px solid #667eea"
-                        : "2px solid #e2e8f0",
-                      borderRadius: "12px",
-                      padding: "12px",
-                      transition: "all 0.3s ease",
-                    }}
-                  >
-                    {/* Item Header */}
-                    <div
-                      onClick={() => handleItemClick(item)}
-                      style={{
-                        cursor: "pointer",
-                        marginBottom: isSelected ? "10px" : "0",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: "10px",
-                            flex: 1,
-                          }}
-                        >
-                          {/* Image */}
-                          {/* <span
-                            style={{
-                              fontSize: "1.6rem",
-                              lineHeight: 1,
-                              marginTop: "2px",
-                            }}
-                          > */}
-                          {/* <img src={item.image} alt={item.name} width="24" height="24" /> */}
-                          {/* </span> */}
-                          <div style={{ flex: 1 }}>
-                            <div
-                              style={{
-                                fontSize: "0.95rem",
-                                fontWeight: "600",
-                                color: "#2d3748",
-                                marginBottom: "4px",
-                              }}
-                            >
-                              {item.name}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: "0.8rem",
-                                color: "#718096",
-                                marginBottom: "6px",
-                              }}
-                            >
-                              {item.portion}
-                            </div>
-                            {/* Nutrition chips */}
-                            <div
-                              style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: "4px",
-                              }}
-                            >
-                              <span style={chipStyle("#FEF3C7", "#92400E")}>
-                                คาร์บ {item.carbs} g
-                              </span>
-                              <span style={chipStyle("#FCE7F3", "#9F1239")}>
-                                {item.calories} kcal
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Checkbox */}
-                        <div
-                          style={{
-                            width: "24px",
-                            height: "24px",
-                            borderRadius: "50%",
-                            border: isSelected
-                              ? "2px solid #667eea"
-                              : "2px solid #cbd5e0",
-                            background: isSelected ? "#667eea" : "white",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "0.75rem",
-                            color: "white",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {isSelected && "✓"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Portion Control */}
-                    {isSelected && (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "8px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            background: "white",
-                            padding: "8px 12px",
-                            borderRadius: "8px",
-                            border: "1px solid #e2e8f0",
-                          }}
-                        >
-                          <span
-                            style={{
-                              fontSize: "0.85rem",
-                              fontWeight: "600",
-                              color: "#4a5568",
-                            }}
-                          >
-                            จำนวนหน่วยบริโภค
-                          </span>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "12px",
-                            }}
-                          >
-                            <button
-                              onClick={() => updatePortion(item.id, -0.5)}
-                              style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "8px",
-                                border: "2px solid #667eea",
-                                background: "white",
-                                color: "#667eea",
-                                fontSize: "1.2rem",
-                                fontWeight: "700",
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              −
-                            </button>
-                            <span
-                              style={{
-                                fontSize: "1.1rem",
-                                fontWeight: "700",
-                                color: "#667eea",
-                                minWidth: "50px",
-                                textAlign: "center",
-                              }}
-                            >
-                              {portion}
-                            </span>
-                            <button
-                              onClick={() => updatePortion(item.id, 0.5)}
-                              style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "8px",
-                                border: "2px solid #667eea",
-                                background: "#667eea",
-                                color: "white",
-                                fontSize: "1.2rem",
-                                fontWeight: "700",
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                        <div
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: "2px 10px",
-                            marginTop: "8px",
-                            color: "#3b82f6",
-                            fontWeight: "600",
-                            fontSize: "15px",
-                          }}
-                        >
-                          <div
-                            style={{ textAlign: "left", fontSize: "inherit" }}
-                          >
-                            คาร์บ • {(portion * item.carbs).toFixed(1)} g
-                          </div>
-                          <div
-                            style={{ textAlign: "left", fontSize: "inherit" }}
-                          >
-                            พลังงาน • {(portion * item.calories).toFixed(0)}{" "}
-                            kcal
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            {renderCategory("green")}
+            {renderCategory("orange")}
+            {renderCategory("red")}
           </div>
 
           {/* Save Button */}
@@ -621,8 +763,8 @@ function FruitPage() {
               {selectedItems.length === 0
                 ? "กรุณาเลือกผลไม้"
                 : currentLogId
-                  ? `อัพเดทข้อมูล`
-                  : `บันทึกข้อมูล`}
+                  ? "อัพเดทข้อมูล"
+                  : "บันทึกข้อมูล"}
             </button>
           </div>
         </div>
@@ -631,7 +773,6 @@ function FruitPage() {
   );
 }
 
-// Helper: chip style
 function chipStyle(bg, color) {
   return {
     background: bg,

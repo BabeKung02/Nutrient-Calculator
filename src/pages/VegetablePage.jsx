@@ -335,7 +335,8 @@ function VegetablePage() {
                     marginBottom: "6px",
                   }}
                 >
-                  ผักสุก 1 ทัพพี หรือ ผักดิบ 2 ทัพพี (1 ส่วน)
+                  {/* ผักสุก 1 ทัพพี หรือ ผักดิบ 2 ทัพพี (1 ส่วน) */}
+                  สุก 1 ทัพพี หรือ ดิบ 2 ทัพพี เท่ากับ 1 ส่วน
                 </div>
                 {/* Nutrition chips */}
                 {isEnergy && (
@@ -352,7 +353,7 @@ function VegetablePage() {
                     <span style={chipStyle("#FEF3C7", "#92400E")}>
                       คาร์บ 5 g
                     </span>
-                    <span style={chipStyle("#FCE7F3", "#9F1239")}>25 kcal</span>
+                    <span style={chipStyle("#FCE7F3", "#9F1239")}>พลังงาน 25 kcal</span>
                   </div>
                 )}
                 {!isEnergy && (

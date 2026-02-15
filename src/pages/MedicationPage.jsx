@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../components/Header";          // ✅ ใช้ Header จริงเหมือนทุกหน้า
 import { useNotification } from "../hooks/useNotification";
 
@@ -233,12 +233,32 @@ const AddModal = ({ onClose, onAdd }) => {
 
 // ── Main Page ──────────────────────────────────────────────────
 export default function MedicationPage() {
+  const currentUser = localStorage.getItem("currentUser");
+  
   const [entries, setEntries] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast]         = useState({ msg:"", visible:false });
   const [notifMap, setNotifMap]   = useState({});
 
   const { permission, scheduleNotification, requestPermission, testNotification } = useNotification();
+
+  // ⭐ Load entries from localStorage on mount
+  useEffect(() => {
+    const savedEntries = localStorage.getItem(`medication_${currentUser}`);
+    if (savedEntries) {
+      try {
+        const parsed = JSON.parse(savedEntries);
+        setEntries(parsed);
+      } catch (e) {
+        console.error("Error loading medication data:", e);
+      }
+    }
+  }, [currentUser]);
+
+  // ⭐ Save entries to localStorage whenever they change
+  const saveToLocalStorage = (newEntries) => {
+    localStorage.setItem(`medication_${currentUser}`, JSON.stringify(newEntries));
+  };
 
   const showToast = (msg) => {
     setToast({ msg, visible:true });
@@ -248,7 +268,11 @@ export default function MedicationPage() {
   const handleAdd = async (entry) => {
     const id = Date.now() + Math.random();
     const newEntry = { ...entry, id };
-    setEntries((p) => [...p, newEntry]);
+    const updatedEntries = [...entries, newEntry];
+    
+    setEntries(updatedEntries);
+    saveToLocalStorage(updatedEntries); // ⭐ Save to localStorage
+    
     const record = await scheduleNotification(newEntry);
     if (record) {
       setNotifMap((p) => ({ ...p, [id]: record }));
@@ -257,7 +281,11 @@ export default function MedicationPage() {
   };
 
   const handleDelete = (id) => {
-    setEntries((p) => p.filter((e) => e.id !== id));
+    const updatedEntries = entries.filter((e) => e.id !== id);
+    
+    setEntries(updatedEntries);
+    saveToLocalStorage(updatedEntries); // ⭐ Save to localStorage
+    
     setNotifMap((p) => { const n = { ...p }; delete n[id]; return n; });
   };
 

@@ -4,195 +4,390 @@ import Swal from "sweetalert2";
 import Header from "../components/Header";
 
 const meatItems = [
+  // เนื้อสัตว์ไขมันต่ำมาก (โปรตีน 7g, ไขมัน 1g, พลังงาน 35 kcal)
   {
     id: 1,
-    name: "ไข่ไก่ต้มกลาง",
-    portion: "2 ฟอง",
+    name: "หอยแครง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 7,
+    fat: 1,
     calories: 35,
-    servingSize: "1 ส่วน",
-    // emoji: "🥚",
+    category: "veryLow",
   },
   {
     id: 2,
-    name: "เนื้อปลา",
-    portion: "30 กรัม",
+    name: "ปีกไก่",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 1,
     calories: 35,
-    servingSize: "1 ส่วน",
-    // emoji: "🐟",
+    category: "veryLow",
   },
   {
     id: 3,
-    name: "กุ้ง",
-    portion: "30 กรัม",
+    name: "ขาหมู ไม่ติดมัน",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 1,
     calories: 35,
-    servingSize: "1 ส่วน",
-    // emoji: "🦐",
+    category: "veryLow",
   },
   {
     id: 4,
-    name: "ไข่ขาว",
-    portion: "2 ฟอง",
+    name: "ไส้กรอกไก่",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 1,
     calories: 35,
-    servingSize: "1 ส่วน",
-    // emoji: "🥚",
+    category: "veryLow",
   },
   {
     id: 5,
-    name: "อกไก่",
-    portion: "30 กรัม",
+    name: "กุ้งตัวกลาง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 1,
     calories: 35,
-    servingSize: "1 ส่วน",
-    // emoji: "🍗",
+    category: "veryLow",
   },
   {
     id: 6,
-    name: "ปลาทู",
-    portion: "30 กรัม",
+    name: "เนื้ออกไก่",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 1,
     calories: 35,
-    servingSize: "1 ส่วน",
-    // emoji: "🐟",
+    category: "veryLow",
   },
   {
     id: 7,
-    name: "เนื้ออกไก่",
-    portion: "30 กรัม",
+    name: "ไข่ไก่ ทั้งฟอง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 3,
-    calories: 55,
-    servingSize: "1 ส่วน",
-    // emoji: "🍗",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 8,
-    name: "หมูเนื้อแดง",
-    portion: "30 กรัม",
+    name: "ปลาสวาย",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 3,
-    calories: 55,
-    servingSize: "1 ส่วน",
-    // emoji: "🥩",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 9,
-    name: "ลูกชิ้นหมู",
-    portion: "30 กรัม",
+    name: "สันในไก่",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 3,
-    calories: 55,
-    servingSize: "1 ส่วน",
-    // emoji: "🍖",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 10,
     name: "ลูกชิ้นไก่",
-    portion: "30 กรัม",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 3,
-    calories: 55,
-    servingSize: "1 ส่วน",
-    // emoji: "🍗",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 11,
-    name: "ปลาหมึกระโปง",
-    portion: "30 กรัม",
+    name: "ไข่เป็ด ทั้งฟอง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 3,
-    calories: 55,
-    servingSize: "1 ส่วน",
-    // emoji: "🦑",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 12,
-    name: "ไข่ไก่ (1 ฟอง)",
-    portion: "1 ฟอง",
+    name: "ไส้กรอกหมู",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 5,
-    calories: 75,
-    servingSize: "1 ส่วน",
-    // emoji: "🥚",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 13,
-    name: "เต้าหู้ขาว",
-    portion: "30 กรัม",
+    name: "ปลาทู",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 5,
-    calories: 75,
-    servingSize: "1 ส่วน",
-    // emoji: "🧈",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 14,
-    name: "เต้าหู้อ่อน",
-    portion: "30 กรัม",
+    name: "ลูกชิ้นหมู",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 5,
-    calories: 75,
-    servingSize: "1 ส่วน",
-    // emoji: "🧈",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
-  //   {
-  //     id: 15,
-  //     name: "นมถั่วเหลืองไม่หวาน",
-  //     portion: "1 ถ้วย",
-  //     protein: 7,
-  //     fat: 5,
-  //     calories: 75,
-  //     servingSize: "1 ส่วน",
-  //     // emoji: "🥛",
-  //   },
+  {
+    id: 15,
+    name: "ซี่โครงหมู ไม่ติดมัน",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
+  },
   {
     id: 16,
-    name: "ไส้กรอก",
-    portion: "30 กรัม",
+    name: "หมูบด",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 8,
-    calories: 100,
-    servingSize: "1 ส่วน",
-    // emoji: "🌭",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 17,
-    name: "กุนเชียง",
-    portion: "30 กรัม",
+    name: "ไข่ขาว",
+    portion: "2 ฟอง เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 8,
-    calories: 100,
-    servingSize: "1 ส่วน",
-    // emoji: "🍖",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
   {
     id: 18,
-    name: "หมูยอ",
-    portion: "30 กรัม",
+    name: "ปลาซาดีนกระป๋อง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
-    fat: 8,
-    calories: 100,
-    servingSize: "1 ส่วน",
-    // emoji: "🥓",
+    fat: 1,
+    calories: 35,
+    category: "veryLow",
   },
+
+  // เนื้อสัตว์ไขมันต่ำ (โปรตีน 7g, ไขมัน 3g, พลังงาน 55 kcal)
   {
     id: 19,
-    name: "เบคอน",
-    portion: "30 กรัม",
+    name: "เนื้อหมู ไม่ติดมัน",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+  {
+    id: 20,
+    name: "เนื้อหมูติดมัน",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+  {
+    id: 21,
+    name: "ปลาช่อน",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+  {
+    id: 22,
+    name: "หมูเนื้อแดง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+  {
+    id: 23,
+    name: "หมูย่าง ไม่มีหนัง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+  {
+    id: 24,
+    name: "เนื้อเป็ดมีหนัง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+  {
+    id: 25,
+    name: "ปลาอื่นๆ",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+  {
+    id: 26,
+    name: "ทรีย์เป็ดย่าง ไม่มีหนัง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 3,
+    calories: 55,
+    category: "low",
+  },
+
+  // เนื้อสัตว์ไขมันปานกลาง (โปรตีน 7g, ไขมัน 5g, พลังงาน 75 kcal)
+  {
+    id: 27,
+    name: "กุนเชียง",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+  {
+    id: 28,
+    name: "ปลาหมึก",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+  {
+    id: 29,
+    name: "ซี่โครงหมู ติดมัน",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+  {
+    id: 30,
+    name: "เนื้อปู",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+  {
+    id: 31,
+    name: "เนื้อไก่ติดมัน/หนังไก่",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+  {
+    id: 32,
+    name: "ปลาอื่นๆ",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+  {
+    id: 33,
+    name: "เนื้อวัว ติดมัน",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+  {
+    id: 34,
+    name: "หอยลาย",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 5,
+    calories: 75,
+    category: "medium",
+  },
+
+  // เนื้อสัตว์ไขมันสูง (โปรตีน 7g, ไขมัน 8g, พลังงาน 100 kcal)
+  {
+    id: 35,
+    name: "หนังหมู",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 8,
     calories: 100,
-    servingSize: "1 ส่วน",
-    // emoji: "🥓",
+    category: "high",
+  },
+  {
+    id: 36,
+    name: "ปลากะพงขาว",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 8,
+    calories: 100,
+    category: "high",
+  },
+  {
+    id: 37,
+    name: "หมูยอ",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 8,
+    calories: 100,
+    category: "high",
+  },
+  {
+    id: 38,
+    name: "ปลาดุก",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 8,
+    calories: 100,
+    category: "high",
+  },
+  {
+    id: 39,
+    name: "แหนม",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 8,
+    calories: 100,
+    category: "high",
+  },
+  {
+    id: 40,
+    name: "ลูกชิ้นปลา",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 8,
+    calories: 100,
+    category: "high",
+  },
+  {
+    id: 41,
+    name: "แฮม",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 8,
+    calories: 100,
+    category: "high",
+  },
+  {
+    id: 42,
+    name: "ลูกชิ้นเนื้อ",
+    portion: "30 กรัม เท่ากับ 1 ส่วน",
+    protein: 7,
+    fat: 8,
+    calories: 100,
+    category: "high",
   },
 ];
 
@@ -208,6 +403,17 @@ function MeatPage() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [portions, setPortions] = useState({});
   const [currentLogId, setCurrentLogId] = useState(null);
+
+  // Show warning on mount
+  useEffect(() => {
+    Swal.fire({
+      icon: "warning",
+      title: "คำแนะนำ",
+      text: "งดเนื้อสัตว์ที่มีไขมันสูง และเนื้อสัตว์แปรรูปทุกชนิด",
+      confirmButtonColor: "#f59e0b",
+      confirmButtonText: "OK",
+    });
+  }, []);
 
   useEffect(() => {
     const existingLogs = JSON.parse(
@@ -353,11 +559,6 @@ function MeatPage() {
       JSON.stringify(updatedLogs),
     );
 
-    console.log(
-      "Saved to LocalStorage:",
-      updatedLogs.find((log) => log.id === logId),
-    );
-
     Swal.fire({
       title: currentLogId ? "อัพเดทสำเร็จ!" : "บันทึกสำเร็จ!",
       html: `
@@ -379,6 +580,271 @@ function MeatPage() {
     });
     navigate(
       `/meal?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`,
+    );
+  };
+
+  const groupedItems = {
+    veryLow: meatItems.filter((item) => item.category === "veryLow"),
+    low: meatItems.filter((item) => item.category === "low"),
+    medium: meatItems.filter((item) => item.category === "medium"),
+    high: meatItems.filter((item) => item.category === "high"),
+  };
+
+  const categoryConfig = {
+    veryLow: {
+      title: "เนื้อสัตว์ไขมันต่ำมาก",
+      color: "#16a34a",
+      bgColor: "#f0fdf4",
+      borderColor: "#16a34a",
+    },
+    low: {
+      title: "เนื้อสัตว์ไขมันต่ำ",
+      color: "#ca8a04",
+      bgColor: "#fef9c3",
+      borderColor: "#facc15",
+    },
+    medium: {
+      title: "เนื้อสัตว์ไขมันปานกลาง",
+      color: "#ea580c",
+      bgColor: "#fff7ed",
+      borderColor: "#fb923c",
+    },
+    high: {
+      title: "เนื้อสัตว์ไขมันสูง",
+      color: "#dc2626",
+      bgColor: "#fef2f2",
+      borderColor: "#dc2626",
+    },
+  };
+
+  const renderCategory = (categoryKey) => {
+    const config = categoryConfig[categoryKey];
+    const items = groupedItems[categoryKey];
+
+    return (
+      <div style={{ marginBottom: "20px" }}>
+        <div
+          style={{
+            fontSize: "0.85rem",
+            fontWeight: "600",
+            color: config.color,
+            marginBottom: "8px",
+          }}
+        >
+          <u>{config.title}</u>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+        >
+          {items.map((item) => {
+            const isSelected = selectedItems.find((i) => i.id === item.id);
+            const portion = portions[item.id] || 1;
+
+            return (
+              <div
+                key={item.id}
+                style={{
+                  background: isSelected ? config.bgColor : "white",
+                  border: isSelected
+                    ? `2px solid ${config.borderColor}`
+                    : "2px solid #e2e8f0",
+                  borderRadius: "12px",
+                  padding: "12px",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                <div
+                  onClick={() => handleItemClick(item)}
+                  style={{
+                    cursor: "pointer",
+                    marginBottom: isSelected ? "10px" : "0",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: "10px",
+                        flex: 1,
+                      }}
+                    >
+                      <div style={{ flex: 1 }}>
+                        <div
+                          style={{
+                            fontSize: "0.95rem",
+                            fontWeight: "600",
+                            color: "#2d3748",
+                            marginBottom: "4px",
+                          }}
+                        >
+                          {item.name}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "0.8rem",
+                            color: "#718096",
+                            marginBottom: "6px",
+                          }}
+                        >
+                          {item.portion}
+                        </div>
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            gap: "4px",
+                          }}
+                        >
+                          <span style={chipStyle("#DBEAFE", "#1E40AF")}>
+                            โปรตีน {item.protein} g
+                          </span>
+                          <span style={chipStyle("#FEF3C7", "#92400E")}>
+                            ไขมัน {item.fat} g
+                          </span>
+                          <span style={chipStyle("#FCE7F3", "#9F1239")}>
+                            พลังงาน {item.calories} kcal
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "50%",
+                        border: isSelected
+                          ? `2px solid ${config.borderColor}`
+                          : "2px solid #cbd5e0",
+                        background: isSelected ? config.borderColor : "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.75rem",
+                        color: "white",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {isSelected && "✓"}
+                    </div>
+                  </div>
+                </div>
+
+                {isSelected && (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "8px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        background: "white",
+                        padding: "8px 12px",
+                        borderRadius: "8px",
+                        border: "1px solid #e2e8f0",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "0.85rem",
+                          fontWeight: "600",
+                          color: "#4a5568",
+                        }}
+                      >
+                        จำนวนส่วน
+                      </span>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                        }}
+                      >
+                        <button
+                          onClick={() => updatePortion(item.id, -0.5)}
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "8px",
+                            border: `2px solid ${config.borderColor}`,
+                            background: "white",
+                            color: config.borderColor,
+                            fontSize: "1.2rem",
+                            fontWeight: "700",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          −
+                        </button>
+                        <span
+                          style={{
+                            fontSize: "1.1rem",
+                            fontWeight: "700",
+                            color: config.borderColor,
+                            minWidth: "50px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {portion}
+                        </span>
+                        <button
+                          onClick={() => updatePortion(item.id, 0.5)}
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            borderRadius: "8px",
+                            border: `2px solid ${config.borderColor}`,
+                            background: config.borderColor,
+                            color: "white",
+                            fontSize: "1.2rem",
+                            fontWeight: "700",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "0.75rem",
+                        color: config.color,
+                        textAlign: "right",
+                        fontWeight: "600",
+                      }}
+                    >
+                      รวม {(portion * item.protein).toFixed(1)} g โปรตีน •{" "}
+                      {(portion * item.fat).toFixed(1)} g ไขมัน •{" "}
+                      {(portion * item.calories).toFixed(0)} kcal พลังงาน
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     );
   };
 
@@ -408,7 +874,6 @@ function MeatPage() {
             backTo={`/food-log?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`}
           />
 
-          {/* Meat Items List */}
           <div style={{ padding: "15px" }}>
             <h3
               style={{
@@ -422,253 +887,12 @@ function MeatPage() {
               <u>เลือกรายการเนื้อสัตว์</u>
             </h3>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-              }}
-            >
-              {meatItems.map((item) => {
-                const isSelected = selectedItems.find((i) => i.id === item.id);
-                const portion = portions[item.id] || 1;
-
-                return (
-                  <div
-                    key={item.id}
-                    style={{
-                      background: isSelected ? "#f0f4ff" : "white",
-                      border: isSelected
-                        ? "2px solid #667eea"
-                        : "2px solid #e2e8f0",
-                      borderRadius: "12px",
-                      padding: "12px",
-                      transition: "all 0.3s ease",
-                    }}
-                  >
-                    {/* Item Header */}
-                    <div
-                      onClick={() => handleItemClick(item)}
-                      style={{
-                        cursor: "pointer",
-                        marginBottom: isSelected ? "10px" : "0",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: "10px",
-                            flex: 1,
-                          }}
-                        >
-                          {/* Emoji */}
-                          {/* <span
-                            style={{
-                              fontSize: "1.6rem",
-                              lineHeight: 1,
-                              marginTop: "2px",
-                            }}
-                          >
-                            {item.emoji}
-                          </span> */}
-                          <div style={{ flex: 1 }}>
-                            <div
-                              style={{
-                                fontSize: "0.95rem",
-                                fontWeight: "600",
-                                color: "#2d3748",
-                                marginBottom: "4px",
-                              }}
-                            >
-                              {item.name}
-                            </div>
-                            <div
-                              style={{
-                                fontSize: "0.8rem",
-                                color: "#718096",
-                                marginBottom: "6px",
-                              }}
-                            >
-                              {item.portion} ({item.servingSize})
-                            </div>
-                            {/* Nutrition chips */}
-                            <div
-                              style={{
-                                display: "flex",
-                                flexWrap: "wrap",
-                                gap: "4px",
-                              }}
-                            >
-                              <span style={chipStyle("#DBEAFE", "#1E40AF")}>
-                                โปรตีน {item.protein} g
-                              </span>
-                              <span style={chipStyle("#FEF3C7", "#92400E")}>
-                                ไขมัน {item.fat} g
-                              </span>
-                              <span style={chipStyle("#FCE7F3", "#9F1239")}>
-                                {item.calories} kcal
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Checkbox */}
-                        <div
-                          style={{
-                            width: "24px",
-                            height: "24px",
-                            borderRadius: "50%",
-                            border: isSelected
-                              ? "2px solid #667eea"
-                              : "2px solid #cbd5e0",
-                            background: isSelected ? "#667eea" : "white",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: "0.75rem",
-                            color: "white",
-                            flexShrink: 0,
-                          }}
-                        >
-                          {isSelected && "✓"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Portion Control */}
-                    {isSelected && (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "8px",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            background: "white",
-                            padding: "8px 12px",
-                            borderRadius: "8px",
-                            border: "1px solid #e2e8f0",
-                          }}
-                        >
-                          <span
-                            style={{
-                              fontSize: "0.85rem",
-                              fontWeight: "600",
-                              color: "#4a5568",
-                            }}
-                          >
-                            จำนวนส่วน
-                          </span>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "12px",
-                            }}
-                          >
-                            <button
-                              onClick={() => updatePortion(item.id, -0.5)}
-                              style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "8px",
-                                border: "2px solid #667eea",
-                                background: "white",
-                                color: "#667eea",
-                                fontSize: "1.2rem",
-                                fontWeight: "700",
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              −
-                            </button>
-                            <span
-                              style={{
-                                fontSize: "1.1rem",
-                                fontWeight: "700",
-                                color: "#667eea",
-                                minWidth: "50px",
-                                textAlign: "center",
-                              }}
-                            >
-                              {portion}
-                            </span>
-                            <button
-                              onClick={() => updatePortion(item.id, 0.5)}
-                              style={{
-                                width: "32px",
-                                height: "32px",
-                                borderRadius: "8px",
-                                border: "2px solid #667eea",
-                                background: "#667eea",
-                                color: "white",
-                                fontSize: "1.2rem",
-                                fontWeight: "700",
-                                cursor: "pointer",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                        {/* Mini summary per item */}
-                        <div
-                          style={{
-                            display: "grid",
-                            gridTemplateColumns: "1fr 1fr",
-                            gap: "2px 10px",
-                            marginTop: "8px",
-                            color: "#3b82f6",
-                            fontWeight: "600",
-                            // ใส่หน่วย px ให้ชัดเจน และใช้ค่าที่ครอบคลุม
-                            fontSize: "15px",
-                          }}
-                        >
-                          <div
-                            style={{ textAlign: "left", fontSize: "inherit" }}
-                          >
-                            โปรตีน • {(portion * item.protein).toFixed(1)} g
-                          </div>
-                          <div
-                            style={{ textAlign: "left", fontSize: "inherit" }}
-                          >
-                            ไขมัน • {(portion * item.fat).toFixed(1)} g
-                          </div>
-                          <div
-                            style={{ textAlign: "left", fontSize: "inherit" }}
-                          >
-                            พลังงาน • {(portion * item.calories).toFixed(0)}{" "}
-                            kcal
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            {renderCategory("veryLow")}
+            {renderCategory("low")}
+            {renderCategory("medium")}
+            {renderCategory("high")}
           </div>
 
-          {/* Save Button */}
           <div style={{ padding: "0 15px 20px 15px" }}>
             <button
               onClick={handleSave}
@@ -707,14 +931,13 @@ function MeatPage() {
   );
 }
 
-// Helper: chip style
 function chipStyle(bg, color) {
   return {
     background: bg,
     color: color,
     borderRadius: "6px",
-    padding: "2px 7px",
-    fontSize: "0.72rem",
+    padding: "2px 5px",
+    fontSize: "0.7rem",
     fontWeight: 600,
   };
 }

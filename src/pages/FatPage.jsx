@@ -5,10 +5,22 @@ import Header from "../components/Header";
 
 const fatItems = [
   // ไขมันไม่อิ่มตัวตำแหน่งเดียว (ดีต่อสุขภาพ)
+
+  {
+    id: 6,
+    name: "น้ำมันถั่วเหลือง",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
+    fat: 5,
+    calories: 45,
+    category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
+    emoji: "🫘",
+    recommended: true,
+  },
+
   {
     id: 1,
     name: "น้ำมันรำข้าว",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -18,7 +30,7 @@ const fatItems = [
   {
     id: 2,
     name: "น้ำมันมะกอก",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -28,7 +40,7 @@ const fatItems = [
   {
     id: 3,
     name: "น้ำมันถั่วลิสง",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -38,7 +50,7 @@ const fatItems = [
   {
     id: 4,
     name: "อัลมอนด์",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -48,7 +60,7 @@ const fatItems = [
   {
     id: 5,
     name: "งาขาว",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -59,7 +71,7 @@ const fatItems = [
   {
     id: 14,
     name: "งาดำ",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -69,40 +81,30 @@ const fatItems = [
 
   // ไขมันไม่อิ่มตัวหลายตำแหน่ง
   {
-    id: 6,
-    name: "น้ำมันถั่วเหลือง",
-    portion: "1 ช้อนชา",
-    fat: 5,
-    calories: 45,
-    category: "ไขมันไม่อิ่มตัวหลายตำแหน่ง",
-    emoji: "🫘",
-    recommended: false,
-  },
-  {
     id: 7,
-    name: "น้ำมันข้าวโพด",
+    name: "น้ำมันข้าวโพด เท่ากับ 1 ส่วน",
     portion: "1 ช้อนชา",
     fat: 5,
     calories: 45,
-    category: "ไขมันไม่อิ่มตัวหลายตำแหน่ง",
+    category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
     emoji: "🌽",
-    recommended: false,
+    recommended: true,
   },
   {
     id: 8,
-    name: "น้ำมันดอกทานตะวัน",
+    name: "น้ำมันดอกทานตะวัน เท่ากับ 1 ส่วน",
     portion: "1 ช้อนชา",
     fat: 5,
     calories: 45,
-    category: "ไขมันไม่อิ่มตัวหลายตำแหน่ง",
+    category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
     emoji: "🌻",
-    recommended: false,
+    recommended: true,
   },
   // ไขมันอิ่มตัว (ไม่แนะนำ)
   {
     id: 9,
     name: "น้ำมันปาล์ม",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันอิ่มตัว",
@@ -113,7 +115,7 @@ const fatItems = [
   {
     id: 10,
     name: "กะทิ",
-    portion: "1 ช้อนโต๊ะ",
+    portion: "1 ช้อนโต๊ะ เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันอิ่มตัว",
@@ -124,7 +126,7 @@ const fatItems = [
   {
     id: 11,
     name: "เนยสด",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันอิ่มตัว",
@@ -134,7 +136,7 @@ const fatItems = [
   },
   {
     id: 12,
-    name: "น้ำมันหมู",
+    name: "น้ำมันหมู เท่ากับ 1 ส่วน",
     portion: "1 ช้อนชา",
     fat: 5,
     calories: 45,
@@ -146,7 +148,7 @@ const fatItems = [
   {
     id: 13,
     name: "น้ำมันไก่",
-    portion: "1 ช้อนชา",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันอิ่มตัว",
@@ -383,16 +385,14 @@ function FatPage() {
                   display: "flex",
                   alignItems: "center",
                   gap: "6px",
-                  marginBottom: "8px",
-                  // ใส่สไตล์ส่วนกลางไว้ที่นี่
                   fontSize: "0.85rem",
                   fontWeight: "600",
                   color: "#16a34a",
                 }}
               >
-                <span style={{ fontSize: "inherit", color: "inherit" }}>
-                  ไขมันไม่อิ่มตัวตำแหน่งเดียว (แนะนำอย่างยิ่ง)
-                </span>
+                {/* <span style={{ fontSize: "inherit", color: "inherit" }}>
+                  ไขมันไม่อิ่มตัวตำแหน่งเดียว (แนะนำ)
+                </span> */}
               </div>
               <div
                 style={{
@@ -457,7 +457,6 @@ function FatPage() {
                                   fontSize: "0.95rem",
                                   fontWeight: "600",
                                   color: "#2d3748",
-                                  marginBottom: "4px",
                                 }}
                               >
                                 {item.name}
@@ -482,7 +481,7 @@ function FatPage() {
                                   ไขมัน {item.fat} g
                                 </span>
                                 <span style={chipStyle("#FCE7F3", "#9F1239")}>
-                                  {item.calories} kcal
+                                  พลังงาน {item.calories} kcal
                                 </span>
                               </div>
                             </div>
@@ -535,7 +534,7 @@ function FatPage() {
                                 color: "#4a5568",
                               }}
                             >
-                              จำนวนช้อนชา
+                              จำนวนส่วน
                             </span>
                             <div
                               style={{
@@ -614,255 +613,22 @@ function FatPage() {
               </div>
             </div>
 
-            {/* Polyunsaturated (ไขมันไม่อิ่มตัวหลายตำแหน่ง) */}
-            <div style={{ marginBottom: "20px" }}>
+            {/* Saturated (ไขมันอิ่มตัว - ไม่แนะนำ) */}
+            <div>
               <div
                 style={{
                   fontSize: "0.85rem",
                   fontWeight: "600",
-                  color: "#2563eb",
-                  marginBottom: "8px",
-                }}
-              >
-                ไขมันไม่อิ่มตัวหลายตำแหน่ง
-              </div>
-              <div
-                style={{
+                  color: "#dc2626", // สีแดง
                   display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
+                  alignItems: "center",
+                  gap: "6px",
                 }}
               >
-                {groupedItems.polyunsaturated.map((item) => {
-                  const isSelected = selectedItems.find(
-                    (i) => i.id === item.id,
-                  );
-                  const portion = portions[item.id] || 1;
-
-                  return (
-                    <div
-                      key={item.id}
-                      style={{
-                        background: isSelected ? "#eff6ff" : "white",
-                        border: isSelected
-                          ? "2px solid #2563eb"
-                          : "2px solid #e2e8f0",
-                        borderRadius: "12px",
-                        padding: "12px",
-                        transition: "all 0.3s ease",
-                      }}
-                    >
-                      <div
-                        onClick={() => handleItemClick(item)}
-                        style={{
-                          cursor: "pointer",
-                          marginBottom: isSelected ? "10px" : "0",
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "flex-start",
-                              gap: "10px",
-                              flex: 1,
-                            }}
-                          >
-                            {/* <span
-                              style={{
-                                fontSize: "1.6rem",
-                                lineHeight: 1,
-                                marginTop: "2px",
-                              }}
-                            >
-                              {item.emoji}
-                            </span> */}
-                            <div style={{ flex: 1 }}>
-                              <div
-                                style={{
-                                  fontSize: "0.95rem",
-                                  fontWeight: "600",
-                                  color: "#2d3748",
-                                  marginBottom: "4px",
-                                }}
-                              >
-                                {item.name}
-                              </div>
-                              <div
-                                style={{
-                                  fontSize: "0.8rem",
-                                  color: "#718096",
-                                  marginBottom: "6px",
-                                }}
-                              >
-                                {item.portion}
-                              </div>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  flexWrap: "wrap",
-                                  gap: "4px",
-                                }}
-                              >
-                                <span style={chipStyle("#FEF9C3", "#92400E")}>
-                                  ไขมัน {item.fat} g
-                                </span>
-                                <span style={chipStyle("#FCE7F3", "#9F1239")}>
-                                  {item.calories} kcal
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            style={{
-                              width: "24px",
-                              height: "24px",
-                              borderRadius: "50%",
-                              border: isSelected
-                                ? "2px solid #2563eb"
-                                : "2px solid #cbd5e0",
-                              background: isSelected ? "#2563eb" : "white",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontSize: "0.75rem",
-                              color: "white",
-                              flexShrink: 0,
-                            }}
-                          >
-                            {isSelected && "✓"}
-                          </div>
-                        </div>
-                      </div>
-
-                      {isSelected && (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "8px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              background: "white",
-                              padding: "8px 12px",
-                              borderRadius: "8px",
-                              border: "1px solid #e2e8f0",
-                            }}
-                          >
-                            <span
-                              style={{
-                                fontSize: "0.85rem",
-                                fontWeight: "600",
-                                color: "#4a5568",
-                              }}
-                            >
-                              จำนวนช้อนชา
-                            </span>
-                            <div
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: "12px",
-                              }}
-                            >
-                              <button
-                                onClick={() => updatePortion(item.id, -0.5)}
-                                style={{
-                                  width: "32px",
-                                  height: "32px",
-                                  borderRadius: "8px",
-                                  border: "2px solid #2563eb",
-                                  background: "white",
-                                  color: "#2563eb",
-                                  fontSize: "1.2rem",
-                                  fontWeight: "700",
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                −
-                              </button>
-                              <span
-                                style={{
-                                  fontSize: "1.1rem",
-                                  fontWeight: "700",
-                                  color: "#2563eb",
-                                  minWidth: "50px",
-                                  textAlign: "center",
-                                }}
-                              >
-                                {portion}
-                              </span>
-                              <button
-                                onClick={() => updatePortion(item.id, 0.5)}
-                                style={{
-                                  width: "32px",
-                                  height: "32px",
-                                  borderRadius: "8px",
-                                  border: "2px solid #2563eb",
-                                  background: "#2563eb",
-                                  color: "white",
-                                  fontSize: "1.2rem",
-                                  fontWeight: "700",
-                                  cursor: "pointer",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
-                          <div
-                            style={{
-                              fontSize: "0.75rem",
-                              color: "#2563eb",
-                              textAlign: "right",
-                              fontWeight: "600",
-                            }}
-                          >
-                            รวม {(portion * item.fat).toFixed(1)} g ไขมัน •{" "}
-                            {(portion * item.calories).toFixed(0)} kcal
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                <span style={{ fontSize: "inherit", color: "inherit", marginBottom: "20px" }}>
+                  <u>ควรหลีกเลี่ยง</u>
+                </span>
               </div>
-            </div>
-
-            {/* Saturated (ไขมันอิ่มตัว - ไม่แนะนำ) */}
-            <div>
-<div
-  style={{
-    fontSize: "0.85rem",
-    fontWeight: "600",
-    color: "#dc2626", // สีแดง
-    marginBottom: "8px",
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-  }}
->
-  <span style={{ fontSize: "inherit", color: "inherit" }}>
-    ไขมันอิ่มตัว (ไม่แนะนำ)
-  </span>
-</div>
               <div
                 style={{
                   display: "flex",

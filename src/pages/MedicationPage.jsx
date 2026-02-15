@@ -153,7 +153,7 @@ const AddModal = ({ onClose, onAdd }) => {
       // ถ้าเคย set เป็น "ก่อนนอน" แต่ตอนนี้มีมื้ออื่นด้วย ให้ reset
       setTiming("หลังอาหาร");
     }
-  }, [meals]);
+  }, [meals,timing]);
 
   const medicineOptions = [
     "Glipizide",

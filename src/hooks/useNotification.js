@@ -243,7 +243,7 @@ export function useNotification() {
     }
     
     return result === "granted";
-  }, [serverAvailable]);
+  }, [serverAvailable, subscribeToPush]);
 
   // Subscribe to Push Notifications
   const subscribeToPush = useCallback(async () => {
@@ -387,7 +387,7 @@ export function useNotification() {
         return scheduleLocalNotification(entry);
       }
     },
-    [permission, requestPermission, currentUser, serverAvailable]
+    [permission, requestPermission, currentUser, serverAvailable, scheduleLocalNotification]
   );
 
   // Fallback: Local notification (ใช้เมื่อ server ไม่พร้อม)

@@ -181,8 +181,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-// ⚙️ Config - แก้ URL เป็น server จริง
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3000/api";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001/api";
 
 export const MEAL_TIMES = {
   เช้า: { hour: 8, minute: 0 },
@@ -221,176 +220,12 @@ export function useNotification() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
-        .then((reg) => {
-          console.log("✅ SW registered:", reg.scope);
-        })
+        .then((reg) => console.log("✅ SW registered:", reg.scope))
         .catch((err) => console.error("❌ SW error:", err));
     }
   }, []);
 
-  // ขอ Permission
-  const requestPermission = useCallback(async () => {
-    if (!("Notification" in window)) {
-      alert("Browser นี้ไม่รองรับ Notification");
-      return false;
-    }
-    
-    const result = await Notification.requestPermission();
-    setPermission(result);
-    
-    if (result === "granted" && serverAvailable) {
-      await subscribeToPush();
-    }
-    
-    return result === "granted";
-  }, [serverAvailable, subscribeToPush]);
-
-  // Subscribe to Push Notifications
-  const subscribeToPush = useCallback(async () => {
-    if (!serverAvailable) {
-      console.warn("⚠️ Server not available, skipping push subscription");
-      return;
-    }
-
-    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-      console.error("❌ Push notifications not supported");
-      return;
-    }
-
-    try {
-      const registration = await navigator.serviceWorker.ready;
-      
-      // เช็คว่ามี subscription อยู่แล้วหรือไม่
-      let existingSub = await registration.pushManager.getSubscription();
-      
-      // ถ้ามีแล้ว ใช้อันเดิม
-      if (existingSub) {
-        console.log("✅ Using existing subscription");
-        setSubscription(existingSub);
-        
-        // ส่ง subscription ที่มีอยู่ไปที่ server (เผื่อ server restart)
-        await fetch(`${API_URL}/subscribe`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: currentUser,
-            subscription: existingSub,
-          }),
-        });
-        
-        return;
-      }
-      
-      // ถ้าไม่มี ให้ subscribe ใหม่
-      // ดึง VAPID public key จาก server
-      const vapidResponse = await fetch(`${API_URL}/vapid-public-key`);
-      const { publicKey } = await vapidResponse.json();
-      
-      const sub = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: publicKey,
-      });
-
-      setSubscription(sub);
-      
-      // ส่ง subscription ไปเก็บที่ server
-      const response = await fetch(`${API_URL}/subscribe`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: currentUser,
-          subscription: sub,
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error("Failed to save subscription");
-      }
-      
-      console.log("✅ Subscribed to push notifications");
-    } catch (error) {
-      console.error("❌ Push subscription failed:", error);
-    }
-  }, [currentUser, serverAvailable]);
-
-  // Auto subscribe on permission granted
-  useEffect(() => {
-    if (permission === "granted" && serverAvailable && !subscription) {
-      subscribeToPush();
-    }
-  }, [permission, serverAvailable, subscription, subscribeToPush]);
-
-  // Schedule notification (ส่งไปยัง server)
-  const scheduleNotification = useCallback(
-    async (entry) => {
-      if (permission !== "granted") {
-        const ok = await requestPermission();
-        if (!ok) return null;
-      }
-
-      // ถ้า server ไม่พร้อม ให้ใช้ local notification แทน (fallback)
-      if (!serverAvailable) {
-        console.warn("⚠️ Using local notification fallback");
-        return scheduleLocalNotification(entry);
-      }
-
-      try {
-        // คำนวณเวลาที่ต้องแจ้งเตือน
-        const mealTime = MEAL_TIMES[entry.meal];
-        let targetHour = mealTime.hour;
-        let targetMin = mealTime.minute;
-
-        if (entry.meal !== "ก่อนนอน") {
-          const offsetMin = entry.timing === "ก่อนอาหาร" ? -30 : entry.timing === "หลังอาหาร" ? 30 : 0;
-          targetMin += offsetMin;
-          
-          if (targetMin < 0) { targetHour -= 1; targetMin += 60; }
-          if (targetMin >= 60) { targetHour += 1; targetMin -= 60; }
-        }
-
-        const fireAt = `${String(targetHour).padStart(2, "0")}:${String(targetMin).padStart(2, "0")}`;
-
-        // ส่งข้อมูลยาไปให้ server จัดการ
-        const response = await fetch(`${API_URL}/schedule`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId: currentUser,
-            medication: {
-              name: entry.name,
-              meal: entry.meal,
-              timing: entry.timing,
-              freq: entry.freq,
-              targetHour,
-              targetMin,
-            },
-          }),
-        });
-
-        if (!response.ok) throw new Error("Failed to schedule");
-
-        const data = await response.json();
-        
-        console.log(`✅ Scheduled on server: ${entry.name} at ${fireAt}`);
-
-        return {
-          id: data.scheduleId || `${entry.meal}-${entry.name}-${Date.now()}`,
-          name: entry.name,
-          meal: entry.meal,
-          timing: entry.timing,
-          fireAt,
-          serverScheduled: true,
-        };
-      } catch (error) {
-        console.error("❌ Schedule error:", error);
-        // Fallback to local
-        return scheduleLocalNotification(entry);
-      }
-    },
-    [permission, requestPermission, currentUser, serverAvailable, scheduleLocalNotification]
-  );
-
-  // Fallback: Local notification (ใช้เมื่อ server ไม่พร้อม)
+  // ── 1. Fallback: Local notification ────────────────────────
   const scheduleLocalNotification = useCallback(
     async (entry) => {
       const mealTime = MEAL_TIMES[entry.meal];
@@ -398,20 +233,18 @@ export function useNotification() {
       let targetMin = mealTime.minute;
 
       if (entry.meal !== "ก่อนนอน") {
-        const offsetMin = entry.timing === "ก่อนอาหาร" ? -30 : entry.timing === "หลังอาหาร" ? 30 : 0;
+        const offsetMin =
+          entry.timing === "ก่อนอาหาร" ? -30 : entry.timing === "หลังอาหาร" ? 30 : 0;
         targetMin += offsetMin;
-        
         if (targetMin < 0) { targetHour -= 1; targetMin += 60; }
         if (targetMin >= 60) { targetHour += 1; targetMin -= 60; }
       }
 
       const fireAt = `${String(targetHour).padStart(2, "0")}:${String(targetMin).padStart(2, "0")}`;
 
-      // เก็บไว้ใน localStorage สำหรับ periodic check
       const schedules = JSON.parse(
         localStorage.getItem(`notificationSchedules_${currentUser}`) || "[]"
       );
-      
       const newSchedule = {
         id: `local-${entry.meal}-${entry.name}-${Date.now()}`,
         userId: currentUser,
@@ -425,59 +258,136 @@ export function useNotification() {
         enabled: true,
         lastFired: null,
       };
-
       schedules.push(newSchedule);
-      localStorage.setItem(
-        `notificationSchedules_${currentUser}`,
-        JSON.stringify(schedules)
-      );
+      localStorage.setItem(`notificationSchedules_${currentUser}`, JSON.stringify(schedules));
 
       console.log(`⚠️ Scheduled locally: ${entry.name} at ${fireAt}`);
-
-      return {
-        id: newSchedule.id,
-        name: entry.name,
-        meal: entry.meal,
-        timing: entry.timing,
-        fireAt,
-        serverScheduled: false,
-      };
+      return { id: newSchedule.id, name: entry.name, meal: entry.meal, timing: entry.timing, fireAt, serverScheduled: false };
     },
     [currentUser]
   );
 
-  // ทดสอบแจ้งเตือนทันที
-  const testNotification = useCallback(
+  // ── 2. Subscribe to Push ────────────────────────────────────
+  const subscribeToPush = useCallback(async () => {
+    if (!serverAvailable) {
+      console.warn("⚠️ Server not available, skipping push subscription");
+      return;
+    }
+    if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
+      console.error("❌ Push notifications not supported");
+      return;
+    }
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      let existingSub = await registration.pushManager.getSubscription();
+
+      if (existingSub) {
+        console.log("✅ Using existing subscription");
+        setSubscription(existingSub);
+        await fetch(`${API_URL}/subscribe`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: currentUser, subscription: existingSub }),
+        });
+        return;
+      }
+
+      const vapidResponse = await fetch(`${API_URL}/vapid-public-key`);
+      const { publicKey } = await vapidResponse.json();
+      const sub = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: publicKey,
+      });
+      setSubscription(sub);
+
+      const response = await fetch(`${API_URL}/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: currentUser, subscription: sub }),
+      });
+      if (!response.ok) throw new Error("Failed to save subscription");
+      console.log("✅ Subscribed to push notifications");
+    } catch (error) {
+      console.error("❌ Push subscription failed:", error);
+    }
+  }, [currentUser, serverAvailable]);
+
+  // ── 3. Request Permission ───────────────────────────────────
+  const requestPermission = useCallback(async () => {
+    if (!("Notification" in window)) {
+      alert("Browser นี้ไม่รองรับ Notification");
+      return false;
+    }
+    const result = await Notification.requestPermission();
+    setPermission(result);
+    if (result === "granted" && serverAvailable) {
+      await subscribeToPush();
+    }
+    return result === "granted";
+  }, [serverAvailable, subscribeToPush]);
+
+  // Auto subscribe on permission granted
+  useEffect(() => {
+    if (permission === "granted" && serverAvailable && !subscription) {
+      subscribeToPush();
+    }
+  }, [permission, serverAvailable, subscription, subscribeToPush]);
+
+  // ── 4. Schedule Notification ────────────────────────────────
+  const scheduleNotification = useCallback(
     async (entry) => {
       if (permission !== "granted") {
         const ok = await requestPermission();
-        if (!ok) return;
+        if (!ok) return null;
       }
 
-      if (serverAvailable) {
-        // ทดสอบผ่าน server
-        try {
-          await fetch(`${API_URL}/notify/test`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              userId: currentUser,
-              medication: entry,
-            }),
-          });
-        } catch (error) {
-          console.error("Test notification error:", error);
-          // Fallback to local
-          showLocalTestNotification(entry);
+      if (!serverAvailable) {
+        console.warn("⚠️ Using local notification fallback");
+        return scheduleLocalNotification(entry);
+      }
+
+      try {
+        const mealTime = MEAL_TIMES[entry.meal];
+        let targetHour = mealTime.hour;
+        let targetMin = mealTime.minute;
+
+        if (entry.meal !== "ก่อนนอน") {
+          const offsetMin =
+            entry.timing === "ก่อนอาหาร" ? -30 : entry.timing === "หลังอาหาร" ? 30 : 0;
+          targetMin += offsetMin;
+          if (targetMin < 0) { targetHour -= 1; targetMin += 60; }
+          if (targetMin >= 60) { targetHour += 1; targetMin -= 60; }
         }
-      } else {
-        // ทดสอบแบบ local
-        showLocalTestNotification(entry);
+
+        const fireAt = `${String(targetHour).padStart(2, "0")}:${String(targetMin).padStart(2, "0")}`;
+
+        const response = await fetch(`${API_URL}/schedule`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: currentUser,
+            medication: { name: entry.name, meal: entry.meal, timing: entry.timing, freq: entry.freq, targetHour, targetMin },
+          }),
+        });
+
+        if (!response.ok) throw new Error("Failed to schedule");
+        const data = await response.json();
+        console.log(`✅ Scheduled on server: ${entry.name} at ${fireAt}`);
+
+        return {
+          id: data.scheduleId || `${entry.meal}-${entry.name}-${Date.now()}`,
+          name: entry.name, meal: entry.meal, timing: entry.timing, fireAt,
+          serverScheduled: true,
+        };
+      } catch (error) {
+        console.error("❌ Schedule error:", error);
+        return scheduleLocalNotification(entry);
       }
     },
-    [permission, requestPermission, currentUser, serverAvailable]
+    [permission, requestPermission, currentUser, serverAvailable, scheduleLocalNotification]
   );
 
+  // ── 5. Test Notification ────────────────────────────────────
   const showLocalTestNotification = async (entry) => {
     if ("serviceWorker" in navigator) {
       const registration = await navigator.serviceWorker.ready;
@@ -491,6 +401,30 @@ export function useNotification() {
       });
     }
   };
+
+  const testNotification = useCallback(
+    async (entry) => {
+      if (permission !== "granted") {
+        const ok = await requestPermission();
+        if (!ok) return;
+      }
+      if (serverAvailable) {
+        try {
+          await fetch(`${API_URL}/notify/test`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: currentUser, medication: entry }),
+          });
+        } catch (error) {
+          console.error("Test notification error:", error);
+          showLocalTestNotification(entry);
+        }
+      } else {
+        showLocalTestNotification(entry);
+      }
+    },
+    [permission, requestPermission, currentUser, serverAvailable]
+  );
 
   return {
     permission,

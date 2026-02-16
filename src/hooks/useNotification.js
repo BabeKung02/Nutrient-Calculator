@@ -186,7 +186,7 @@ const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001/api";
 export const MEAL_TIMES = {
   เช้า: { hour: 8, minute: 0 },
   เที่ยง: { hour: 12, minute: 0 },
-  เย็น: { hour: 14, minute: 24 },
+  เย็น: { hour: 14, minute: 30 },
   ก่อนนอน: { hour: 20, minute: 0 },
 };
 

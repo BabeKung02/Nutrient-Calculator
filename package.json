@@ -11,6 +11,7 @@
     "react-scripts": "5.0.1",
     "recharts": "^3.5.1",
     "sweetalert2": "^11.23.0",
+    "web-push": "^3.6.7",
     "web-vitals": "^5.1.0"
   },
   "scripts": {
@@ -39,7 +40,6 @@
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/BabeKung02/Nutrient-Calculator.git"

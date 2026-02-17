@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Header from "../components/Header";          // ✅ ใช้ Header จริงเหมือนทุกหน้า
+import Header from "../components/Header";
 import { useNotification } from "../hooks/useNotification";
 import Swal from "sweetalert2";
 
@@ -93,7 +93,15 @@ const MealCard = ({ entry, onDelete, onTest, scheduled }) => {
         <span style={{ fontSize:"24px" }}>{mealIcons[entry.meal] || "🍽️"}</span>
         <div style={{ flex:1 }}>
           <div style={{ fontWeight:700, color:"#2d2050", fontSize:"15px", fontFamily:"'Prompt',sans-serif" }}>{entry.name}</div>
-          <div style={{ fontSize:"12px", color:"#9ca3af", marginTop:"2px", fontFamily:"'Prompt',sans-serif" }}>{entry.freq} • {entry.meal}</div>
+          <div style={{ fontSize:"12px", color:"#9ca3af", marginTop:"2px", fontFamily:"'Prompt',sans-serif" }}>
+            {entry.freq} • {entry.meal}
+            {entry.amount ? (
+              <span style={{ marginLeft:"6px", background:"#f5f3ff", color:"#7c3aed",
+                borderRadius:"6px", padding:"1px 7px", fontWeight:700, fontSize:"11px" }}>
+                💊 {entry.amount} เม็ด
+              </span>
+            ) : null}
+          </div>
           <NotifBadge scheduled={scheduled} />
         </div>
         <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"6px" }}>
@@ -132,36 +140,29 @@ const Toast = ({ msg, visible }) => (
 
 // ── Add Modal ──────────────────────────────────────────────────
 const AddModal = ({ onClose, onAdd }) => {
-  const [name, setName]   = useState("");
-  const [freq, setFreq]   = useState(1);
-  const [meals, setMeals] = useState({ เช้า:false, เที่ยง:false, เย็น:false, ก่อนนอน:false });
+  const [name, setName]     = useState("");
+  const [freq, setFreq]     = useState(1);
+  const [amount, setAmount] = useState(1);
+  const [meals, setMeals]   = useState({ เช้า:false, เที่ยง:false, เย็น:false, ก่อนนอน:false });
   const [timing, setTiming] = useState("หลังอาหาร");
 
-  // Reset meals เมื่อเปลี่ยน freq
   useEffect(() => {
     setMeals({ เช้า:false, เที่ยง:false, เย็น:false, ก่อนนอน:false });
   }, [freq]);
 
-  // ⭐ Set timing เป็น "ก่อนนอน" เฉพาะเมื่อเลือกเฉพาะมื้อก่อนนอนเท่านั้น
   useEffect(() => {
     const hasNonBedtimeMeal = meals.เช้า || meals.เที่ยง || meals.เย็น;
     const hasOnlyBedtime = meals.ก่อนนอน && !hasNonBedtimeMeal;
-    
     if (hasOnlyBedtime) {
       setTiming("ก่อนนอน");
     } else if (timing === "ก่อนนอน" && hasNonBedtimeMeal) {
-      // ถ้าเคย set เป็น "ก่อนนอน" แต่ตอนนี้มีมื้ออื่นด้วย ให้ reset
       setTiming("หลังอาหาร");
     }
-  }, [meals, timing]); // ← เพิ่ม timing
+  }, [meals, timing]);
 
   const medicineOptions = [
-    "Glipizide",
-    "Metformin",
-    "Pioglitazone",
-    "Empagliflozin",
-    "Sitagliptin",
-    "Semaglutide",
+    "Glipizide","Metformin","Pioglitazone",
+    "Empagliflozin","Sitagliptin","Semaglutide",
   ];
 
   const mealOptions = [
@@ -171,16 +172,12 @@ const AddModal = ({ onClose, onAdd }) => {
     { label:"ก่อนนอน", color:{ bg:"#f5f3ff", text:"#7c3aed", border:"#c4b5fd", shadow:"rgba(124,58,237,.2)" } },
   ];
 
-  // นับจำนวนมื้อที่เลือกแล้ว
   const selectedMealsCount = Object.values(meals).filter(Boolean).length;
 
-  // จัดการการเลือกมื้ออาหาร (จำกัดตามจำนวน freq)
   const handleMealToggle = (label, currentValue) => {
     if (currentValue) {
-      // ถ้ากำลัง uncheck → อนุญาตเสมอ
       setMeals((p) => ({ ...p, [label]: false }));
     } else {
-      // ถ้ากำลัง check → ตรวจสอบว่าเกิน freq หรือไม่
       if (selectedMealsCount < freq) {
         setMeals((p) => ({ ...p, [label]: true }));
       }
@@ -189,69 +186,30 @@ const AddModal = ({ onClose, onAdd }) => {
 
   const handleAdd = () => {
     const selected = Object.entries(meals).filter(([,v]) => v).map(([k]) => k);
-    
-    // Validation 1: ตรวจสอบว่ากรอกยาหรือยัง
     if (!name) {
-      Swal.fire({
-        icon: "warning",
-        title: "กรุณาเลือกยา",
-        text: "กรุณาเลือกยาที่ต้องการเพิ่ม",
-        confirmButtonColor: "#7c3aed",
-      });
+      Swal.fire({ icon:"warning", title:"กรุณาเลือกยา", text:"กรุณาเลือกยาที่ต้องการเพิ่ม", confirmButtonColor:"#7c3aed" });
       return;
     }
-
-    // Validation 2: ตรวจสอบว่าเลือกมื้ออาหารครบหรือยัง
     if (selected.length === 0) {
-      Swal.fire({
-        icon: "warning",
-        title: "กรุณาเลือกมื้อ",
-        text: "กรุณาเลือกมื้ออาหารอย่างน้อย 1 มื้อ",
-        confirmButtonColor: "#7c3aed",
-      });
+      Swal.fire({ icon:"warning", title:"กรุณาเลือกมื้อ", text:"กรุณาเลือกมื้ออาหารอย่างน้อย 1 มื้อ", confirmButtonColor:"#7c3aed" });
       return;
     }
-
-    // Validation 3: ตรวจสอบว่าเลือกมื้อตรงกับจำนวน freq หรือไม่
     if (selected.length !== freq) {
-      Swal.fire({
-        icon: "warning",
-        title: "กรุณาเลือกช่วงเวลาให้ครบถ้วน",
-        text: `คุณเลือกรับประทาน ${freq} เวลา กรุณาเลือกช่วงเวลา ${freq} มื้อ (ตอนนี้เลือกไว้ ${selected.length} มื้อ)`,
-        confirmButtonColor: "#7c3aed",
-      });
+      Swal.fire({ icon:"warning", title:"กรุณาเลือกช่วงเวลาให้ครบถ้วน",
+        text:`คุณเลือกรับประทาน ${freq} เวลา กรุณาเลือกช่วงเวลา ${freq} มื้อ (ตอนนี้เลือกไว้ ${selected.length} มื้อ)`,
+        confirmButtonColor:"#7c3aed" });
       return;
     }
-    
-    // สร้าง array ของ entries ทั้งหมด
-    const entriesToAdd = selected.map((m) => ({
-      name,
-      freq: `${freq} เวลา`,
-      meal: m,
-      timing
-    }));
-    
-    // ส่งกลับเป็น array เดียว
+    const entriesToAdd = selected.map((m) => ({ name, freq:`${freq} เวลา`, meal:m, timing, amount }));
     onAdd(entriesToAdd);
     onClose();
   };
 
   const lbl = { display:"block", fontSize:"13px", fontWeight:600, color:"#7c3aed", marginBottom:"8px",
     fontFamily:"'Prompt',sans-serif", textTransform:"uppercase", letterSpacing:".05em" };
-  const selectStyle = { 
-    width:"100%", 
-    padding:"12px 16px", 
-    borderRadius:"14px", 
-    border:"2px solid #ede9fe",
-    fontSize:"15px", 
-    fontFamily:"'Prompt',sans-serif", 
-    outline:"none", 
-    marginBottom:"16px",
-    boxSizing:"border-box", 
-    color:"#2d2050",
-    background:"white",
-    cursor:"pointer"
-  };
+  const selectStyle = { width:"100%", padding:"12px 16px", borderRadius:"14px", border:"2px solid #ede9fe",
+    fontSize:"15px", fontFamily:"'Prompt',sans-serif", outline:"none", marginBottom:"16px",
+    boxSizing:"border-box", color:"#2d2050", background:"white", cursor:"pointer" };
 
   return (
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.45)", display:"flex",
@@ -265,16 +223,47 @@ const AddModal = ({ onClose, onAdd }) => {
         </h3>
 
         <label style={lbl}>เลือกยา</label>
-        <select 
-          style={selectStyle}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        >
+        <select style={selectStyle} value={name} onChange={(e) => setName(e.target.value)}>
           <option value="">-- เลือกยา --</option>
           {medicineOptions.map((med) => (
             <option key={med} value={med}>{med}</option>
           ))}
         </select>
+
+        {/* ── จำนวนเม็ด (compact) ── */}
+        <label style={lbl}>จำนวนเม็ด</label>
+        <div style={{ display:"inline-flex", alignItems:"center", gap:"6px",
+          border:"2px solid #ede9fe", borderRadius:"12px", padding:"5px 10px",
+          background:"white", marginBottom:"16px" }}>
+          <button
+            onClick={() => setAmount((v) => Math.max(1, v - 1))}
+            style={{ width:"26px", height:"26px", borderRadius:"7px", border:"2px solid #ddd6fe",
+              background:"white", color:"#7c3aed", fontSize:"1rem", fontWeight:700,
+              cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+            −
+          </button>
+          <input
+            type="number"
+            min="1"
+            value={amount}
+            onChange={(e) => {
+              const v = parseInt(e.target.value, 10);
+              if (!isNaN(v) && v >= 1) setAmount(v);
+            }}
+            style={{ width:"36px", border:"none", outline:"none", textAlign:"center",
+              fontSize:"14px", fontWeight:700, color:"#2d2050",
+              fontFamily:"'Prompt',sans-serif", background:"transparent" }}
+          />
+          <span style={{ fontSize:"13px", color:"#a78bfa", fontWeight:600 }}></span>
+          <button
+            onClick={() => setAmount((v) => v + 1)}
+            style={{ width:"26px", height:"26px", borderRadius:"7px", border:"none",
+              background:"linear-gradient(135deg,#7c3aed,#a855f7)", color:"white", fontSize:"1rem",
+              fontWeight:700, cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center",
+              flexShrink:0 }}>
+            +
+          </button>
+        </div>
 
         <label style={lbl}>วิธีรับประทาน</label>
         <PillSelector options={[{label:"1 เวลา",value:1},{label:"2 เวลา",value:2},{label:"3 เวลา",value:3}]}
@@ -283,45 +272,32 @@ const AddModal = ({ onClose, onAdd }) => {
         <label style={{ ...lbl, marginTop:"16px" }}>มื้อ อาหาร (เลือก {freq} มื้อ)</label>
         <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
           {mealOptions.map(({ label, color }) => {
-            const isChecked = meals[label];
+            const isChecked  = meals[label];
             const isDisabled = !isChecked && selectedMealsCount >= freq;
-            
             return (
-              <TagCheckbox 
-                key={label} 
-                label={label} 
-                checked={isChecked}
-                onChange={() => handleMealToggle(label, isChecked)} 
-                color={color}
-                disabled={isDisabled}
-              />
+              <TagCheckbox key={label} label={label} checked={isChecked}
+                onChange={() => handleMealToggle(label, isChecked)}
+                color={color} disabled={isDisabled} />
             );
           })}
         </div>
-        
-        {/* แสดงจำนวนที่เลือก */}
+
         <div style={{ marginTop:"8px", fontSize:"12px", color:"#7c3aed", fontWeight:600 }}>
           เลือกแล้ว {selectedMealsCount}/{freq} มื้อ
         </div>
 
-        {/* ตรวจสอบว่ามีมื้ออื่นนอกจากก่อนนอนหรือไม่ */}
         {(() => {
           const hasNonBedtimeMeal = meals.เช้า || meals.เที่ยง || meals.เย็น;
-          
           return (
             <>
-              {/* แสดงเวลารับประทานเมื่อมีมื้ออื่นนอกจากก่อนนอน */}
               {hasNonBedtimeMeal && (
                 <>
-                  <label style={{ ...lbl, marginTop:"16px" }}>
-
-                  </label>
+                  <label style={{ ...lbl, marginTop:"16px" }}></label>
                   <PillSelector
                     options={[{label:"หลังอาหาร",value:"หลังอาหาร"},{label:"ก่อนอาหาร",value:"ก่อนอาหาร"}]}
                     value={timing} onChange={setTiming} />
                 </>
               )}
-
             </>
           );
         })()}
@@ -347,47 +323,26 @@ const AddModal = ({ onClose, onAdd }) => {
 export default function MedicationPage() {
   const currentUser = localStorage.getItem("currentUser");
   
-  const [entries, setEntries] = useState([]);
+  const [entries,   setEntries]   = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [toast, setToast]         = useState({ msg:"", visible:false });
-  const [notifMap, setNotifMap]   = useState({});
+  const [toast,     setToast]     = useState({ msg:"", visible:false });
+  const [notifMap,  setNotifMap]  = useState({});
 
   const { permission, scheduleNotification, requestPermission, testNotification } = useNotification();
 
-  // ⭐ Load entries AND notifMap from localStorage on mount
   useEffect(() => {
-    // Load medication entries
     const savedEntries = localStorage.getItem(`medication_${currentUser}`);
     if (savedEntries) {
-      try {
-        const parsed = JSON.parse(savedEntries);
-        setEntries(parsed);
-      } catch (e) {
-        console.error("Error loading medication data:", e);
-      }
+      try { setEntries(JSON.parse(savedEntries)); } catch (e) { console.error("Error loading medication data:", e); }
     }
-
-    // Load notification map
     const savedNotifMap = localStorage.getItem(`medicationNotifs_${currentUser}`);
     if (savedNotifMap) {
-      try {
-        const parsed = JSON.parse(savedNotifMap);
-        setNotifMap(parsed);
-      } catch (e) {
-        console.error("Error loading notification map:", e);
-      }
+      try { setNotifMap(JSON.parse(savedNotifMap)); } catch (e) { console.error("Error loading notification map:", e); }
     }
   }, [currentUser]);
 
-  // ⭐ Save entries to localStorage whenever they change
-  const saveToLocalStorage = (newEntries) => {
-    localStorage.setItem(`medication_${currentUser}`, JSON.stringify(newEntries));
-  };
-
-  // ⭐ Save notifMap to localStorage whenever it changes
-  const saveNotifMapToLocalStorage = (newNotifMap) => {
-    localStorage.setItem(`medicationNotifs_${currentUser}`, JSON.stringify(newNotifMap));
-  };
+  const saveToLocalStorage        = (v) => localStorage.setItem(`medication_${currentUser}`,       JSON.stringify(v));
+  const saveNotifMapToLocalStorage = (v) => localStorage.setItem(`medicationNotifs_${currentUser}`, JSON.stringify(v));
 
   const showToast = (msg) => {
     setToast({ msg, visible:true });
@@ -395,24 +350,14 @@ export default function MedicationPage() {
   };
 
   const handleAdd = async (entriesToAdd) => {
-    // รองรับทั้ง single entry และ array of entries
     const newEntries = Array.isArray(entriesToAdd) ? entriesToAdd : [entriesToAdd];
-    
-    // สร้าง entries พร้อม id
-    const entriesWithIds = newEntries.map(entry => ({
-      ...entry,
-      id: Date.now() + Math.random()
-    }));
-    
-    // เพิ่ม entries ทั้งหมดพร้อมกัน
+    const entriesWithIds = newEntries.map((entry) => ({ ...entry, id: Date.now() + Math.random() }));
     const updatedEntries = [...entries, ...entriesWithIds];
     setEntries(updatedEntries);
-    saveToLocalStorage(updatedEntries); // ⭐ Save entries
-    
-    // ตั้งการแจ้งเตือนสำหรับแต่ละ entry
+    saveToLocalStorage(updatedEntries);
+
     const newNotifMap = { ...notifMap };
     const successMessages = [];
-    
     for (const newEntry of entriesWithIds) {
       const record = await scheduleNotification(newEntry);
       if (record) {
@@ -420,30 +365,23 @@ export default function MedicationPage() {
         successMessages.push(`${newEntry.meal} เวลา ${record.fireAt}`);
       }
     }
-    
     setNotifMap(newNotifMap);
-    saveNotifMapToLocalStorage(newNotifMap); // ⭐ Save notifMap
-    
-    // แสดง toast สรุป
+    saveNotifMapToLocalStorage(newNotifMap);
     if (successMessages.length > 0) {
-      if (successMessages.length === 1) {
-        showToast(`✅ ตั้งแจ้งเตือน ${successMessages[0]}`);
-      } else {
-        showToast(`✅ ตั้งแจ้งเตือน ${successMessages.length} มื้อสำเร็จ`);
-      }
+      showToast(successMessages.length === 1
+        ? `✅ ตั้งแจ้งเตือน ${successMessages[0]}`
+        : `✅ ตั้งแจ้งเตือน ${successMessages.length} มื้อสำเร็จ`);
     }
   };
 
   const handleDelete = (id) => {
     const updatedEntries = entries.filter((e) => e.id !== id);
-    
     setEntries(updatedEntries);
-    saveToLocalStorage(updatedEntries); // ⭐ Save entries
-    
+    saveToLocalStorage(updatedEntries);
     const newNotifMap = { ...notifMap };
     delete newNotifMap[id];
     setNotifMap(newNotifMap);
-    saveNotifMapToLocalStorage(newNotifMap); // ⭐ Save notifMap
+    saveNotifMapToLocalStorage(newNotifMap);
   };
 
   const handleTest = async (entry) => {
@@ -457,17 +395,15 @@ export default function MedicationPage() {
     return acc;
   }, {});
 
-  const mealOrder = ["เช้า", "เที่ยง", "เย็น", "ก่อนนอน"];
-  const mealEmoji = { เช้า:"🌅", เที่ยง:"☀️", เย็น:"🌆", ก่อนนอน:"🌙" };
+  const mealOrder  = ["เช้า","เที่ยง","เย็น","ก่อนนอน"];
+  const mealEmoji  = { เช้า:"🌅", เที่ยง:"☀️", เย็น:"🌆", ก่อนนอน:"🌙" };
 
-  // สำหรับ Summary chips - นับตาม timing
   const groupedByTiming = entries.reduce((acc, e) => {
     if (!acc[e.timing]) acc[e.timing] = [];
     acc[e.timing].push(e);
     return acc;
   }, {});
-
-  const timingOrder = ["หลังอาหาร", "ก่อนอาหาร", "ก่อนนอน"];
+  const timingOrder = ["หลังอาหาร","ก่อนอาหาร","ก่อนนอน"];
   const timingEmoji = { หลังอาหาร:"🍽️", ก่อนอาหาร:"⏰", ก่อนนอน:"🌙" };
 
   return (
@@ -480,57 +416,25 @@ export default function MedicationPage() {
         body { background:#f0ebff; }
       `}</style>
 
-      <div
-        style={{
-          width: "100vw",
-          minHeight: "100vh",
-          padding: "40px 15px",
-          background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-        }}
-      >
-        <div style={{ maxWidth: "600px", width: "100%" }}>
-          <div
-            style={{
-              background: "white",
-              borderRadius: "12px",
-              boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-              overflow: "hidden",
-            }}
-          >
-            {/* ✅ Header จริง เหมือนทุกหน้า */}
+      <div style={{ width:"100vw", minHeight:"100vh", padding:"40px 15px",
+        background:"linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
+        display:"flex", justifyContent:"center", alignItems:"flex-start" }}>
+        <div style={{ maxWidth:"600px", width:"100%" }}>
+          <div style={{ background:"white", borderRadius:"12px",
+            boxShadow:"0 6px 20px rgba(0,0,0,0.12)", overflow:"hidden" }}>
             <Header title="บันทึกยาที่ได้รับ" backTo="/menu" />
 
-            <div style={{ padding: "15px" }}>
+            <div style={{ padding:"15px" }}>
               <PermissionBanner permission={permission} onRequest={requestPermission} />
 
-              {/* Add Button */}
-              <button
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "8px",
-                  padding: "15px",
-                  borderRadius: "18px",
-                  border: "2.5px dashed #c4b5fd",
-                  background: "white",
-                  color: "#7c3aed",
-                  fontSize: "16px",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  marginBottom: "20px",
-                  fontFamily: "'Prompt',sans-serif",
-                }}
-                onClick={() => setShowModal(true)}
-              >
-                <span style={{ fontSize: "20px" }}>＋</span> เพิ่มรายการ
+              <button style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"center",
+                gap:"8px", padding:"15px", borderRadius:"18px", border:"2.5px dashed #c4b5fd",
+                background:"white", color:"#7c3aed", fontSize:"16px", fontWeight:700,
+                cursor:"pointer", marginBottom:"20px", fontFamily:"'Prompt',sans-serif" }}
+                onClick={() => setShowModal(true)}>
+                <span style={{ fontSize:"20px" }}>＋</span> เพิ่มรายการ
               </button>
 
-              {/* Summary chips - แสดงตาม timing */}
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px", marginBottom:"20px" }}>
                 {timingOrder.map((t) => (
                   <div key={t} style={{ background:"white", borderRadius:"16px", padding:"14px 10px",
@@ -545,7 +449,6 @@ export default function MedicationPage() {
                 ))}
               </div>
 
-              {/* Grouped list - แสดงตาม meal */}
               {mealOrder.map((meal) =>
                 grouped[meal] ? (
                   <div key={meal} style={{ animation:"fadeIn .4s ease" }}>

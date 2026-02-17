@@ -25,7 +25,13 @@ const dessertItems = [
     carbs: 45,
     calories: 180,
   },
-  { id: 4, name: "ขนมชั้น", portion: "1 ชิ้น เท่ากับ 1 ส่วน", carbs: 26, calories: 104 },
+  {
+    id: 4,
+    name: "ขนมชั้น",
+    portion: "1 ชิ้น เท่ากับ 1 ส่วน",
+    carbs: 26,
+    calories: 104,
+  },
   {
     id: 5,
     name: "ขนมตาล",
@@ -33,7 +39,13 @@ const dessertItems = [
     carbs: 15,
     calories: 60,
   },
-  { id: 6, name: "ขนมถังแตก", portion: "1 ชิ้น เท่ากับ 1 ส่วน", carbs: 57, calories: 228 },
+  {
+    id: 6,
+    name: "ขนมถังแตก",
+    portion: "1 ชิ้น เท่ากับ 1 ส่วน",
+    carbs: 57,
+    calories: 228,
+  },
   {
     id: 7,
     name: "ขนมบัวลอยเผือก",
@@ -361,7 +373,7 @@ function DessertPage() {
             background: "white",
             borderRadius: "12px",
             boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-            overflow: "hidden",
+            // overflow: "hidden",
           }}
         >
           <Header
@@ -611,7 +623,16 @@ function DessertPage() {
           </div>
 
           {/* Save Button */}
-          <div style={{ padding: "0 15px 20px 15px" }}>
+          <div
+            style={{
+              position: "sticky",
+              bottom: 0,
+              padding: "12px 15px 20px 15px",
+              background:
+                "linear-gradient(to top, rgba(255,255,255,1) 70%, rgba(255,255,255,0))",
+              zIndex: 10,
+            }}
+          >
             <button
               onClick={handleSave}
               disabled={selectedItems.length === 0}
@@ -637,7 +658,7 @@ function DessertPage() {
               }}
             >
               {selectedItems.length === 0
-                ? "กรุณาเลือกขนม"
+                ? "กรุณาเลือกรายการ"
                 : currentLogId
                   ? `อัพเดทข้อมูล`
                   : `บันทึกข้อมูล`}

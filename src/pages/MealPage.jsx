@@ -138,6 +138,7 @@ function MealPage() {
     const rawVegetable = getLogs("vegetableLogs");
     const rawFat       = getLogs("fatLogs");
     const rawDish      = getLogs("dishLogs");
+    const rawDessert = getLogs("dessertLogs")
     const rawCondiment = getLogs("condimentLogs");
 
     const now      = new Date();
@@ -151,13 +152,14 @@ function MealPage() {
     const todayVegetable = f(rawVegetable);
     const todayFat       = f(rawFat);
     const todayDish      = f(rawDish);
+    const todayDessert   = f(rawDessert);
     const todayCondiment = f(rawCondiment);
 
     setConsumed({
       rice:      Math.round(calcRicePortions(todayRice)      * 10) / 10,
       vegetable: Math.round(calcVegetablePortions(todayVegetable) * 10) / 10,
       fruit:     Math.round(calcFruitPortions(todayFruit)    * 10) / 10,
-      meat:      Math.round(calcMeatPortions(todayMeat)      * 10) / 10,
+      meat: Math.round(calcMeatPortions(todayMeat) * 2 * 10) / 10,
       milk:      Math.round(calcDairyPortions(todayDairy)    * 10) / 10,
     //   sugar:     Math.round(calcSugarPortions(todayDish)     * 10) / 10,
       fat:       Math.round(calcFatPortions(todayFat)        * 10) / 10,
@@ -166,7 +168,7 @@ function MealPage() {
 
     const todayLogs = [
       ...todayRice, ...todayFruit, ...todayDairy, ...todayMeat,
-      ...todayVegetable, ...todayFat, ...todayDish, ...todayCondiment,
+      ...todayVegetable, ...todayFat, ...todayDessert, ...todayDish, ...todayCondiment,
     ].map((log) => {
       const carbValue    = Number(log.totalCarb    || log.carb    || log.carbs    || 0);
       const proteinValue = Number(log.totalProtein || log.protein || log.proteins || 0);
@@ -297,7 +299,7 @@ function MealPage() {
               </div>
 
               <div style={{ display: "grid", gridTemplateRows: "1fr 1fr 1fr", gap: "8px" }}>
-                <MacroBox label="คาร์บ"   value={Math.round(summary.carb)}    target={userTarget.carbs}   unit="g" gradient="linear-gradient(135deg,#FCD9A0 0%,#FDE4BA 100%)" color="#FCD9A0" />
+                <MacroBox label="คาร์โบไฮเดรต"   value={Math.round(summary.carb)}    target={userTarget.carbs}   unit="g" gradient="linear-gradient(135deg,#FCD9A0 0%,#FDE4BA 100%)" color="#FCD9A0" />
                 <MacroBox label="โปรตีน" value={Math.round(summary.protein)} target={userTarget.protein} unit="g" gradient="linear-gradient(135deg,#FBACCA 0%,#FCC2D7 100%)" color="#FBACCA" />
                 <MacroBox label="ไขมัน"  value={Math.round(summary.fat)}     target={userTarget.fat}     unit="g" gradient="linear-gradient(135deg,#93D8FF 0%,#BAE8FF 100%)" color="#93D8FF" />
               </div>

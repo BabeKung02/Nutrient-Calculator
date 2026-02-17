@@ -82,8 +82,8 @@ const fatItems = [
   // ไขมันไม่อิ่มตัวหลายตำแหน่ง
   {
     id: 7,
-    name: "น้ำมันข้าวโพด เท่ากับ 1 ส่วน",
-    portion: "1 ช้อนชา",
+    name: "น้ำมันข้าวโพด",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -92,8 +92,8 @@ const fatItems = [
   },
   {
     id: 8,
-    name: "น้ำมันดอกทานตะวัน เท่ากับ 1 ส่วน",
-    portion: "1 ช้อนชา",
+    name: "น้ำมันดอกทานตะวัน",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันไม่อิ่มตัวตำแหน่งเดียว",
@@ -136,8 +136,8 @@ const fatItems = [
   },
   {
     id: 12,
-    name: "น้ำมันหมู เท่ากับ 1 ส่วน",
-    portion: "1 ช้อนชา",
+    name: "น้ำมันหมู",
+    portion: "1 ช้อนชา เท่ากับ 1 ส่วน",
     fat: 5,
     calories: 45,
     category: "ไขมันอิ่มตัว",
@@ -356,7 +356,7 @@ function FatPage() {
             background: "white",
             borderRadius: "12px",
             boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-            overflow: "hidden",
+            // overflow: "hidden",
           }}
         >
           <Header
@@ -625,7 +625,13 @@ function FatPage() {
                   gap: "6px",
                 }}
               >
-                <span style={{ fontSize: "inherit", color: "inherit", marginBottom: "20px" }}>
+                <span
+                  style={{
+                    fontSize: "inherit",
+                    color: "inherit",
+                    marginBottom: "20px",
+                  }}
+                >
                   <u>ควรหลีกเลี่ยง</u>
                 </span>
               </div>
@@ -851,7 +857,16 @@ function FatPage() {
           </div>
 
           {/* Save Button */}
-          <div style={{ padding: "0 15px 20px 15px" }}>
+          <div
+            style={{
+              position: "sticky",
+              bottom: 0,
+              padding: "12px 15px 20px 15px",
+              background:
+                "linear-gradient(to top, rgba(255,255,255,1) 70%, rgba(255,255,255,0))",
+              zIndex: 10,
+            }}
+          >
             <button
               onClick={handleSave}
               disabled={selectedItems.length === 0}
@@ -877,7 +892,7 @@ function FatPage() {
               }}
             >
               {selectedItems.length === 0
-                ? "กรุณาเลือกน้ำมัน"
+                ? "กรุณาเลือกรายการ"
                 : currentLogId
                   ? `อัพเดทข้อมูล`
                   : `บันทึกข้อมูล`}

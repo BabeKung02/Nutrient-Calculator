@@ -464,7 +464,7 @@ function SingleDishPage() {
             background: "white",
             borderRadius: "12px",
             boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-            overflow: "hidden",
+            // overflow: "hidden",
           }}
         >
           <Header
@@ -730,8 +730,16 @@ function SingleDishPage() {
             </div>
           </div>
 
-          {/* Save Button */}
-          <div style={{ padding: "0 15px 20px 15px" }}>
+          <div
+            style={{
+              position: "sticky",
+              bottom: 0,
+              padding: "12px 15px 20px 15px",
+              background:
+                "linear-gradient(to top, rgba(255,255,255,1) 70%, rgba(255,255,255,0))",
+              zIndex: 10,
+            }}
+          >
             <button
               onClick={handleSave}
               disabled={selectedItems.length === 0}
@@ -757,7 +765,7 @@ function SingleDishPage() {
               }}
             >
               {selectedItems.length === 0
-                ? "กรุณาเลือกอาหาร"
+                ? "กรุณาเลือกรายการ"
                 : currentLogId
                   ? `อัพเดทข้อมูล`
                   : `บันทึกข้อมูล`}

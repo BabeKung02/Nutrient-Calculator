@@ -18,7 +18,7 @@ const nonEnergyVegetables = [
   { id: 111, name: "แตงกวา", emoji: "🥒" },
   { id: 112, name: "บวบ", emoji: "🥒" },
   { id: 113, name: "หยวกกล้วยอ่อน", emoji: "🌿" },
-  { id: 114, name: "ผักบุ้งแดง", emoji: "🥬" },
+  { id: 114, name: "ผักบุ้ง", emoji: "🥬" },
   { id: 115, name: "ยอดฟักทองอ่อน", emoji: "🌱" },
   { id: 116, name: "มะเขือเทศ", emoji: "🍅" },
   { id: 117, name: "แตงโมอ่อน", emoji: "🥒" },

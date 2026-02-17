@@ -69,7 +69,7 @@ const riceFlourItems = [
   },
   {
     id: 8,
-    name: "ข้าวสวย (ข้าวขาว)",
+    name: "ข้าวสวย",
     portion: "1 ทัพพี เท่ากับ 1 ส่วน",
     carbs: 18,
     protein: 2,
@@ -79,7 +79,7 @@ const riceFlourItems = [
 
    {
     id: 32,
-    name: "ข้าวสวย (ข้าวกล้อง)",
+    name: "ข้าวกล้อง",
     portion: "1 ทัพพี เท่ากับ 1 ส่วน",
     carbs: 18,
     protein: 2,
@@ -89,7 +89,7 @@ const riceFlourItems = [
 
      {
     id: 33,
-    name: "ข้าวสวย (ข้าวไรซ์เบอร์รี่)",
+    name: "ข้าวไรซ์เบอร์รี่",
     portion: "1 ทัพพี เท่ากับ 1 ส่วน",
     carbs: 18,
     protein: 2,

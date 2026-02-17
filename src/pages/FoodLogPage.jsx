@@ -54,7 +54,7 @@ function FoodLogPage() {
     },
         {
       id: 7,
-      name: "ไขมัน",
+      name: "ไขมัน หรือ น้ำมัน",
       icon: "🧈",
       gradient: "linear-gradient(135deg, #feca57 0%, #ff9ff3 100%)",
       route: "/food/fat",

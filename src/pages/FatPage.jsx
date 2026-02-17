@@ -360,7 +360,7 @@ function FatPage() {
           }}
         >
           <Header
-            title={`น้ำมัน (${mealName})`}
+            title={`ไขมัน หรือ น้ำมัน (${mealName})`}
             backTo={`/food-log?mealId=${selectedMeal}&mealName=${encodeURIComponent(mealName)}`}
           />
 

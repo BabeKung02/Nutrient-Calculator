@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
+import SearchBox from "../components/SearchBox";
 
 const meatItems = [
   // ─── เนื้อสัตว์ไขมันต่ำมาก (โปรตีน 7g, ไขมัน 1g, พลังงาน 35 kcal) ───
@@ -412,7 +413,7 @@ function MeatPage() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [portions, setPortions] = useState({});
   const [currentLogId, setCurrentLogId] = useState(null);
-
+  const [searchQuery, setSearchQuery] = useState("");
   // Show warning on mount
   useEffect(() => {
     Swal.fire({
@@ -450,6 +451,35 @@ function MeatPage() {
       setPortions(loadedPortions);
     }
   }, [currentUser, selectedMeal]);
+
+  const filteredByCategory = {
+    veryLow: meatItems.filter(
+      (item) =>
+        item.category === "veryLow" &&
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+    low: meatItems.filter(
+      (item) =>
+        item.category === "low" &&
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+    medium: meatItems.filter(
+      (item) =>
+        item.category === "medium" &&
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+    high: meatItems.filter(
+      (item) =>
+        item.category === "high" &&
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    ),
+  };
+
+  const totalResults =
+    filteredByCategory.veryLow.length +
+    filteredByCategory.low.length +
+    filteredByCategory.medium.length +
+    filteredByCategory.high.length;
 
   const handleItemClick = (item) => {
     if (selectedItems.find((i) => i.id === item.id)) {
@@ -625,11 +655,12 @@ function MeatPage() {
       borderColor: "#dc2626",
     },
   };
+const renderCategory = (categoryKey, items) => {
+    // ถ้าไม่มีผลลัพธ์ในหมวดนี้ → ไม่แสดงเลย
+    if (items.length === 0) return null;
 
-  const renderCategory = (categoryKey) => {
     const config = categoryConfig[categoryKey];
-    const items = groupedItems[categoryKey];
-
+    
     return (
       <div style={{ marginBottom: "20px" }}>
         <div
@@ -896,10 +927,29 @@ function MeatPage() {
               <u>เลือกรายการเนื้อสัตว์</u>
             </h3>
 
-            {renderCategory("veryLow")}
-            {renderCategory("low")}
-            {renderCategory("medium")}
-            {renderCategory("high")}
+            <SearchBox
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="ค้นหารายการ..."
+            />
+
+            {searchQuery && totalResults === 0 && (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  color: "#9ca3af",
+                  fontSize: "0.95rem",
+                }}
+              >
+                ไม่พบรายการ "{searchQuery}"
+              </div>
+            )}
+
+            {renderCategory("veryLow", filteredByCategory.veryLow)}
+            {renderCategory("low", filteredByCategory.low)}
+            {renderCategory("medium", filteredByCategory.medium)}
+            {renderCategory("high", filteredByCategory.high)}
           </div>
 
           {/* Save Button */}

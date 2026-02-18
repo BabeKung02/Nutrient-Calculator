@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
+import SearchBox from "../components/SearchBox";
 
 const dairyItems = [
   {
@@ -38,7 +39,7 @@ function DairyPage() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [portions, setPortions] = useState({});
   const [currentLogId, setCurrentLogId] = useState(null);
-
+  const [searchQuery, setSearchQuery] = useState("");
   useEffect(() => {
     const existingLogs = JSON.parse(
       localStorage.getItem(`dairyLogs_${currentUser}`) || "[]",
@@ -65,6 +66,12 @@ function DairyPage() {
       setPortions(loadedPortions);
     }
   }, [currentUser, selectedMeal]);
+
+  const filteredItems = dairyItems.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const totalResults = filteredItems.length;
 
   const handleItemClick = (item) => {
     if (selectedItems.find((i) => i.id === item.id)) {
@@ -263,10 +270,29 @@ function DairyPage() {
               <u>เลือกรายการนม</u>
             </h3>
 
+            <SearchBox
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="ค้นหารายการ..."
+            />
+
+            {searchQuery && totalResults === 0 && (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  color: "#9ca3af",
+                  fontSize: "0.95rem",
+                }}
+              >
+                ไม่พบรายการ "{searchQuery}"
+              </div>
+            )}
+
             <div
               style={{ display: "flex", flexDirection: "column", gap: "10px" }}
             >
-              {dairyItems.map((item) => {
+              {filteredItems.map((item) => {
                 const isSelected = selectedItems.find((i) => i.id === item.id);
                 const portion = portions[item.id] || 1;
 

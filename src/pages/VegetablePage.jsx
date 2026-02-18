@@ -585,7 +585,7 @@ function VegetablePage() {
                   fontSize: "0.95rem",
                 }}
               >
-                ไม่พบผัก "{searchQuery}"
+                ไม่พบรายการ "{searchQuery}"
               </div>
             )}
 

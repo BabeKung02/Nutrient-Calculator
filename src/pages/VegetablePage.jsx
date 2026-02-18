@@ -124,12 +124,12 @@ function VegetablePage() {
     }
   }, [currentUser, selectedMeal]);
 
- const filteredNonEnergy = nonEnergyVegetables.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredNonEnergy = nonEnergyVegetables.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
-  
+
   const filteredEnergy = energyVegetables.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const totalResults = filteredNonEnergy.length + filteredEnergy.length;
@@ -575,6 +575,19 @@ function VegetablePage() {
               onChange={setSearchQuery}
               placeholder="ค้นหารายการ..."
             />
+
+            {searchQuery && totalResults === 0 && (
+              <div
+                style={{
+                  textAlign: "center",
+                  padding: "40px 20px",
+                  color: "#9ca3af",
+                  fontSize: "0.95rem",
+                }}
+              >
+                ไม่พบผัก "{searchQuery}"
+              </div>
+            )}
 
             <div
               style={{

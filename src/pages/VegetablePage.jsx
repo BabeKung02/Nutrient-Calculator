@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
+import SearchBox from "../components/SearchBox";
 
 // ผักที่ไม่ได้ให้พลังงาน - พลังงานต่ำมาก คาร์โบไฮเดรตน้อย
 const nonEnergyVegetables = [
@@ -84,6 +85,7 @@ function VegetablePage() {
   const [selectedItems, setSelectedItems] = useState([]);
   const [portions, setPortions] = useState({});
   const [currentLogId, setCurrentLogId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const existingLogs = JSON.parse(
@@ -121,6 +123,16 @@ function VegetablePage() {
       setPortions(loadedPortions);
     }
   }, [currentUser, selectedMeal]);
+
+ const filteredNonEnergy = nonEnergyVegetables.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+  const filteredEnergy = energyVegetables.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalResults = filteredNonEnergy.length + filteredEnergy.length;
 
   const handleItemClick = (item, isEnergy) => {
     const itemWithType = { ...item, isEnergy };
@@ -558,6 +570,12 @@ function VegetablePage() {
               <u>เลือกรายการผัก</u>
             </h3>
 
+            <SearchBox
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder="ค้นหารายการ..."
+            />
+
             <div
               style={{
                 display: "flex",
@@ -565,10 +583,10 @@ function VegetablePage() {
                 gap: "10px",
               }}
             >
-              {nonEnergyVegetables.map((item) =>
+              {filteredNonEnergy.map((item) =>
                 renderVegetableItem(item, false),
               )}
-              {energyVegetables.map((item) => renderVegetableItem(item, true))}
+              {filteredEnergy.map((item) => renderVegetableItem(item, true))}
             </div>
           </div>
 

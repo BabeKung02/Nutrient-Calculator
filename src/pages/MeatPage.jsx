@@ -622,13 +622,6 @@ function MeatPage() {
     );
   };
 
-  const groupedItems = {
-    veryLow: meatItems.filter((item) => item.category === "veryLow"),
-    low: meatItems.filter((item) => item.category === "low"),
-    medium: meatItems.filter((item) => item.category === "medium"),
-    high: meatItems.filter((item) => item.category === "high"),
-  };
-
   const categoryConfig = {
     veryLow: {
       title: "เนื้อสัตว์ไขมันต่ำมาก",

@@ -92,9 +92,6 @@ function PortionControl({ portion, onDecrease, onIncrease, color, label }) {
 }
 
 function FatItem({ item, isSelected, portion, onToggle, onDecrease, onIncrease }) {
-  const color = isSelected
-    ? item.recommended ? "#16a34a" : "#dc2626"
-    : "#cbd5e0";
 
   const selectedBg  = item.recommended ? "#f0fdf4" : "#fef2f2";
   const selectedBorder = item.recommended ? "#16a34a" : "#dc2626";

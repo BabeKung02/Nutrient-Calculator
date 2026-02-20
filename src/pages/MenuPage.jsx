@@ -78,7 +78,7 @@ function MenuPage() {
       title: "บันทึกนัดที่ต้องไปพบแพทย์",
       icon: "👨‍⚕️",
       color: "#48dbfb",
-      onClick: () => alert("Coming soon!"),
+      onClick: () => navigate("/doctor-record", { state: userData }),
     },
     {
       id: 8,

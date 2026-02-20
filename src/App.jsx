@@ -18,6 +18,7 @@ import MeatPage from "./pages/MeatPage";
 import SingleDishPage from "./pages/SingleDishPage";
 import DessertPage from "./pages/DessertPage";
 import FatPage from "./pages/FatPage";
+import DoctorRecord from "./pages/DoctorRecord"
 
 import "./App.css";
 function App() {
@@ -43,6 +44,7 @@ function App() {
         <Route path="/food/single-dish" element={<SingleDishPage />} />
         <Route path="/food/dessert" element={<DessertPage />} />
         <Route path="/food/fat" element={<FatPage />} />  
+        <Route path="/doctor-record" element={<DoctorRecord />} />
       </Routes>
     </BrowserRouter>
   );

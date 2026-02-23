@@ -161,14 +161,14 @@ export default function DoctorRecord({ appointment = APPOINTMENT }) {
 
   const handleCancelConfirm = () => {
     Swal.fire({
-      title: "ยกเลิกการยืนยัน",
-      text: "คุณต้องการยกเลิกการยืนยันนัดหมายนี้ใช่หรือไม่?",
+      title: "ยกเลิกการนัดหมาย",
+      text: "คุณต้องการยกเลิกการนัดหมายนี้ใช่หรือไม่?",
       icon: "warning",
       showCancelButton: true,
       cancelButtonText: "ยกเลิก",
       confirmButtonText: "ยืนยัน",
-      confirmButtonColor: "#aaa",
-      cancelButtonColor: "#e05a7a",
+      confirmButtonColor: "#e05a7a",
+      cancelButtonColor: "#aaa",
       reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) setConfirmed(false);
@@ -247,7 +247,7 @@ export default function DoctorRecord({ appointment = APPOINTMENT }) {
           </button>
         ) : (
           <button onClick={handleCancelConfirm} style={styles.btnCancelConfirm}>
-            ยกเลิกการยืนยัน
+            ยกเลิกการนัดหมาย
           </button>
         )}
 

@@ -147,10 +147,11 @@ export default function DoctorRecord({ appointment = APPOINTMENT }) {
       `,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "ยืนยัน",
       cancelButtonText: "ยกเลิก",
+      confirmButtonText: "ยืนยัน",
       confirmButtonColor: "#e05a7a",
       cancelButtonColor: "#aaa",
+      reverseButtons: true,
     }).then((result) => {
       if (!result.isConfirmed) return;
       setConfirmed(true);
@@ -168,6 +169,7 @@ export default function DoctorRecord({ appointment = APPOINTMENT }) {
       confirmButtonText: "ยืนยัน",
       confirmButtonColor: "#aaa",
       cancelButtonColor: "#e05a7a",
+      reverseButtons: true,
     }).then((result) => {
       if (result.isConfirmed) setConfirmed(false);
     });

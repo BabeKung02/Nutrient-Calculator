@@ -679,7 +679,7 @@ function MacroRow({ label, value, target, unit, color }) {
 }
 
 function FoodCard({ cat }) {
-  const { name, icon, unit, target, consumed: eaten = 0, color, isLimit } = cat;
+  const { name, icon, unit, target, consumed: eaten = 0, color } = cat;
   const pct    = target > 0 ? Math.min((eaten / target) * 100, 100) : 0;
   const isOver = eaten > target;
   const barColor = isOver ? "#EF4444" : color;

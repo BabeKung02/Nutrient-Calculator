@@ -453,7 +453,16 @@ function getPortionsByCalories(cal) {
 
 // ─── Portion calculators ─────────────────────────────────────────────
 const calcRicePortions      = (logs) => logs.reduce((s, l) => { const c = Number(l.totalCarb || l.carb || l.carbs || 0); return c > 0 ? s + c / 18 : s + Number(l.servings || l.serving || l.amount || l.portions || 0); }, 0);
-const calcVegetablePortions = (logs) => logs.reduce((s, l) => { const c = Number(l.totalCarb || l.carb || l.carbs || 0); return c > 0 ? s + c / 5  : s + Number(l.servings || l.serving || l.amount || 0); }, 0);
+const calcVegetablePortions = (logs) => logs.reduce((s, l) => {
+  // ถ้ามี items array (vegetableLogs format) — นับ portion ของแต่ละ item โดยตรง
+  if (Array.isArray(l.items) && l.items.length > 0) {
+    return s + l.items.reduce((sum, item) => sum + Number(item.portion || 0), 0);
+  }
+  // fallback: คำนวณจาก carb หรือ servings
+  const c = Number(l.totalCarb || l.carb || l.carbs || 0);
+  if (c > 0) return s + c / 5;
+  return s + Number(l.servings || l.serving || l.amount || 0);
+}, 0);
 const calcFruitPortions     = (logs) => logs.reduce((s, l) => { const c = Number(l.totalCarb || l.carb || l.carbs || 0); return c > 0 ? s + c / 15 : s + Number(l.servings || l.serving || l.amount || 0); }, 0);
 const calcMeatPortions      = (logs) => logs.reduce((s, l) => { const p = Number(l.totalProtein || l.protein || l.proteins || 0); return p > 0 ? s + p / 7 : s + Number(l.servings || l.serving || l.amount || 0); }, 0);
 const calcDairyPortions     = (logs) => logs.reduce((s, l) => { const p = Number(l.totalProtein || l.protein || l.proteins || 0); return p > 0 ? s + p / 8 : s + Number(l.servings || l.serving || l.amount || 0); }, 0);
@@ -535,13 +544,14 @@ export default function MealPage() {
   const isKcalOver = summary.kcal > userTarget.calories;
 
   const foodCategories = [
-    { id: "rice",      name: "ข้าว-แป้ง",  icon: "🍚", unit: "ทัพพี",       target: portions.rice,      consumed: consumed.rice,      color: "#2CB9A8" },
+    { id: "rice",      name: "ข้าว - แป้ง",  icon: "🍚", unit: "ทัพพี",       target: portions.rice,      consumed: consumed.rice,      color: "#2CB9A8" },
     { id: "vegetable", name: "ผัก",         icon: "🥬", unit: "ทัพพี",       target: portions.vegetable, consumed: consumed.vegetable, color: "#2CB9A8" },
+    { id: "fruit",     name: "ผลไม้",       icon: "🍎", unit: "ส่วน",        target: portions.fruit,     consumed: consumed.fruit,     color: "#2CB9A8" },
     { id: "meat",      name: "เนื้อสัตว์",  icon: "🥩", unit: "ช้อนกินข้าว", target: portions.meat,      consumed: consumed.meat,      color: "#2CB9A8" },
     { id: "dairy",     name: "นม",          icon: "🥛", unit: "แก้ว",        target: portions.milk,      consumed: consumed.milk,      color: "#2CB9A8" },
-    { id: "sugar",     name: "น้ำตาล",      icon: "🍬", unit: "ช้อนชา",      target: portions.sugar,     consumed: consumed.sugar,     color: "#F59E0B", isLimit: true },
-    { id: "fat",       name: "น้ำมัน",      icon: "🧈", unit: "ช้อนชา",      target: portions.fat,       consumed: consumed.fat,       color: "#F59E0B", isLimit: true },
-    { id: "salt",      name: "เกลือ",       icon: "🧂", unit: "ช้อนชา",      target: portions.salt,      consumed: consumed.salt,      color: "#F59E0B", isLimit: true },
+    { id: "sugar",     name: "น้ำตาล",      icon: "🍬", unit: "ช้อนชา",      target: portions.sugar,     consumed: consumed.sugar,     color: "#2CB9A8", isLimit: true },
+    { id: "fat",       name: "น้ำมัน",      icon: "🧈", unit: "ช้อนชา",      target: portions.fat,       consumed: consumed.fat,       color: "#2CB9A8", isLimit: true },
+    { id: "salt",      name: "เกลือ",       icon: "🧂", unit: "ช้อนชา",      target: portions.salt,      consumed: consumed.salt,      color: "#2CB9A8", isLimit: true },
   ];
 
   const meals = [
@@ -577,7 +587,7 @@ export default function MealPage() {
               {Math.round(kcalPct)}%
             </span>
           </div>
-          <ProgressBar pct={kcalPct} color={isKcalOver ? "#EF4444" : "#2CB9A8"} height={8} />
+          <ProgressBar pct={kcalPct} color={isKcalOver ? "#EF4444" : "#2CB9A8"} height={10} />
 
           <div style={s.macroList}>
             <MacroRow label="คาร์บ"   value={Math.round(summary.carb)}    target={userTarget.carbs}   unit="g" color="#2CB9A8" />
@@ -642,9 +652,9 @@ export default function MealPage() {
 
 // ─── Sub-components ──────────────────────────────────────────────────
 
-function ProgressBar({ pct, color, height = 5 }) {
+function ProgressBar({ pct, color, height = 6 }) {
   return (
-    <div style={{ width: "100%", height, background: "#E8F4F2", borderRadius: 99, overflow: "hidden", marginTop: 4 }}>
+    <div style={{ width: "100%", height, background: "#E8F4F2", borderRadius: 99, overflow: "hidden", marginTop: 6 }}>
       <div style={{ width: `${Math.min(pct, 100)}%`, height: "100%", background: color, borderRadius: 99, transition: "width 0.5s ease" }} />
     </div>
   );
@@ -654,22 +664,22 @@ function MacroRow({ label, value, target, unit, color }) {
   const pct    = Math.min((value / target) * 100, 100);
   const isOver = value > target;
   return (
-    <div style={{ marginTop: 6 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 2 }}>
-        <span style={{ fontSize: "0.75rem", color: "#5C7C7A", fontWeight: 600 }}>{label}</span>
+    <div style={{ marginTop: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
+        <span style={{ fontSize: "0.82rem", color: "#5C7C7A", fontWeight: 600 }}>{label}</span>
         <div style={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-          <span style={{ fontSize: "0.75rem", fontWeight: 700, color: isOver ? "#EF4444" : "#2d3748" }}>{value}{unit}</span>
-          <span style={{ fontSize: "0.68rem", color: "#9CA3AF" }}>/{target}{unit}</span>
-          <span style={{ fontSize: "0.68rem", fontWeight: 700, color: isOver ? "#EF4444" : color, marginLeft: 4 }}>{Math.round(pct)}%</span>
+          <span style={{ fontSize: "0.82rem", fontWeight: 700, color: isOver ? "#EF4444" : "#2d3748" }}>{value}{unit}</span>
+          <span style={{ fontSize: "0.72rem", color: "#9CA3AF" }}>/{target}{unit}</span>
+          <span style={{ fontSize: "0.72rem", fontWeight: 700, color: isOver ? "#EF4444" : color, marginLeft: 6 }}>{Math.round(pct)}%</span>
         </div>
       </div>
-      <ProgressBar pct={pct} color={isOver ? "#EF4444" : color} height={4} />
+      <ProgressBar pct={pct} color={isOver ? "#EF4444" : color} height={6} />
     </div>
   );
 }
 
 function FoodCard({ cat }) {
-  const { name, icon, unit, target, consumed: eaten = 0, color } = cat;
+  const { name, icon, unit, target, consumed: eaten = 0, color, isLimit } = cat;
   const pct    = target > 0 ? Math.min((eaten / target) * 100, 100) : 0;
   const isOver = eaten > target;
   const barColor = isOver ? "#EF4444" : color;
@@ -684,7 +694,7 @@ function FoodCard({ cat }) {
         <span style={{ ...s.foodEaten, color: isOver ? "#EF4444" : "#1a202c" }}>{eaten}</span>
         <span style={s.foodOf}> / {target} {unit}</span>
       </div>
-      <ProgressBar pct={pct} color={barColor} height={4} />
+      <ProgressBar pct={pct} color={barColor} height={5} />
     </div>
   );
 }
@@ -701,9 +711,9 @@ function InsightItem({ status, label, good, low, bad }) {
   const text  = status === "ok" ? good : status === "low" ? low : bad;
   const color = status === "ok" ? "#2CB9A8" : status === "low" ? "#9CA3AF" : "#EF4444";
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-      <span style={{ fontSize: "0.9rem" }}>{icon}</span>
-      <span style={{ fontSize: "0.72rem", color: "#4A5568", fontWeight: 600 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+      <span style={{ fontSize: "1rem" }}>{icon}</span>
+      <span style={{ fontSize: "0.78rem", color: "#4A5568", fontWeight: 600 }}>
         {label} <span style={{ color }}>{text}</span>
       </span>
     </div>
@@ -724,52 +734,52 @@ const s = {
     background: "#EEF4F3", display: "flex", flexDirection: "column",
   },
   container: {
-    flex: 1, padding: "0 16px 16px", marginTop: -12,
+    flex: 1, padding: "0 16px 16px",
   },
 
-  // top bar - ลดขนาด
-  topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 0 10px" },
-  brand: { fontSize: "1.4rem", fontWeight: 800, lineHeight: 1 },
+  // top bar
+  topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 0 14px" },
+  brand: { fontSize: "1.6rem", fontWeight: 800, lineHeight: 1 },
   brandBold: { color: "#1a3a38" },
   brandAccent: { color: "#2CB9A8" },
-  dateText: { fontSize: "0.78rem", color: "#5C7C7A", marginTop: 2, fontWeight: 600 },
-  hospitalBadge: { display: "flex", alignItems: "center", gap: 5, background: "white", borderRadius: 10, padding: "6px 10px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" },
-  hospitalIcon: { fontSize: "1rem" },
-  hospitalName: { fontSize: "0.7rem", fontWeight: 700, color: "#2CB9A8" },
+  dateText: { fontSize: "0.85rem", color: "#5C7C7A", marginTop: 2, fontWeight: 600 },
+  hospitalBadge: { display: "flex", alignItems: "center", gap: 6, background: "white", borderRadius: 12, padding: "8px 12px", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" },
+  hospitalIcon: { fontSize: "1.1rem" },
+  hospitalName: { fontSize: "0.75rem", fontWeight: 700, color: "#2CB9A8" },
 
-  // calorie card - ลด padding และขนาดตัวอักษร
-  calorieCard: { background: "white", borderRadius: 16, padding: "14px 16px 12px", marginBottom: 10, boxShadow: "0 4px 16px rgba(44,185,168,0.08)" },
-  calorieTitle: { fontSize: "0.72rem", fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 4 },
+  // calorie card
+  calorieCard: { background: "white", borderRadius: 20, padding: "20px 20px 16px", marginBottom: 14, boxShadow: "0 4px 16px rgba(44,185,168,0.08)" },
+  calorieTitle: { fontSize: "0.8rem", fontWeight: 700, color: "#9CA3AF", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 },
   calorieRow: { display: "flex", alignItems: "baseline", gap: 0 },
-  calorieNum: { fontSize: "1.9rem", fontWeight: 800, color: "#1a202c", letterSpacing: -1 },
-  calorieOf: { fontSize: "0.82rem", color: "#9CA3AF", fontWeight: 600, marginLeft: 4 },
-  caloriePct: { marginLeft: "auto", fontSize: "1rem", fontWeight: 800 },
-  macroList: { marginTop: 6 },
+  calorieNum: { fontSize: "2.2rem", fontWeight: 800, color: "#1a202c", letterSpacing: -1 },
+  calorieOf: { fontSize: "0.9rem", color: "#9CA3AF", fontWeight: 600, marginLeft: 4 },
+  caloriePct: { marginLeft: "auto", fontSize: "1.1rem", fontWeight: 800 },
+  macroList: { marginTop: 8 },
 
-  // food grid - ลดขนาด
-  grid2: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 10 },
-  foodCard: { background: "white", borderRadius: 14, padding: "8px 12px", display: "flex", flexDirection: "column", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
+  // food grid
+  grid2: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 },
+  foodCard: { background: "white", borderRadius: 16, padding: "10px 14px", display: "flex", flexDirection: "column", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
   foodCardLeft: { flex: 1 },
-  foodNameRow: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 3 },
-  foodName: { fontSize: "0.75rem", fontWeight: 700, color: "#5C7C7A" },
-  foodCount: { marginBottom: 4 },
-  foodEaten: { fontSize: "1rem", fontWeight: 800, lineHeight: 1 },
-  foodOf: { fontSize: "0.66rem", color: "#9CA3AF", fontWeight: 600 },
-  foodEmoji: { fontSize: "1.6rem", flexShrink: 0 },
+  foodNameRow: { display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 },
+  foodName: { fontSize: "0.82rem", fontWeight: 700, color: "#5C7C7A" },
+  foodCount: { marginBottom: 6 },
+  foodEaten: { fontSize: "1.1rem", fontWeight: 800, lineHeight: 1 },
+  foodOf: { fontSize: "0.7rem", color: "#9CA3AF", fontWeight: 600 },
+  foodEmoji: { fontSize: "1.8rem", flexShrink: 0 },
 
-  // meals - ลดขนาด
-  sectionCard: { background: "white", borderRadius: 16, padding: "12px 14px", marginBottom: 10, boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
-  sectionTitle: { fontSize: "0.82rem", fontWeight: 700, color: "#1a202c", marginBottom: 10 },
-  mealRow: { display: "flex", gap: 7, justifyContent: "space-between" },
-  mealItem: { flex: 1, background: "#F8FFFE", border: "1.5px solid #E0F2F0", borderRadius: 12, padding: "10px 5px", display: "flex", flexDirection: "column", alignItems: "center", cursor: "pointer", transition: "all 0.2s" },
-  mealIcon: { fontSize: "1.3rem", marginBottom: 3 },
-  mealName: { fontSize: "0.62rem", fontWeight: 700, color: "#5C7C7A", textAlign: "center", marginBottom: 3 },
-  mealSub: { fontSize: "0.62rem", fontWeight: 700, color: "#2CB9A8" },
+  // meals
+  sectionCard: { background: "white", borderRadius: 20, padding: "16px", marginBottom: 14, boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
+  sectionTitle: { fontSize: "0.9rem", fontWeight: 700, color: "#1a202c", marginBottom: 14 },
+  mealRow: { display: "flex", gap: 8, justifyContent: "space-between" },
+  mealItem: { flex: 1, background: "#F8FFFE", border: "1.5px solid #E0F2F0", borderRadius: 14, padding: "12px 6px", display: "flex", flexDirection: "column", alignItems: "center", cursor: "pointer", transition: "all 0.2s" },
+  mealIcon: { fontSize: "1.5rem", marginBottom: 4 },
+  mealName: { fontSize: "0.65rem", fontWeight: 700, color: "#5C7C7A", textAlign: "center", marginBottom: 4 },
+  mealSub: { fontSize: "0.65rem", fontWeight: 700, color: "#2CB9A8" },
 
-  // insight - ลดขนาด
-  insightCard: { background: "white", borderRadius: 16, padding: "12px 14px", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
-  insightHeader: { display: "flex", alignItems: "center", gap: 6, marginBottom: 8 },
-  insightIcon: { fontSize: "1.1rem" },
-  insightTitle: { fontSize: "0.82rem", fontWeight: 700, color: "#1a202c" },
-  insightGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 7 },
+  // insight
+  insightCard: { background: "white", borderRadius: 20, padding: "16px", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" },
+  insightHeader: { display: "flex", alignItems: "center", gap: 8, marginBottom: 12 },
+  insightIcon: { fontSize: "1.2rem" },
+  insightTitle: { fontSize: "0.9rem", fontWeight: 700, color: "#1a202c" },
+  insightGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 },
 };

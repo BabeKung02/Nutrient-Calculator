@@ -598,13 +598,13 @@ export default function MealPage() {
     fat: 0,
     salt: 0,
   });
-  const [userData, setUserData] = useState(null);
+
   useEffect(() => {
     const currentUser = localStorage.getItem("currentUser") || "default";
     const userDataStr = localStorage.getItem(`userData_${currentUser}`);
     if (userDataStr) {
       const ud = JSON.parse(userDataStr);
-      setUserData(ud); // ← เพิ่มบรรทัดนี้
+
       setUserTarget({
         calories: Number(ud.calories) || 2000,
         protein: Number(ud.protein) || 100,

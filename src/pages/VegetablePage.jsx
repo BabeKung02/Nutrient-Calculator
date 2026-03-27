@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
 import SearchBox from "../components/SearchBox";
+import Background from "../components/Background";
 
 // ผักที่ไม่ได้ให้พลังงาน - พลังงานต่ำมาก คาร์โบไฮเดรตน้อย
 const nonEnergyVegetables = [
@@ -531,17 +532,7 @@ function VegetablePage() {
   };
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        minHeight: "100vh",
-        padding: "40px 15px",
-        background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-      }}
-    >
+    <Background>
       <div style={{ maxWidth: "600px", width: "100%" }}>
         <div
           style={{
@@ -647,7 +638,7 @@ function VegetablePage() {
           </div>
         </div>
       </div>
-    </div>
+    </Background>
   );
 }
 

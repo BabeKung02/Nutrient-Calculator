@@ -1,5 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/Header";
+import Background from "../components/Background";
+import Footer from "../components/Footer";
+
 const styles = {
   page: {
     width: "100vw",
@@ -75,7 +78,7 @@ const PersonalPage = () => {
   }
 
   return (
-    <div style={styles.page}>
+    <Background>
       <div style={styles.card}>
         {/* Header */}
         <Header title="ข้อมูลส่วนตัว" backTo="/menu" />
@@ -149,7 +152,7 @@ const PersonalPage = () => {
             </div>
           </div>
 
-          <div
+          {/* <div
             style={{
               ...styles.infoCard,
               marginTop: "15px",
@@ -161,7 +164,7 @@ const PersonalPage = () => {
             <div style={{ fontSize: "32px", color: "#f89704" }}>
               {userData.carbs?.toLocaleString()} กรัม
             </div>
-          </div>
+          </div> */}
 
           {/* <div
             style={{
@@ -203,7 +206,8 @@ const PersonalPage = () => {
           </button>
         </div>
       </div>
-    </div>
+      <Footer userData={userData} />
+    </Background>
   );
 };
 

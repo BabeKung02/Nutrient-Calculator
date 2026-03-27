@@ -10,7 +10,8 @@
 }
 
 body {
-  background: linear-gradient(135deg, #f8f4ff, #fdf2f8, #fef7f7);
+  /* background: linear-gradient(135deg, #f8f4ff, #fdf2f8, #fef7f7); */
+  background: rgb(238, 244, 243);
   min-height: 100vh;
   margin: 0;
   padding: 0;

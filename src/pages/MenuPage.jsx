@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Background from "../components/Background";
+import Footer from "../components/Footer";
 
 function MenuPage() {
   const navigate = useNavigate();
@@ -30,111 +32,78 @@ function MenuPage() {
 
   const menuItems = [
     {
-      id: 1,
-      title: "ข้อมูลส่วนตัว",
-      icon: "👤",
-      color: "#667eea",
-      onClick: () => navigate("/personal", { state: userData }),
-    },
-    {
       id: 2,
       title: "โภชนาการอาหาร",
-      icon: "🍽️",
-      color: "#f093fb",
+      icon: "🥗",
+      color: "#43C6A0", // เขียวมิ้นท์ — nutrition/health
       onClick: () => navigate("/summary", { state: userData }),
     },
-
     {
       id: 3,
       title: "บันทึกการรับประทานอาหาร",
-      icon: "📋",
-      color: "#FFA500",
+      icon: "🍽️",
+      color: "#F7A84A", // ส้มอบอุ่น — food/meal
       onClick: () => navigate("/meal", { state: userData }),
     },
-
     {
       id: 4,
       title: "บันทึกค่าน้ำตาล",
-      icon: "⬜",
-      color: "#4facfe",
+      icon: "🩸",
+      color: "#F06292", // ชมพูแดง — blood sugar (medical alert)
       onClick: () => navigate("/sugar-level", { state: userData }),
     },
     {
       id: 5,
       title: "บันทึกยาที่ได้รับ",
       icon: "💊",
-      color: "#fa709a", 
+      color: "#AB82D4", // ม่วงลาเวนเดอร์ — medication
       onClick: () => navigate("/medication", { state: userData }),
     },
     {
       id: 6,
       title: "บันทึกการตรวจเท้า",
-      icon: "🏥",
-      color: "#ff6b6b",
+      icon: "🦶",
+      color: "#4DB6AC", // teal — physical check
       onClick: () => navigate("/foot-exam", { state: userData }),
     },
     {
       id: 7,
-      title: "บันทึกนัดที่ต้องไปพบแพทย์",
-      icon: "👨‍⚕️",
-      color: "#48dbfb",
+      title: "บันทึกนัดพบแพทย์",
+      icon: "🏥",
+      color: "#5B8DEF", // น้ำเงิน — doctor/appointment
       onClick: () => navigate("/doctor-record", { state: userData }),
     },
     {
       id: 8,
-      title: "บทความให้ความรู้ต่างๆ\nเกี่ยวกับเบาหวาน",
-      icon: "📝",
-      color: "#54a0ff",
+      title: "บทความเกี่ยวกับเบาหวาน",
+      icon: "📖",
+      color: "#78909C", // เทาน้ำเงิน — content/article
       onClick: () => alert("Coming soon!"),
     },
   ];
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        minHeight: "100vh",
-        padding: "40px 15px", // เพิ่ม padding บนเล็กน้อยเพื่อให้กล่องไม่ชิดขอบจอเกินไป
-        background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-      }}
-    >
-      <style>{`
-        * {
-          outline: none !important;
-        }
-        *:focus {
-          outline: none !important;
-        }
-        svg {
-          outline: none !important;
-        }
-        .recharts-surface {
-          outline: none !important;
-        }
-      `}</style>
+    <Background>
       <div style={{ maxWidth: "600px", width: "100%" }}>
         <div
           style={{
-            position: "relative", // เพิ่มบรรทัดนี้เพื่อให้ปุ่มอ้างอิงตำแหน่งกับกล่องขาว
+            position: "relative",
             background: "white",
-            padding: "40px 15px 15px 15px", // เพิ่ม padding top เพื่อเว้นที่ให้ปุ่มไม่บังเนื้อหา
+            padding: "40px 15px 15px 15px",
             borderRadius: "12px",
             boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-            overflow: "hidden", // ช่วยให้มุมของปุ่มตัดพอดีกับความโค้งของกล่อง (ถ้าต้องการ)
+            overflow: "hidden",
           }}
         >
           <button
             onClick={handleLogout}
             style={{
               position: "absolute",
-              top: "0", // ชิดขอบบนสุด
-              right: "0", // ชิดขอบขวาสุด
+              top: "0",
+              right: "0",
               background: "#f1f5f9",
               border: "none",
-              borderBottomLeftRadius: "12px", // มนเฉพาะมุมล่างซ้าย
+              borderBottomLeftRadius: "12px",
               padding: "8px 16px",
               fontSize: "13px",
               fontWeight: 600,
@@ -220,7 +189,8 @@ function MenuPage() {
           </div>
         </div>
       </div>
-    </div>
+      <Footer userData={userData} />
+    </Background>
   );
 }
 

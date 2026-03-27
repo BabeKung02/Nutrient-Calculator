@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
 import SearchBox from "../components/SearchBox";
-
+import Background from "../components/Background";
 // ─────────────────────────────────────────────
 // Constants
 // ─────────────────────────────────────────────
@@ -285,7 +285,7 @@ function FruitPage() {
   };
 
   return (
-    <div style={{ width: "100vw", minHeight: "100vh", padding: "40px 15px", background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)", display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+    <Background>
       <div style={{ maxWidth: "600px", width: "100%" }}>
         <div style={{ background: "white", borderRadius: "12px", boxShadow: "0 6px 20px rgba(0,0,0,0.12)" }}>
           <Header
@@ -333,7 +333,7 @@ function FruitPage() {
           </div>
         </div>
       </div>
-    </div>
+    </Background>
   );
 }
 

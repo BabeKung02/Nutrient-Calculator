@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Background from "../components/Background";
+
 function FootExaminationPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,17 +49,7 @@ function FootExaminationPage() {
   ];
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        minHeight: "100vh",
-        padding: "40px 15px",
-        background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-      }}
-    >
+    <Background>
       <div style={{ maxWidth: "600px", width: "100%" }}>
         <div
           style={{
@@ -133,7 +126,8 @@ function FootExaminationPage() {
         </div>
       </div>
       </div>
-    </div>
+      <Footer/>
+    </Background>
   );
 }
 

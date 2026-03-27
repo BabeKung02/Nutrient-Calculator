@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import Background from "../components/Background";
+import Footer from "../components/Footer";
 
 const getFoodRecommendations = (weight, calories, category) => {
   const recommendations = {
@@ -424,14 +426,15 @@ function NutritionSummaryPage() {
   // };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background:
-          "linear-gradient(135deg, rgb(183, 199, 255) 0%, rgb(229, 212, 251) 100%)",
-        padding: "20px",
-      }}
-    >
+    // <div
+    //   style={{
+    //     minHeight: "100vh",
+    //     background:
+    //       "linear-gradient(135deg, rgb(183, 199, 255) 0%, rgb(229, 212, 251) 100%)",
+    //     padding: "20px",
+    //   }}
+    // >
+    <Background>
       <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
         <div
           style={{
@@ -1249,7 +1252,9 @@ function NutritionSummaryPage() {
           }
         }
       `}</style>
-    </div>
+      {/* </div> */}
+      <Footer userData={userData} />
+    </Background>
   );
 }
 

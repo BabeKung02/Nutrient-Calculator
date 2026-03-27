@@ -12,6 +12,8 @@ import {
 } from "recharts";
 
 import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Background from "../components/Background";
 
 function SugarLevel() {
   const navigate = useNavigate();
@@ -644,17 +646,7 @@ function SugarLevel() {
   };
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        minHeight: "100vh",
-        padding: "20px 15px",
-        background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "flex-start",
-      }}
-    >
+    <Background>
       <style>{`
         * { outline: none !important; }
         *:focus { outline: none !important; }
@@ -1615,7 +1607,8 @@ function SugarLevel() {
           )}
         </div>
       </div>
-    </div>
+      <Footer userData={userData} />
+    </Background>
   );
 }
 

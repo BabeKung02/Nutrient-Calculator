@@ -54,20 +54,127 @@
 }
 
 .weight-input:focus {
-  border-color: #8b5cf6 !important;
-  box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25) !important;
+  border-color: #17BCBC !important;
+  box-shadow: 0 0 0 0.2rem rgba(23, 188, 188, 0.25) !important;
   outline: none !important;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #64C5D7, #17BCBC) !important;
+  border: none !important;
+  border-radius: 15px !important;
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 6px -1px rgba(23, 188, 188, 0.3) !important;
 }
 
 .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.2) !important;
-  background: linear-gradient(45deg, #7c3aed, #db2777) !important;
+  box-shadow: 0 8px 15px -3px rgba(23, 188, 188, 0.4) !important;
+  background: linear-gradient(135deg, #17BCBC, #0fa8a8) !important;
 }
 
 .submit-btn:active {
   transform: translateY(0) !important;
 }
+
+.description {
+  color: #17BCBC;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.content-card {
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(23, 188, 188, 0.15) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 25px -5px rgba(23, 188, 188, 0.15) !important;
+  max-width: 450px;
+  position: relative;
+}
+
+/* select dropdown */
+.form-select,
+select.weight-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%2317BCBC' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+  padding-right: 3rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 15px;
+}
+
+.form-select:hover,
+select.weight-input:hover {
+  border-color: #64C5D7;
+  box-shadow: 0 0 0 3px rgba(23, 188, 188, 0.1);
+  transform: translateY(-2px);
+  background-color: #f0fffe;
+}
+
+.form-select:focus,
+select.weight-input:focus {
+  border-color: #17BCBC;
+  box-shadow: 0 0 0 4px rgba(23, 188, 188, 0.2), 0 8px 16px -4px rgba(23, 188, 188, 0.15);
+  outline: none;
+  background-color: #f0fffe;
+  transform: translateY(-2px);
+}
+
+.form-select option:hover,
+select.weight-input option:hover {
+  background: linear-gradient(135deg, #e0f5f5 0%, #CEEAE5 100%);
+  color: #17BCBC;
+}
+
+.form-select option:checked,
+select.weight-input option:checked {
+  background: linear-gradient(135deg, #64C5D7 0%, #17BCBC 100%);
+  color: white;
+  font-weight: 600;
+}
+
+/* radio & checkbox */
+.form-check-input:checked {
+  background-color: #17BCBC;
+  border-color: #17BCBC;
+}
+
+.form-check-input:focus {
+  border-color: #17BCBC;
+  box-shadow: 0 0 0 3px rgba(23, 188, 188, 0.15);
+}
+
+.form-check-input:checked:focus {
+  box-shadow: 0 0 0 3px rgba(23, 188, 188, 0.25);
+}
+
+.form-control:focus,
+.form-select:focus,
+.weight-input:focus {
+  border-color: #17BCBC;
+  box-shadow: 0 0 0 4px rgba(23, 188, 188, 0.15);
+  outline: none;
+}
+
+.disease-checkboxes .form-check-input:checked + .form-check-label {
+  color: #17BCBC;
+  font-weight: 600;
+}
+
+/* background decorations — เปลี่ยนจาก purple/pink เป็น teal */
+.deco1 { background: #7CCFD1; }
+.deco2 { background: #64C5D7; }
+.deco3 { background: #17BCBC; }
+.deco4 { background: #CEEAE5; }
 
 /* === Food Animation Styles === */
 .food-float {
@@ -317,14 +424,6 @@
   position: relative;
 }
 
-/* === Description Text === */
-.description {
-  color: #7c3aed;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 2rem;
-}
-
 /* === Weight Input Styling === */
 .weight-input {
   border: 2px solid #d1d5db !important;
@@ -338,7 +437,7 @@
 
 /* === Submit Button Styling === */
 .submit-btn {
-  background: linear-gradient(45deg, #8b5cf6, #ec4899) !important;
+  background: linear-gradient(45deg, #17BCBC, #A9CCE3) !important;
   border: none !important;
   border-radius: 15px !important;
   padding: 1rem 2rem !important;

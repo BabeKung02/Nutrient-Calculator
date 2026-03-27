@@ -8,6 +8,7 @@ import {
   calculateMacros,
 } from "../utils/nutritionCalculator";
 import "../styles/Register.css";
+import Background from "../components/Background";
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -317,298 +318,140 @@ function RegisterPage() {
   const CarrotIcon = () => <div className="carrot-icon" />;
 
   return (
-    <div className="main-container">
-      <div
-        className="container-fluid d-flex align-items-center justify-content-center min-vh-100 p-4"
-        style={{
-          background: "linear-gradient(135deg, #B7C7FF 0%, #E5D4FB 100%)",
-          minHeight: "100vh",
-          width: "100vw",
-        }}
-      >
-        <div className="w-100" style={{ maxWidth: "450px" }}>
-          <div className="card p-4 content-card">
-            <div className="text-center">
-              <p className="description">กรอกข้อมูลส่วนตัว</p>
-              <div className="healthy-food-section">
-                <div className="food-item">
-                  <EggIcon />
-                </div>
-                <div className="food-item">
-                  <CarrotIcon />
-                </div>
+
+  <Background>
+    <div className="w-100" style={{ maxWidth: "450px", paddingBottom: "20px" }}>
+      <div className="card p-4 content-card">
+        <div className="text-center">
+          <p className="description">กรอกข้อมูลส่วนตัว</p>
+          <div className="healthy-food-section">
+            <div className="food-item"><EggIcon /></div>
+            <div className="food-item"><CarrotIcon /></div>
+          </div>
+        </div>
+
+        {/* ชื่อ */}
+        <div className="mb-4">
+          <label htmlFor="firstName" className="form-label text-center d-block fw-semibold">
+            ชื่อ <span className="required-star">*</span>
+          </label>
+          <input type="text" id="firstName" className="form-control weight-input"
+            value={firstName} onChange={(e) => setFirstName(e.target.value)}
+            placeholder="กรอกชื่อของคุณ" />
+        </div>
+
+        {/* นามสกุล */}
+        <div className="mb-4">
+          <label htmlFor="lastName" className="form-label text-center d-block fw-semibold">
+            นามสกุล <span className="required-star">*</span>
+          </label>
+          <input type="text" id="lastName" className="form-control weight-input"
+            value={lastName} onChange={(e) => setLastName(e.target.value)}
+            placeholder="กรอกนามสกุลของคุณ" />
+        </div>
+
+        {/* น้ำหนัก */}
+        <div className="mb-4">
+          <label htmlFor="weight" className="form-label text-center d-block fw-semibold">
+            น้ำหนัก (กิโลกรัม) <span className="required-star">*</span>
+          </label>
+          <input type="text" id="weight" className="form-control weight-input"
+            value={weight} inputMode="decimal" placeholder="กรอกน้ำหนักของคุณ"
+            onChange={(e) => { const v = e.target.value; if (v === "" || /^\d*\.?\d*$/.test(v)) setWeight(v); }} />
+        </div>
+
+        {/* ส่วนสูง */}
+        <div className="mb-4">
+          <label htmlFor="height" className="form-label text-center d-block fw-semibold">
+            ส่วนสูง (เซนติเมตร) <span className="required-star">*</span>
+          </label>
+          <input type="text" id="height" className="form-control weight-input"
+            value={height} placeholder="กรอกส่วนสูงของคุณ"
+            onChange={(e) => { const v = e.target.value; if (v === "" || /^\d*\.?\d*$/.test(v)) setHeight(v); }} />
+        </div>
+
+        {/* อายุ */}
+        <div className="mb-4">
+          <label htmlFor="age" className="form-label text-center d-block fw-semibold">
+            อายุ (ปี) <span className="required-star">*</span>
+          </label>
+          <input type="text" id="age" className="form-control weight-input"
+            value={age} placeholder="กรอกอายุของคุณ"
+            onChange={(e) => { const v = e.target.value; if (v === "" || /^\d*\.?\d*$/.test(v)) setAge(v); }} />
+        </div>
+
+        {/* เพศ */}
+        <div className="mb-4">
+          <label className="form-label text-center d-block fw-semibold mb-3">
+            เพศ <span className="required-star">*</span>
+          </label>
+          <div className="d-flex justify-content-center align-items-center" style={{ gap: "80px", paddingRight: "20px" }}>
+            {[{ value: "male", label: "ชาย" }, { value: "female", label: "หญิง" }].map(({ value, label }) => (
+              <div key={value} className="form-check">
+                <input className="form-check-input radio-input" type="radio"
+                  id={value} name="gender" value={value}
+                  checked={gender === value} onChange={(e) => setGender(e.target.value)} />
+                <label className="form-check-label" htmlFor={value}>{label}</label>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            <div className="mb-4">
-              <label
-                htmlFor="firstName"
-                className="form-label text-center d-block fw-semibold"
-              >
-                ชื่อ <span className="required-star">*</span>
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                className="form-control weight-input"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="กรอกชื่อของคุณ"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="lastName"
-                className="form-label text-center d-block fw-semibold"
-              >
-                นามสกุล <span className="required-star">*</span>
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                className="form-control weight-input"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="กรอกนามสกุลของคุณ"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="weight"
-                className="form-label text-center d-block fw-semibold"
-              >
-                น้ำหนัก (กิโลกรัม) <span className="required-star">*</span>
-              </label>
-              <input
-                type="text"
-                id="weight"
-                className="form-control weight-input"
-                value={weight}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                    setWeight(value);
-                  }
-                }}
-                placeholder="กรอกน้ำหนักของคุณ"
-                inputMode="decimal"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="height"
-                className="form-label text-center d-block fw-semibold"
-              >
-                ส่วนสูง (เซนติเมตร) <span className="required-star">*</span>
-              </label>
-              <input
-                type="text"
-                id="height"
-                className="form-control weight-input"
-                value={height}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                    setHeight(value);
-                  }
-                }}
-                placeholder="กรอกส่วนสูงของคุณ"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="age"
-                className="form-label text-center d-block fw-semibold"
-              >
-                อายุ (ปี) <span className="required-star">*</span>
-              </label>
-              <input
-                type="text"
-                id="age"
-                className="form-control weight-input"
-                value={age}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value === "" || /^\d*\.?\d*$/.test(value)) {
-                    setAge(value);
-                  }
-                }}
-                placeholder="กรอกอายุของคุณ"
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="form-label text-center d-block fw-semibold mb-3">
-                เพศ <span className="required-star">*</span>
-              </label>
-              <div
-                className="d-flex justify-content-center align-items-center"
-                style={{ gap: "80px", paddingRight: "20px" }}
-              >
-                <div className="form-check">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="male"
-                    name="gender"
-                    value="male"
-                    checked={gender === "male"}
-                    onChange={(e) => setGender(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="male">
-                    ชาย
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="female"
-                    name="gender"
-                    value="female"
-                    checked={gender === "female"}
-                    onChange={(e) => setGender(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="female">
-                    หญิง
-                  </label>
-                </div>
+        {/* กิจกรรม */}
+        <div className="mb-4">
+          <label className="form-label text-center d-block fw-semibold mb-3">
+            กิจกรรมที่ทำเป็นประจำ <span className="required-star">*</span>
+          </label>
+          <div className="activity-radio-list">
+            {[
+              { value: "1.2",   label: "เคลื่อนไหวน้อยมาก นั่งเป็นส่วนใหญ่ ไม่ออกกำลังกายเลย" },
+              { value: "1.375", label: "ออกกำลังกาย 1-3 วัน/สัปดาห์" },
+              { value: "1.55",  label: "ออกกำลังกาย 3-5 วัน/สัปดาห์" },
+              { value: "1.725", label: "ออกกำลังกาย 6-7 วัน/สัปดาห์" },
+              { value: "1.9",   label: "ออกกำลังกายเช้า-เย็นทุกวัน" },
+            ].map(({ value, label }, i) => (
+              <div key={value} className="form-check activity-radio-item">
+                <input className="form-check-input radio-input" type="radio"
+                  id={`activity-${i + 1}`} name="activityLevel" value={value}
+                  checked={activityLevel === value} onChange={(e) => setActivityLevel(e.target.value)} />
+                <label className="form-check-label" htmlFor={`activity-${i + 1}`}>{label}</label>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
 
-            <div className="mb-4">
-              <label className="form-label text-center d-block fw-semibold mb-3">
-                กิจกรรมที่ทำเป็นประจำ <span className="required-star">*</span>
-              </label>
-              <div className="activity-radio-list">
-                <div className="form-check activity-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="activity-1"
-                    name="activityLevel"
-                    value="1.2"
-                    checked={activityLevel === "1.2"}
-                    onChange={(e) => setActivityLevel(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="activity-1">
-                    เคลื่อนไหวน้อยมาก นั่งเป็นส่วนใหญ่ ไม่ออกกำลังกายเลย
-                  </label>
+        {/* BMI */}
+        {bmi && (
+          <div className="mb-4">
+            <div className="bmi-display text-center">
+              <div className="bmi-card p-3 rounded"
+                style={{ backgroundColor: "#f8f9fa", border: "2px solid #e9ecef" }}>
+                <h5 className="mb-2" style={{ color: "#495057" }}>ดัชนีมวลกาย (BMI)</h5>
+                <div className="bmi-value mb-2">
+                  <span style={{ fontSize: "2rem", fontWeight: "bold", color: bmiCategory.color }}>
+                    {bmi}
+                  </span>
                 </div>
-                <div className="form-check activity-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="activity-2"
-                    name="activityLevel"
-                    value="1.375"
-                    checked={activityLevel === "1.375"}
-                    onChange={(e) => setActivityLevel(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="activity-2">
-                    ออกกำลังกาย 1-3 วัน/สัปดาห์
-                  </label>
-                </div>
-                <div className="form-check activity-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="activity-3"
-                    name="activityLevel"
-                    value="1.55"
-                    checked={activityLevel === "1.55"}
-                    onChange={(e) => setActivityLevel(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="activity-3">
-                    ออกกำลังกาย 3-5 วัน/สัปดาห์
-                  </label>
-                </div>
-                <div className="form-check activity-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="activity-4"
-                    name="activityLevel"
-                    value="1.725"
-                    checked={activityLevel === "1.725"}
-                    onChange={(e) => setActivityLevel(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="activity-4">
-                    ออกกำลังกาย 6-7 วัน/สัปดาห์
-                  </label>
-                </div>
-                <div className="form-check activity-radio-item">
-                  <input
-                    className="form-check-input radio-input"
-                    type="radio"
-                    id="activity-5"
-                    name="activityLevel"
-                    value="1.9"
-                    checked={activityLevel === "1.9"}
-                    onChange={(e) => setActivityLevel(e.target.value)}
-                  />
-                  <label className="form-check-label" htmlFor="activity-5">
-                    ออกกำลังกายเช้า-เย็นทุกวัน
-                  </label>
-                </div>
+                <span className="badge px-3 py-2"
+                  style={{ backgroundColor: bmiCategory.color, color: "white", fontSize: "0.9rem" }}>
+                  {bmiCategory.text}
+                </span>
               </div>
-            </div>
-
-            {bmi && (
-              <div className="mb-4">
-                <div className="bmi-display text-center">
-                  <div
-                    className="bmi-card p-3 rounded"
-                    style={{
-                      backgroundColor: "#f8f9fa",
-                      border: "2px solid #e9ecef",
-                    }}
-                  >
-                    <h5 className="mb-2" style={{ color: "#495057" }}>
-                      ดัชนีมวลกาย (BMI)
-                    </h5>
-                    <div className="bmi-value mb-2">
-                      <span
-                        style={{
-                          fontSize: "2rem",
-                          fontWeight: "bold",
-                          color: bmiCategory.color,
-                        }}
-                      >
-                        {bmi}
-                      </span>
-                    </div>
-                    <div className="bmi-category">
-                      <span
-                        className="badge px-3 py-2"
-                        style={{
-                          backgroundColor: bmiCategory.color,
-                          color: "white",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {bmiCategory.text}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="text-center mb-4">
-              <button className="btn w-100 submit-btn" onClick={handleSubmit}>
-                คลิกเพื่อเริ่มต้น
-              </button>
             </div>
           </div>
+        )}
+
+        {/* Submit */}
+        <div className="text-center mb-4">
+          <button className="btn w-100 submit-btn" onClick={handleSubmit}>
+            คลิกเพื่อเริ่มต้น
+          </button>
         </div>
       </div>
     </div>
-  );
+  </Background>
+);
+
 }
 
 export default RegisterPage;

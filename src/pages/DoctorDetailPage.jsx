@@ -152,15 +152,15 @@ export default function DoctorDetailPage() {
   };
 
   // ── Reschedule ────────────────────────────────
-  const handleReschedule = () => {
-    Swal.fire({
-      title: "เลื่อนนัด",
-      text:  "ฟีเจอร์นี้กำลังพัฒนาอยู่ กรุณาติดต่อโรงพยาบาลโดยตรง",
-      icon:  "info",
-      confirmButtonColor: "#17BCBC",
-      confirmButtonText:  "ตกลง",
-    });
-  };
+//   const handleReschedule = () => {
+//     Swal.fire({
+//       title: "เลื่อนนัด",
+//       text:  "ฟีเจอร์นี้กำลังพัฒนาอยู่ กรุณาติดต่อโรงพยาบาลโดยตรง",
+//       icon:  "info",
+//       confirmButtonColor: "#17BCBC",
+//       confirmButtonText:  "ตกลง",
+//     });
+//   };
 
   return (
     <Background>

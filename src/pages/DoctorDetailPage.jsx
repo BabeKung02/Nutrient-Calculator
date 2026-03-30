@@ -203,9 +203,9 @@ export default function DoctorDetailPage() {
             </button>
           )}
 
-          <button onClick={handleReschedule} style={styles.btnReschedule}>
+          {/* <button onClick={handleReschedule} style={styles.btnReschedule}>
             เลื่อนนัด
-          </button>
+          </button> */}
 
         </div>
       </div>

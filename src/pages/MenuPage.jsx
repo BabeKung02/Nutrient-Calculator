@@ -31,13 +31,13 @@ function MenuPage() {
   if (!userData) return null;
 
   const menuItems = [
-    {
-      id: 2,
-      title: "โภชนาการอาหาร",
-      icon: "🥗",
-      color: "#43C6A0", // เขียวมิ้นท์ — nutrition/health
-      onClick: () => navigate("/summary", { state: userData }),
-    },
+    // {
+    //   id: 2,
+    //   title: "โภชนาการอาหาร",
+    //   icon: "🥗",
+    //   color: "#43C6A0", // เขียวมิ้นท์ — nutrition/health
+    //   onClick: () => navigate("/summary", { state: userData }),
+    // },
     {
       id: 3,
       title: "บันทึกการรับประทานอาหาร",

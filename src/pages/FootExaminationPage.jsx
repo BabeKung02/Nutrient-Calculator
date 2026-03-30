@@ -28,17 +28,17 @@ function FootExaminationPage() {
     {
       id: 1,
       title: "เริ่มการตรวจเท้า",
-      icon: "👤",
+      icon: "🏥",
       gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       onClick: () => navigate("/foot-exam/data", { state: userData }),
     },
-    {
-      id: 2,
-      title: "การดูแลเท้า",
-      icon: "🏥",
-      gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-      onClick: () => navigate("/foot-exam/care", { state: userData }),
-    },
+    // {
+    //   id: 2,
+    //   title: "การดูแลเท้า",
+    //   icon: "🏥",
+    //   gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    //   onClick: () => navigate("/foot-exam/care", { state: userData }),
+    // },
     {
       id: 3,
       title: "ประวัติการตรวจเท้า",

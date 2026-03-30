@@ -18,7 +18,11 @@ import MeatPage from "./pages/MeatPage";
 import SingleDishPage from "./pages/SingleDishPage";
 import DessertPage from "./pages/DessertPage";
 import FatPage from "./pages/FatPage";
-import DoctorRecord from "./pages/DoctorRecord"
+import DoctorRecord from "./pages/DoctorRecord";
+import QuestionaireFootPage from "./pages/QuestionaireFootPage";
+import HistoryFootPage, { FootExamDetailPage } from "./pages/HistoryFootPage";
+import DoctorFormPage from "./pages/DoctorFormPage";
+import DoctorDetailPage from "./pages/DoctorDetailPage";
 
 import "./App.css";
 function App() {
@@ -43,8 +47,13 @@ function App() {
         <Route path="/food/meat" element={<MeatPage />} />
         <Route path="/food/single-dish" element={<SingleDishPage />} />
         <Route path="/food/dessert" element={<DessertPage />} />
-        <Route path="/food/fat" element={<FatPage />} />  
+        <Route path="/food/fat" element={<FatPage />} />
         <Route path="/doctor-record" element={<DoctorRecord />} />
+        <Route path="/foot-exam/data" element={<QuestionaireFootPage />} />
+        <Route path="/foot-exam/history" element={<HistoryFootPage />} />
+        <Route path="/foot-exam/detail" element={<FootExamDetailPage />} />
+        <Route path="/doctor-form" element={<DoctorFormPage />} />
+        <Route path="/doctor-record/detail" element={<DoctorDetailPage />} />
       </Routes>
     </BrowserRouter>
   );

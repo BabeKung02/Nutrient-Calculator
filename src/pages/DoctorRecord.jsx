@@ -681,6 +681,7 @@
 
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 import Background from "../components/Background";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -729,51 +730,66 @@ const ClipboardIcon = ({ size = 16 }) => (
   </svg>
 );
 
-// ─── Storage ──────────────────────────────────
+// ─── Storage helpers ──────────────────────────
 
-function getStorageKey() {
-  const currentUser = localStorage.getItem("currentUser") || "default";
-  return `doctorAppointments_${currentUser}`;
+function getKey() {
+  return `doctorAppointments_${localStorage.getItem("currentUser") || "default"}`;
 }
-
 function loadAppointments() {
-  return JSON.parse(localStorage.getItem(getStorageKey()) || "[]");
+  return JSON.parse(localStorage.getItem(getKey()) || "[]");
 }
-
 function saveAppointments(data) {
-  localStorage.setItem(getStorageKey(), JSON.stringify(data));
+  localStorage.setItem(getKey(), JSON.stringify(data));
 }
 
 // ─── Sub-components ───────────────────────────
 
-function AppointmentCard({ appointment, onClick }) {
+function AppointmentCard({ appointment, onClick, onDelete }) {
   const { checkupName, date, time, location, confirmed } = appointment;
   return (
-    <button onClick={onClick} style={s.card}>
-      <div style={{
-        ...s.cardAccent,
-        background: confirmed
-          ? "linear-gradient(180deg, #17BCBC, #64C5D7)"
-          : "linear-gradient(180deg, #b0b0b0, #d0d0d0)",
-      }} />
+    // wrapper div carries position:relative so the ✕ button can be absolute
+    <div style={s.cardWrap}>
 
-      <div style={s.cardContent}>
-        <div style={s.cardTop}>
-          <div style={s.cardCheckupName}>{checkupName}</div>
-          {confirmed && <span style={s.confirmedBadge}>✓ ยืนยันแล้ว</span>}
-        </div>
-        <div style={s.cardMeta}>
-          <span style={s.metaItem}><CalendarIcon /><span>{date}</span></span>
-          <span style={s.metaDot}>·</span>
-          <span style={s.metaItem}><ClockIcon /><span>{time}</span></span>
-        </div>
-        <div style={s.cardLocation}>
-          <ClipboardIcon /><span>{location}</span>
-        </div>
-      </div>
+      {/* ✕ — absolute top-right corner, outside the clickable button */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onDelete(); }}
+        style={s.deleteBtn}
+        aria-label="ลบนัดหมาย"
+      >
+        ✕
+      </button>
 
-      <div style={s.cardArrow}><ChevronIcon /></div>
-    </button>
+      {/* main clickable area */}
+      <button onClick={onClick} style={s.card}>
+        <div style={{
+          ...s.cardAccent,
+          background: confirmed
+            ? "linear-gradient(180deg, #17BCBC, #64C5D7)"
+            : "linear-gradient(180deg, #b0b0b0, #d0d0d0)",
+        }} />
+
+        <div style={s.cardContent}>
+          <div style={s.cardTop}>
+            <div style={s.cardCheckupName}>{checkupName}</div>
+            {confirmed && <span style={s.confirmedBadge}>✓ ยืนยันแล้ว</span>}
+          </div>
+          <div style={s.cardMeta}>
+            <span style={s.metaItem}><CalendarIcon /><span>{date}</span></span>
+            <span style={s.metaDot}>·</span>
+            <span style={s.metaItem}><ClockIcon /><span>{time}</span></span>
+          </div>
+          <div style={s.cardBottomRow}>
+            <div style={s.cardLocation}>
+              <span style={s.cardLocationIcon}><ClipboardIcon /></span>
+              <span style={s.cardLocationText}>{location}</span>
+            </div>
+            <span style={s.detailLink}>➜</span>
+          </div>
+        </div>
+
+        <div style={{ width: 12, flexShrink: 0 }} />
+      </button>
+    </div>
   );
 }
 
@@ -782,7 +798,7 @@ function EmptyState() {
     <div style={s.emptyState}>
       <div style={s.emptyIcon}><CalendarIcon size={32} /></div>
       <p style={s.emptyText}>กรุณาเพิ่มบันทึกใบนัดพบแพทย์</p>
-      <p style={s.emptySubtext}>แตะปุ่ม + มุมขวาบนเพื่อเพิ่มนัดหมายใหม่</p>
+      <p style={s.emptySubtext}>แตะปุ่ม + เพิ่ม เพื่อเพิ่มนัดหมายใหม่</p>
     </div>
   );
 }
@@ -790,18 +806,42 @@ function EmptyState() {
 // ─── Main Component ───────────────────────────
 
 export default function DoctorRecord() {
-  const navigate  = useNavigate();
-  const location  = useLocation();
-  const userData  = location.state || JSON.parse(localStorage.getItem("userData") || "null");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const userData = location.state || JSON.parse(localStorage.getItem("userData") || "null");
 
   const [appointments, setAppointments] = useState(() => loadAppointments());
   const [showForm,     setShowForm]     = useState(false);
 
+  const updateAppointments = (data) => {
+    setAppointments(data);
+    saveAppointments(data);
+  };
+
   const handleAdd = (newAppointment) => {
-    const updated = [{ ...newAppointment, id: Date.now(), confirmed: false }, ...appointments];
-    setAppointments(updated);
-    saveAppointments(updated);
+    updateAppointments([
+      { ...newAppointment, id: Date.now(), confirmed: false },
+      ...appointments,
+    ]);
     setShowForm(false);
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "ยกเลิกการนัดหมาย",
+      text: "คุณต้องการยกเลิกการนัดหมายนี้หรือไม่?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "ใช่",
+      cancelButtonText: "ไม่ใช่",
+      confirmButtonColor: "#ef4444",
+      cancelButtonColor: "#17BCBC",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        updateAppointments(appointments.filter((a) => a.id !== id));
+      }
+    });
   };
 
   return (
@@ -828,6 +868,7 @@ export default function DoctorRecord() {
                     key={appt.id}
                     appointment={appt}
                     onClick={() => navigate("/doctor-record/detail", { state: { appointment: appt, userData } })}
+                    onDelete={() => handleDelete(appt.id)}
                   />
                 ))}
               </div>
@@ -869,26 +910,61 @@ const s = {
   listContainer: { padding: "14px 16px 16px", flex: 1 },
   list:          { display: "flex", flexDirection: "column", gap: "10px" },
 
-  // Card
+  // cardWrap: relative container so ✕ can be position:absolute
+  cardWrap: {
+    position: "relative",
+    borderRadius: "16px",
+  },
+
+  // ✕ button — absolute top-right
+  deleteBtn: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    zIndex: 2,
+    width: 24,
+    height: 24,
+    borderRadius: "50%",
+    border: "none",
+    background: "#fee2e2",
+    color: "#ef4444",
+    fontSize: "11px",
+    fontWeight: 700,
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    lineHeight: 1,
+  },
+
+  // card button fills the wrap
   card: {
-    width: "100%", background: "#f8fffe", border: "1px solid #e0f5f5",
-    borderRadius: "16px", padding: "14px 12px 14px 0",
-    display: "flex", alignItems: "center", cursor: "pointer", textAlign: "left",
+    width: "100%",
+    background: "#f8fffe",
+    border: "1px solid #e0f5f5",
+    borderRadius: "16px",
+    padding: "14px 12px 14px 0",
+    display: "flex",
+    alignItems: "center",
+    cursor: "pointer",
+    textAlign: "left",
   },
   cardAccent:      { width: "4px", alignSelf: "stretch", borderRadius: "0 4px 4px 0", marginRight: "12px", flexShrink: 0 },
   cardContent:     { flex: 1, display: "flex", flexDirection: "column", gap: "5px" },
   cardTop:         { display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" },
-  cardCheckupName: { fontSize: "0.95rem", fontWeight: "700", color: "#1a1a1a" },
+  cardCheckupName: { fontSize: "0.88rem", fontWeight: "700", color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
   confirmedBadge:  { background: "#dcfce7", color: "#16a34a", borderRadius: "99px", padding: "1px 8px", fontSize: "0.72rem", fontWeight: "600" },
-  cardMeta:        { display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" },
-  metaItem:        { display: "flex", alignItems: "center", gap: "4px", fontSize: "0.8rem", color: "#17BCBC" },
+  cardMeta:        { display: "flex", alignItems: "center", gap: "6px", flexWrap: "nowrap" },
+  metaItem:        { display: "flex", alignItems: "center", gap: "4px", fontSize: "0.75rem", color: "#17BCBC", flexShrink: 0 },
   metaDot:         { color: "#ccc", fontSize: "0.8rem" },
-  cardLocation:    { display: "flex", alignItems: "center", gap: "4px", fontSize: "0.78rem", color: "#888" },
-  cardArrow:       { color: "#ccc", flexShrink: 0, marginLeft: "4px" },
+  cardLocation:    { display: "flex", alignItems: "center", gap: "4px", fontSize: "0.75rem", color: "#888", minWidth: 0 },
+  cardLocationIcon: { flexShrink: 0, color: "#bbb" },
+  cardLocationText: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0, fontSize: "0.72rem", color: "#888", marginTop: "5px" },
 
-  // Empty
-  emptyState:  { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px", gap: "10px" },
-  emptyIcon:   { color: "#c5e8e8", marginBottom: "4px" },
-  emptyText:   { fontSize: "0.95rem", color: "#aaa", fontWeight: "600" },
-  emptySubtext:{ fontSize: "0.8rem", color: "#ccc" },
+  cardBottomRow: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px", minWidth: 0 },
+  detailLink:    { fontSize: "0.75rem", color: "#b0b0b0", whiteSpace: "nowrap", flexShrink: 0 , marginTop: "5px"},
+  emptyState:   { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px", gap: "10px" },
+  emptyIcon:    { color: "#c5e8e8", marginBottom: "4px" },
+  emptyText:    { fontSize: "0.95rem", color: "#aaa", fontWeight: "600", margin: 0 },
+  emptySubtext: { fontSize: "0.8rem", color: "#ccc", margin: 0 },
 };

@@ -8,7 +8,7 @@ import Background from "../components/Background";
 const dishItems = [
   {
     id: 1,
-    name: "ผัดมะระขึ้นกใส่ไข่",
+    name: "ผัดมะระขี้นกใส่ไข่",
     calories: 140,
     carbs: 3.9,
     protein: 7.8,
@@ -179,7 +179,7 @@ const dishItems = [
   },
   {
     id: 20,
-    name: "ย่ามะระจีนไก่ฉีก",
+    name: "ยำมะระจีนไก่ฉีก",
     calories: 66,
     carbs: 5.5,
     protein: 6.9,
@@ -215,7 +215,7 @@ const dishItems = [
   },
   {
     id: 24,
-    name: "เกาเหลาหมู แกงเลียงสมุนไพร ก๋วยเตี๋ยวลุยสวน",
+    name: "เกาเหลาหมู",
     calories: 114,
     carbs: 4.6,
     protein: 10.4,

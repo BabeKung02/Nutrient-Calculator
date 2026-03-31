@@ -513,22 +513,26 @@ function SugarLevel() {
   });
 
   const chartDataFbs = recentFbsRecords.map((record, index) => {
-    const recordDate = new Date(record.date);
-    const position = ((recordDate - startDate) / totalRange) * 100;
-    return {
-      position: position,
-      value: record.value,
-      displayDate: `${recordDate.getDate()} ${
-        monthNames[recordDate.getMonth()]
-      }`,
-      fullDate: recordDate.toLocaleDateString("th-TH", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }),
-      index: index,
-    };
-  });
+  const recordDate = new Date(record.date);
+
+  // snap ไปวันที่ 1 ของเดือนเดียวกันเสมอ
+  const snappedDate = new Date(
+    recordDate.getFullYear(),
+    recordDate.getMonth(),
+    1
+  );
+  const position = ((snappedDate - startDate) / totalRange) * 100;
+
+  return {
+    position: position,
+    value: record.value,
+    displayDate: `${monthNames[recordDate.getMonth()]} ${recordDate.getFullYear()}`,
+    fullDate: recordDate.toLocaleDateString("th-TH", {
+      day: "numeric", month: "short", year: "numeric",
+    }),
+    index: index,
+  };
+});
 
   const monthMarkers = last3Months.map((m) => {
     const monthStart = new Date(m.year, m.month, 1);

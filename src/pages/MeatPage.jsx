@@ -230,7 +230,7 @@ const meatItems = [
   {
     id: 7,
     name: "ไข่ไก่ ทั้งฟอง",
-    portion: "2 ช้อนกินข้าว เท่ากับ 1 ส่วน",
+    portion: "1 ฟอง เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 5,
     calories: 75,
@@ -239,7 +239,7 @@ const meatItems = [
   {
     id: 11,
     name: "ไข่เป็ด ทั้งฟอง",
-    portion: "2 ช้อนกินข้าว เท่ากับ 1 ส่วน",
+    portion: "1 ฟอง เท่ากับ 1 ส่วน",
     protein: 7,
     fat: 5,
     calories: 75,

@@ -794,10 +794,6 @@ export default function MealPage() {
               </div>
               <div style={s.dateText}>วันนี้ {getTodayThai()}</div>
             </div>
-            <div style={s.hospitalBadge}>
-              <span style={s.hospitalIcon}>🏥</span>
-              <span style={s.hospitalName}>MHU Hospital</span>
-            </div>
           </div>
 
           {/* ── Calorie card ── */}

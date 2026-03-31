@@ -680,7 +680,7 @@
 // };
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Background from "../components/Background";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -729,66 +729,60 @@ const ClipboardIcon = ({ size = 16 }) => (
   </svg>
 );
 
-// ─── Appointment Card ─────────────────────────
+// ─── Storage ──────────────────────────────────
+
+function getStorageKey() {
+  const currentUser = localStorage.getItem("currentUser") || "default";
+  return `doctorAppointments_${currentUser}`;
+}
+
+function loadAppointments() {
+  return JSON.parse(localStorage.getItem(getStorageKey()) || "[]");
+}
+
+function saveAppointments(data) {
+  localStorage.setItem(getStorageKey(), JSON.stringify(data));
+}
+
+// ─── Sub-components ───────────────────────────
 
 function AppointmentCard({ appointment, onClick }) {
-  const isConfirmed = appointment.confirmed;
-
+  const { checkupName, date, time, location, confirmed } = appointment;
   return (
-    <button onClick={onClick} style={styles.card}>
-      {/* Left accent bar */}
+    <button onClick={onClick} style={s.card}>
       <div style={{
-        ...styles.cardAccent,
-        background: isConfirmed
+        ...s.cardAccent,
+        background: confirmed
           ? "linear-gradient(180deg, #17BCBC, #64C5D7)"
           : "linear-gradient(180deg, #b0b0b0, #d0d0d0)",
       }} />
 
-      {/* Content */}
-      <div style={styles.cardContent}>
-        <div style={styles.cardTop}>
-          <div style={styles.cardCheckupName}>{appointment.checkupName}</div>
-          {isConfirmed && (
-            <span style={styles.confirmedBadge}>&#10003; ยืนยันแล้ว</span>
-          )}
+      <div style={s.cardContent}>
+        <div style={s.cardTop}>
+          <div style={s.cardCheckupName}>{checkupName}</div>
+          {confirmed && <span style={s.confirmedBadge}>✓ ยืนยันแล้ว</span>}
         </div>
-
-        <div style={styles.cardMeta}>
-          <span style={styles.metaItem}>
-            <CalendarIcon />
-            <span>{appointment.date}</span>
-          </span>
-          <span style={styles.metaDot}>·</span>
-          <span style={styles.metaItem}>
-            <ClockIcon />
-            <span>{appointment.time}</span>
-          </span>
+        <div style={s.cardMeta}>
+          <span style={s.metaItem}><CalendarIcon /><span>{date}</span></span>
+          <span style={s.metaDot}>·</span>
+          <span style={s.metaItem}><ClockIcon /><span>{time}</span></span>
         </div>
-
-        <div style={styles.cardLocation}>
-          <ClipboardIcon />
-          <span>{appointment.location}</span>
+        <div style={s.cardLocation}>
+          <ClipboardIcon /><span>{location}</span>
         </div>
       </div>
 
-      {/* Arrow */}
-      <div style={styles.cardArrow}>
-        <ChevronIcon />
-      </div>
+      <div style={s.cardArrow}><ChevronIcon /></div>
     </button>
   );
 }
 
-// ─── Empty State ──────────────────────────────
-
 function EmptyState() {
   return (
-    <div style={styles.emptyState}>
-      <div style={styles.emptyIcon}>
-        <CalendarIcon size={32} />
-      </div>
-      <p style={styles.emptyText}>กรุณาเพิ่มบันทึกใบนัดพบแพทย์</p>
-      <p style={styles.emptySubtext}>แตะปุ่ม + มุมขวาบนเพื่อเพิ่มนัดหมายใหม่</p>
+    <div style={s.emptyState}>
+      <div style={s.emptyIcon}><CalendarIcon size={32} /></div>
+      <p style={s.emptyText}>กรุณาเพิ่มบันทึกใบนัดพบแพทย์</p>
+      <p style={s.emptySubtext}>แตะปุ่ม + มุมขวาบนเพื่อเพิ่มนัดหมายใหม่</p>
     </div>
   );
 }
@@ -796,53 +790,44 @@ function EmptyState() {
 // ─── Main Component ───────────────────────────
 
 export default function DoctorRecord() {
-  const navigate = useNavigate();
-  const [appointments, setAppointments] = useState([]);
-  const [showForm, setShowForm] = useState(false);
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const userData  = location.state || JSON.parse(localStorage.getItem("userData") || "null");
 
-  const handleAddAppointment = (newAppointment) => {
-    setAppointments((prev) => [
-      { ...newAppointment, id: Date.now(), confirmed: false },
-      ...prev,
-    ]);
+  const [appointments, setAppointments] = useState(() => loadAppointments());
+  const [showForm,     setShowForm]     = useState(false);
+
+  const handleAdd = (newAppointment) => {
+    const updated = [{ ...newAppointment, id: Date.now(), confirmed: false }, ...appointments];
+    setAppointments(updated);
+    saveAppointments(updated);
     setShowForm(false);
-  };
-
-  const handleCardClick = (appointment) => {
-    navigate("/doctor-record/detail", { state: { appointment } });
   };
 
   return (
     <Background>
-      <div style={styles.page}>
-        {/* Header */}
+      <div style={s.page}>
         <Header title="บันทึกนัดพบแพทย์" backTo="/menu" />
 
-        {/* Sub-bar: ปุ่ม + เพิ่ม ชิดขวา ใต้ Header */}
         {!showForm && (
-          <div style={styles.subBar}>
-            <button
-              style={styles.addBtn}
-              onClick={() => setShowForm(true)}
-            >
-              <PlusIcon />
-              <span>เพิ่ม</span>
+          <div style={s.subBar}>
+            <button style={s.addBtn} onClick={() => setShowForm(true)}>
+              <PlusIcon /><span>เพิ่ม</span>
             </button>
           </div>
         )}
 
-        {/* Card List */}
         {!showForm && (
-          <div style={styles.listContainer}>
+          <div style={s.listContainer}>
             {appointments.length === 0 ? (
               <EmptyState />
             ) : (
-              <div style={styles.list}>
+              <div style={s.list}>
                 {appointments.map((appt) => (
                   <AppointmentCard
                     key={appt.id}
                     appointment={appt}
-                    onClick={() => handleCardClick(appt)}
+                    onClick={() => navigate("/doctor-record/detail", { state: { appointment: appt, userData } })}
                   />
                 ))}
               </div>
@@ -850,166 +835,60 @@ export default function DoctorRecord() {
           </div>
         )}
 
-        {/* Form — rendered inline inside the same card */}
         {showForm && (
           <DoctorFormPage
-            onSubmit={handleAddAppointment}
+            onSubmit={handleAdd}
             onCancel={() => setShowForm(false)}
           />
         )}
       </div>
-
-      <Footer />
+      <Footer userData={userData} />
     </Background>
   );
 }
 
 // ─── Styles ───────────────────────────────────
 
-const styles = {
+const s = {
   page: {
-    background: "white",
-    borderRadius: "24px",
-    width: "100%",
-    maxWidth: "420px",
-    boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-    overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "520px",
+    background: "white", borderRadius: "24px", width: "100%", maxWidth: "420px",
+    boxShadow: "0 8px 32px rgba(0,0,0,0.12)", overflow: "hidden",
+    display: "flex", flexDirection: "column", minHeight: "520px",
     fontFamily: "'Sarabun', 'Noto Sans Thai', sans-serif",
   },
-
-  // Sub-bar ใต้ Header
   subBar: {
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: "10px 16px 4px",
-    borderBottom: "1px solid #f0fafa",
+    display: "flex", justifyContent: "flex-end", alignItems: "center",
+    padding: "10px 16px 4px", borderBottom: "1px solid #f0fafa",
   },
   addBtn: {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    padding: "7px 16px",
-    borderRadius: "99px",
-    border: "1.5px solid #17BCBC",
-    background: "white",
-    color: "#17BCBC",
-    fontSize: "0.88rem",
-    fontWeight: "700",
-    cursor: "pointer",
-    fontFamily: "'Sarabun', 'Noto Sans Thai', sans-serif",
+    display: "flex", alignItems: "center", gap: "4px",
+    padding: "7px 16px", borderRadius: "99px",
+    border: "1.5px solid #17BCBC", background: "white",
+    color: "#17BCBC", fontSize: "0.88rem", fontWeight: "700", cursor: "pointer",
   },
-
-  listContainer: {
-    padding: "14px 16px 16px",
-    flex: 1,
-  },
-  list: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
+  listContainer: { padding: "14px 16px 16px", flex: 1 },
+  list:          { display: "flex", flexDirection: "column", gap: "10px" },
 
   // Card
   card: {
-    width: "100%",
-    background: "#f8fffe",
-    border: "1px solid #e0f5f5",
-    borderRadius: "16px",
-    padding: "14px 12px 14px 0",
-    display: "flex",
-    alignItems: "center",
-    cursor: "pointer",
-    textAlign: "left",
-    fontFamily: "'Sarabun', 'Noto Sans Thai', sans-serif",
+    width: "100%", background: "#f8fffe", border: "1px solid #e0f5f5",
+    borderRadius: "16px", padding: "14px 12px 14px 0",
+    display: "flex", alignItems: "center", cursor: "pointer", textAlign: "left",
   },
-  cardAccent: {
-    width: "4px",
-    alignSelf: "stretch",
-    borderRadius: "0 4px 4px 0",
-    marginRight: "12px",
-    flexShrink: 0,
-  },
-  cardContent: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: "5px",
-  },
-  cardTop: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    flexWrap: "wrap",
-  },
-  cardCheckupName: {
-    fontSize: "0.95rem",
-    fontWeight: "700",
-    color: "#1a1a1a",
-  },
-  confirmedBadge: {
-    background: "#dcfce7",
-    color: "#16a34a",
-    borderRadius: "99px",
-    padding: "1px 8px",
-    fontSize: "0.72rem",
-    fontWeight: "600",
-  },
-  cardMeta: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-    flexWrap: "wrap",
-  },
-  metaItem: {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    fontSize: "0.8rem",
-    color: "#17BCBC",
-  },
-  metaDot: {
-    color: "#ccc",
-    fontSize: "0.8rem",
-  },
-  cardLocation: {
-    display: "flex",
-    alignItems: "center",
-    gap: "4px",
-    fontSize: "0.78rem",
-    color: "#888",
-  },
-  cardArrow: {
-    color: "#ccc",
-    flexShrink: 0,
-    marginLeft: "4px",
-  },
+  cardAccent:      { width: "4px", alignSelf: "stretch", borderRadius: "0 4px 4px 0", marginRight: "12px", flexShrink: 0 },
+  cardContent:     { flex: 1, display: "flex", flexDirection: "column", gap: "5px" },
+  cardTop:         { display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" },
+  cardCheckupName: { fontSize: "0.95rem", fontWeight: "700", color: "#1a1a1a" },
+  confirmedBadge:  { background: "#dcfce7", color: "#16a34a", borderRadius: "99px", padding: "1px 8px", fontSize: "0.72rem", fontWeight: "600" },
+  cardMeta:        { display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" },
+  metaItem:        { display: "flex", alignItems: "center", gap: "4px", fontSize: "0.8rem", color: "#17BCBC" },
+  metaDot:         { color: "#ccc", fontSize: "0.8rem" },
+  cardLocation:    { display: "flex", alignItems: "center", gap: "4px", fontSize: "0.78rem", color: "#888" },
+  cardArrow:       { color: "#ccc", flexShrink: 0, marginLeft: "4px" },
 
-  // Empty state
-  emptyState: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "60px 20px",
-    gap: "10px",
-  },
-  emptyIcon: {
-    color: "#c5e8e8",
-    marginBottom: "4px",
-  },
-  emptyText: {
-    fontSize: "0.95rem",
-    color: "#aaa",
-    fontWeight: "600",
-    fontFamily: "'Sarabun', 'Noto Sans Thai', sans-serif",
-  },
-  emptySubtext: {
-    fontSize: "0.8rem",
-    color: "#ccc",
-    fontFamily: "'Sarabun', 'Noto Sans Thai', sans-serif",
-  },
+  // Empty
+  emptyState:  { display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "60px 20px", gap: "10px" },
+  emptyIcon:   { color: "#c5e8e8", marginBottom: "4px" },
+  emptyText:   { fontSize: "0.95rem", color: "#aaa", fontWeight: "600" },
+  emptySubtext:{ fontSize: "0.8rem", color: "#ccc" },
 };

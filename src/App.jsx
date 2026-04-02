@@ -23,6 +23,7 @@ import QuestionaireFootPage from "./pages/QuestionaireFootPage";
 import HistoryFootPage, { FootExamDetailPage } from "./pages/HistoryFootPage";
 import DoctorFormPage from "./pages/DoctorFormPage";
 import DoctorDetailPage from "./pages/DoctorDetailPage";
+import HistoryFoodPage from "./pages/HistoryFoodPage";
 
 import "./App.css";
 function App() {
@@ -54,6 +55,7 @@ function App() {
         <Route path="/foot-exam/detail" element={<FootExamDetailPage />} />
         <Route path="/doctor-form" element={<DoctorFormPage />} />
         <Route path="/doctor-record/detail" element={<DoctorDetailPage />} />
+        <Route path="/food/history" element={<HistoryFoodPage />} />
       </Routes>
     </BrowserRouter>
   );

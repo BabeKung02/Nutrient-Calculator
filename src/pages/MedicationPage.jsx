@@ -285,7 +285,7 @@ const AddModal = ({ onClose, onAdd }) => {
             border: "none", fontSize: "16px", fontWeight: 700, color: "white",
             background: "linear-gradient(135deg,#7c3aed,#a855f7)", cursor: "pointer",
             boxShadow: "0 6px 20px rgba(124,58,237,.4)" }}>
-          บันทึก + ตั้งการแจ้งเตือน
+          บันทึกรายการยา
         </button>
       </div>
     </div>
@@ -421,7 +421,7 @@ export default function MedicationPage() {
             </div>
           </div>
         </div>
-        <Footer userData={userData} />
+        {!showModal && <Footer userData={userData} />}
       </Background>
 
       {showModal && <AddModal onClose={() => setShowModal(false)} onAdd={handleAdd} />}

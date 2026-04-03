@@ -1881,7 +1881,7 @@ export default function MealPage() {
             </button>
           </div>
           {/* Calorie card */}
-          <div style={s.calorieCard}>
+          <div style={s.calorieCard}> 
             <div style={s.calorieTitle}>พลังงานรวม</div>
             <div style={s.calorieRow}>
               <span style={s.calorieNum}>
